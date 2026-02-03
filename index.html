@@ -1,0 +1,1028 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Portfolio BTS SIO SISR - Naim</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Fraunces:wght@600;700&display=swap");
+
+      :root {
+        --ink: #0b1020;
+        --muted: #5b647a;
+        --brand: #0f766e;
+        --brand-2: #f59e0b;
+        --paper: #ffffff;
+        --bg: #f4f1ea;
+        --line: #e5e7eb;
+        --shadow: 0 20px 60px rgba(15, 23, 42, 0.12);
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+
+      body {
+        margin: 0;
+        font-family: "Manrope", "Segoe UI", sans-serif;
+        color: var(--ink);
+        line-height: 1.55;
+        background:
+          radial-gradient(circle at 80% 10%, #ffe9b7 0, transparent 45%),
+          radial-gradient(circle at 15% 15%, #c7f2ee 0, transparent 40%),
+          radial-gradient(circle at 80% 80%, #dbeafe 0, transparent 40%),
+          var(--bg);
+      }
+
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 24px 56px;
+        position: sticky;
+        top: 0;
+        background: rgba(244, 241, 234, 0.85);
+        backdrop-filter: blur(8px);
+        z-index: 10;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 800;
+        letter-spacing: 0.4px;
+      }
+
+      .logo-badge {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, var(--brand), #0f766e);
+        color: white;
+        display: grid;
+        place-items: center;
+        font-weight: 800;
+      }
+
+      nav a {
+        text-decoration: none;
+        color: var(--ink);
+        margin-left: 18px;
+        font-weight: 700;
+        font-size: 13px;
+      }
+
+      .hero {
+        max-width: 1160px;
+        margin: 0 auto;
+        padding: 56px 56px 24px;
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 42px;
+      }
+
+      .hero h1 {
+        font-family: "Fraunces", serif;
+        font-size: 52px;
+        line-height: 1.04;
+        margin: 0 0 18px;
+      }
+
+      .hero p {
+        color: var(--muted);
+        font-size: 18px;
+        margin: 0 0 22px;
+      }
+
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #fef3c7;
+        color: #92400e;
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .cta {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        border: none;
+        padding: 12px 20px;
+        border-radius: 12px;
+        font-weight: 800;
+        cursor: pointer;
+        font-size: 14px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        color: inherit;
+      }
+
+      .btn-primary {
+        background: var(--brand);
+        color: white;
+        box-shadow: var(--shadow);
+      }
+
+      .btn-ghost {
+        background: transparent;
+        border: 1px solid var(--line);
+      }
+
+      .hero-card {
+        background: var(--paper);
+        border-radius: 22px;
+        padding: 22px;
+        box-shadow: var(--shadow);
+        display: grid;
+        gap: 14px;
+      }
+
+      .metric {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 12px;
+        border-radius: 12px;
+        background: #f8fafc;
+        font-weight: 700;
+      }
+
+      .section {
+        max-width: 1160px;
+        margin: 0 auto;
+        padding: 28px 56px;
+      }
+
+      .section h2 {
+        margin: 0 0 14px;
+        font-size: 22px;
+        position: relative;
+        display: inline-block;
+      }
+      .section h2::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -6px;
+        width: 48px;
+        height: 3px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, var(--brand), #0ea5a4);
+      }
+
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 16px;
+      }
+
+      .card {
+        background: var(--paper);
+        border-radius: 18px;
+        padding: 16px;
+        border: 1px solid var(--line);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .card h3 {
+        margin: 0 0 6px;
+        font-size: 16px;
+      }
+
+      .card p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .list {
+        margin: 8px 0 0;
+        padding-left: 18px;
+        color: var(--muted);
+        font-size: 14px;
+        list-style: none;
+        padding-left: 0;
+      }
+      .list li {
+        margin: 4px 0;
+        padding-left: 18px;
+        position: relative;
+      }
+      .list li::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--brand), #0ea5a4);
+        position: absolute;
+        left: 0;
+        top: 7px;
+      }
+      .points {
+        margin: 6px 0 0;
+        padding-left: 0;
+        list-style: none;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .points li {
+        margin: 4px 0;
+        padding-left: 16px;
+        position: relative;
+      }
+      .points li::before {
+        content: "•";
+        position: absolute;
+        left: 0;
+        color: var(--brand);
+        font-weight: 800;
+      }
+
+      .card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow);
+      }
+      .pill-compare {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: #e0f2fe;
+        color: #0369a1;
+        font-size: 12px;
+        font-weight: 800;
+      }
+      .compare {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-top: 16px;
+      }
+      .compare .card {
+        border-left: 4px solid #0f766e;
+      }
+      .compare .card.slam {
+        border-left-color: #f59e0b;
+      }
+
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .tag {
+        background: #ecfeff;
+        color: #0e7490;
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 20px;
+      }
+
+      .timeline {
+        display: grid;
+        gap: 12px;
+      }
+
+      .timeline-item {
+        background: var(--paper);
+        border-radius: 16px;
+        padding: 14px 16px;
+        border: 1px solid var(--line);
+        display: grid;
+        gap: 6px;
+      }
+
+      .skill {
+        display: grid;
+        gap: 8px;
+      }
+
+      .bar {
+        height: 8px;
+        background: #e5e7eb;
+        border-radius: 999px;
+        overflow: hidden;
+      }
+
+      .bar > span {
+        display: block;
+        height: 100%;
+        background: linear-gradient(90deg, var(--brand), #0ea5a4);
+      }
+
+      .contact {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 20px;
+      }
+
+      .contact form {
+        display: grid;
+        gap: 10px;
+      }
+
+      input, textarea {
+        width: 100%;
+        padding: 10px 12px;
+        border-radius: 12px;
+        border: 1px solid var(--line);
+        font-size: 14px;
+      }
+
+      .footer {
+        text-align: center;
+        padding: 30px 56px 50px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .section + .section {
+        margin-top: 6px;
+      }
+      .rss-grid {
+        display: grid;
+        gap: 12px;
+      }
+      .rss-card {
+        display: grid;
+        grid-template-columns: 110px 1fr;
+        gap: 12px;
+        padding: 10px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: #f8fafc;
+        text-decoration: none;
+        color: inherit;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+      .rss-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow);
+      }
+      .rss-thumb {
+        width: 110px;
+        height: 80px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #e2e8f0, #f8fafc);
+        display: grid;
+        place-items: center;
+        font-size: 12px;
+        color: var(--muted);
+        overflow: hidden;
+      }
+      .rss-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .rss-title {
+        font-weight: 800;
+        font-size: 14px;
+        margin-bottom: 6px;
+      }
+      .rss-meta {
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .rss-source {
+        color: #0e7490;
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .rss-grid {
+        margin-top: 8px;
+      }
+      .rss-links {
+        margin: 6px 0 10px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .rss-links a {
+        font-size: 12px;
+        font-weight: 700;
+        color: #0e7490;
+        text-decoration: none;
+        border: 1px solid #e2e8f0;
+        padding: 4px 8px;
+        border-radius: 999px;
+        background: #f8fafc;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: #f1f5f9;
+        font-size: 12px;
+        font-weight: 700;
+        color: #0f172a;
+      }
+
+      .split {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(12px);
+        transition: opacity 0.6s ease, transform 0.6s ease;
+      }
+
+      .reveal.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      @media (max-width: 900px) {
+        header { padding: 20px 24px; }
+        .hero { grid-template-columns: 1fr; padding: 28px 24px; }
+        .section { padding: 24px; }
+        .grid-2 { grid-template-columns: 1fr; }
+        .contact { grid-template-columns: 1fr; }
+        .split { grid-template-columns: 1fr; }
+        .compare { grid-template-columns: 1fr; }
+        .rss-card { grid-template-columns: 1fr; }
+        .rss-thumb { width: 100%; height: 160px; }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="logo">
+        <div class="logo-badge">N</div>
+        Naim · Portfolio BTS SIO SISR
+      </div>
+      <nav>
+        <a href="#profil">Profil</a>
+        <a href="#competences">Compétences</a>
+        <a href="#projets">Projets</a>
+        <a href="#stages">Expériences</a>
+        <a href="#formations">Formations</a>
+        <a href="#bts">Dossier BTS</a>
+        <a href="#veille">Veille</a>
+        <a href="#certifs">Certifs</a>
+        <a href="#contact">Contact</a>
+        <a href="#passions">Passions</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div>
+        <div class="chip">BTS SIO · SISR</div>
+        <h1>Portfolio BTS SIO SISR — systèmes, réseaux, sécurité.</h1>
+        <p>
+          Étudiant SISR, je construis des environnements fiables et sécurisés.
+          J'aime analyser, documenter et automatiser pour livrer des solutions stables.
+        </p>
+        <div class="cta">
+          <a
+            class="btn btn-primary"
+            href="https://mail.google.com/mail/?view=cm&fs=1&to=ragotnaimpro@gmail.com&su=Contact%20Portfolio%20BTS%20SIO&body=Bonjour%20Naim%2C%0A%0AJe%20souhaite%20vous%20contacter%20concernant%20votre%20portfolio.%0A"
+            target="_blank"
+            rel="noopener"
+          >Me contacter</a>
+          <button class="btn btn-ghost" onclick="document.getElementById('projets').scrollIntoView({behavior:'smooth'})">Voir mes projets</button>
+          <a class="btn btn-ghost" href="cv_naim.pdf" download>Télécharger CV</a>
+        </div>
+      </div>
+      <div class="hero-card">
+        <div class="metric">Localisation <span>France</span></div>
+        <div class="metric">Disponibilité <span>Alternance / Stage</span></div>
+        <div class="metric">Spécialité <span>Réseaux · Sécurité · Support</span></div>
+        <div class="metric">Objectif <span>Admin Sys & Net</span></div>
+        <div class="metric">Stack <span>Windows · Linux · AD</span></div>
+      </div>
+    </section>
+
+    <section class="section reveal" id="profil">
+      <h2>Profil</h2>
+      <div class="grid-2">
+        <div class="card">
+          <p>
+            Étudiant en BTS SIO option SISR, j’ai de solides bases en support IT,
+            réseaux et systèmes. Je cherche à apporter des solutions fiables,
+            sécurisées et faciles à maintenir.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Objectifs BTS</h3>
+          <p>Conduite de projets, support N1/N2, administration systèmes, réseau et sécurité.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal" id="infos">
+      <h2>Infos personnelles</h2>
+      <div class="cards">
+        <div class="card">
+          <h3>Coordonnées</h3>
+          <p>Email : ragotnaimpro@gmail.com</p>
+          <p>Téléphone : 0782307536</p>
+          <p>Adresse : 10 rue tout y croit, 47300 Villeneuve-sur-Lot</p>
+        </div>
+        <div class="card">
+          <h3>Langues</h3>
+          <p>Français : langue maternelle</p>
+          <p>Anglais : B1 (intermédiaire)</p>
+        </div>
+        <div class="card">
+          <h3>Permis</h3>
+          <p>Permis B · Permis A2</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal" id="competences">
+      <h2>Compétences clés</h2>
+      <div class="cards">
+        <div class="card">
+          <h3>Systèmes</h3>
+          <p>Windows Server, Linux, GPO, sauvegardes, déploiements.</p>
+        </div>
+        <div class="card">
+          <h3>Réseaux</h3>
+          <p>TCP/IP, VLAN, DHCP, DNS, VPN, supervision.</p>
+        </div>
+        <div class="card">
+          <h3>Sécurité</h3>
+          <p>Pare-feu, durcissement, MFA, bonnes pratiques.</p>
+        </div>
+        <div class="card">
+          <h3>Automatisation</h3>
+          <p>PowerShell, Bash, documentation, procédures.</p>
+        </div>
+      </div>
+      <div style="margin-top:12px;" class="tags">
+        <div class="tag">Windows Server</div>
+        <div class="tag">Linux</div>
+        <div class="tag">Active Directory</div>
+        <div class="tag">VMware</div>
+        <div class="tag">vCenter</div>
+        <div class="tag">Zabbix</div>
+        <div class="tag">Cisco</div>
+        <div class="tag">Fortigate</div>
+        <div class="tag">PHPIPAM</div>
+        <div class="tag">VoIP</div>
+        <div class="tag">Azure</div>
+      </div>
+      <div style="margin-top:16px;" class="cards">
+        <div class="card skill">
+          <strong>Administration Windows</strong>
+          <div class="bar"><span style="width:80%"></span></div>
+        </div>
+        <div class="card skill">
+          <strong>Linux & services</strong>
+          <div class="bar"><span style="width:70%"></span></div>
+        </div>
+        <div class="card skill">
+          <strong>Réseaux & sécurité</strong>
+          <div class="bar"><span style="width:75%"></span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal" id="bts">
+      <h2>Dossier BTS SIO</h2>
+      <div class="split">
+        <div class="card">
+          <span class="pill">Bloc 1</span>
+          <h3>Support & incidents</h3>
+          <p>Analyse, résolution, suivi des demandes et amélioration continue.</p>
+        </div>
+        <div class="card">
+          <span class="pill">Bloc 2</span>
+          <h3>Administration & sécurité</h3>
+          <p>Comptes, droits, sauvegardes, VPN et continuité de service.</p>
+        </div>
+        <div class="card">
+          <span class="pill">Bloc 3</span>
+          <h3>Infrastructure réseau</h3>
+          <p>VLAN, DNS/DHCP, pare-feu, supervision et QoS.</p>
+        </div>
+        <div class="card">
+          <span class="pill">Bloc 4</span>
+          <h3>Mode projet</h3>
+          <p>Besoin, budget, plan de migration, documentation et communication.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal" id="projets">
+      <h2>Projets</h2>
+      <div class="cards">
+        <div class="card">
+          <h3>Plan d'upgrade pare-feu saturé</h3>
+          <ul class="points">
+            <li>Analyse de saturation et contraintes</li>
+            <li>Choix matériel et budget</li>
+            <li>Plan de migration et sauvegardes</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Masterisation parc bancaire</h3>
+          <ul class="points">
+            <li>Procédures de préparation</li>
+            <li>Sécurisation et nomenclature</li>
+            <li>Documentation de déploiement</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Supervision réseau</h3>
+          <ul class="points">
+            <li>Monitoring des services</li>
+            <li>Alertes et tableaux de bord</li>
+            <li>Suivi des SLA</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal" id="details">
+      <h2>Projets détaillés</h2>
+      <div class="cards">
+        <div class="card">
+          <h3>Upgrade pare-feu</h3>
+          <ul class="points">
+            <li><strong>Objectif</strong> : réduire la saturation et sécuriser le périmètre</li>
+            <li><strong>Actions</strong> : audit, choix matériel, budget, sauvegardes, plan de migration</li>
+            <li><strong>Résultat</strong> : plan structuré et continuité de service</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Masterisation</h3>
+          <ul class="points">
+            <li><strong>Objectif</strong> : déploiement homogène des postes</li>
+            <li><strong>Actions</strong> : procédure, nomenclature, sécurisation, documentation</li>
+            <li><strong>Résultat</strong> : intégration rapide et fiable des postes</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal" id="stages">
+      <h2>Expériences professionnelles</h2>
+      <div class="timeline">
+        <div class="timeline-item">
+          <strong>Technicien systèmes et réseaux (alternance)</strong>
+          <div style="color:var(--muted);">Coaxis Fauguerolles · Juill. 2023 - Déc. 2024</div>
+          <ul class="points">
+            <li>Configuration firewalls & VPN</li>
+            <li>Supervision réseau avec Zabbix</li>
+            <li>Maintenance postes & mise en rack</li>
+            <li>Gestion des incidents clients</li>
+          </ul>
+        </div>
+        <div class="timeline-item">
+          <strong>Technicien alarme vidéo-surveillance</strong>
+          <div style="color:var(--muted);">Verisure / Ariane Sécurité · Déc. 2024 - Mai 2025</div>
+          <ul class="points">
+            <li>Installation & mise en service</li>
+            <li>Conseil et relation client</li>
+            <li>Suivi des interventions</li>
+          </ul>
+        </div>
+        <div class="timeline-item">
+          <strong>Technicien du territoire</strong>
+          <div style="color:var(--muted);">La Régie · Mai 2025 - Sept. 2025</div>
+          <ul class="points">
+            <li>Collecte et transport</li>
+            <li>Traçabilité via tablette</li>
+            <li>Organisation des tournées</li>
+          </ul>
+        </div>
+        <div class="timeline-item">
+          <strong>Serveur extra</strong>
+          <div style="color:var(--muted);">La Pataterie · Oct. 2022 - Août 2023</div>
+          <ul class="points">
+            <li>Accueil client</li>
+            <li>Encaissement</li>
+            <li>Gestion du rythme en forte affluence</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal" id="formations">
+      <h2>Formations</h2>
+      <div class="card">
+        <h3>BTS SIO — options SISR & SLAM</h3>
+        <p>
+          Le BTS SIO forme aux métiers de l’informatique avec deux options.
+          <strong>SISR</strong> (Systèmes & Réseaux) : administration systèmes, réseaux, sécurité,
+          virtualisation, supervision, sauvegardes et support.
+          <strong>SLAM</strong> (Solutions Logicielles & Applications) : développement web/app,
+          bases de données, APIs, tests et maintenance applicative.
+        </p>
+        <p><strong>Matières principales (BTS SIO) :</strong></p>
+        <ul class="list">
+          <li>Mathématiques</li>
+          <li>Anglais</li>
+          <li>Culture générale & expression</li>
+          <li>CEJM (culture économique, juridique & managériale)</li>
+          <li>Réseaux</li>
+          <li>Systèmes</li>
+          <li>Cybersécurité</li>
+          <li>Projets / ateliers de professionnalisation</li>
+        </ul>
+        <div class="cards">
+          <div class="card">
+            <h3>Support & ITSM</h3>
+            <p>Gestion d’incidents, suivi des demandes, procédures et documentation.</p>
+          </div>
+          <div class="card">
+            <h3>Systèmes</h3>
+            <p>Administration Windows/Linux, comptes, droits, GPO, services.</p>
+          </div>
+          <div class="card">
+            <h3>Réseaux</h3>
+            <p>TCP/IP, DNS, DHCP, VLAN, routage, VPN, supervision.</p>
+          </div>
+          <div class="card">
+            <h3>Sécurité</h3>
+            <p>Durcissement, sauvegardes, MFA, cybersécurité, bonnes pratiques.</p>
+          </div>
+          <div class="card">
+            <h3>Virtualisation</h3>
+            <p>VMware/Hyper-V, ressources, haute disponibilité, snapshots.</p>
+          </div>
+          <div class="card">
+            <h3>Développement & BDD</h3>
+            <p>Notions web/app, bases de données, APIs, tests, maintenance.</p>
+          </div>
+          <div class="card">
+            <h3>Gestion de projet</h3>
+            <p>Analyse des besoins, budget, planification, livrables.</p>
+          </div>
+          <div class="card">
+            <h3>Communication pro</h3>
+            <p>Expression écrite/orale, travail en équipe, relation client.</p>
+          </div>
+        </div>
+        </p>
+        <p>
+          <strong>Métiers SISR :</strong> administrateur systèmes & réseaux, technicien réseau,
+          technicien support, technicien cybersécurité.
+          <br />
+          <strong>Métiers SLAM :</strong> développeur web/app, analyste-programmeur, intégrateur,
+          support applicatif.
+        </p>
+        <p>
+          <strong>Poursuites d’études :</strong> licence pro, bachelor IT, école d’ingénieur,
+          spécialisation cybersécurité ou cloud.
+        </p>
+        <p style="margin-top:12px;">
+          <strong>Parcours personnel :</strong> BTS SIO SISR (STUDI · en cours),
+          niveau BTS SIO SISR (Campus numérique Agen · 2023–2024),
+          Bac STI2D Énergie & Environnement (Sainte Catherine · 2023).
+        </p>
+      </div>
+      <div style="margin-top:12px;" class="cards">
+        <div class="card">
+          <h3>Langues</h3>
+          <p>Français : langue maternelle · Anglais : B1</p>
+        </div>
+        <div class="card">
+          <h3>Permis</h3>
+          <p>Permis B · Permis A2</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal" id="veille">
+      <h2>Veille technologique</h2>
+      <div class="card">
+        <h3>Veille en direct (RSS)</h3>
+        <p style="color:var(--muted); font-size:13px;">
+          3 sections simples avec aperçus cliquables : Cyber, Tech, Cloud. 
+          Si tu ouvres le fichier en local et que rien n'apparaît, certains navigateurs bloquent les appels externes.
+        </p>
+        <div class="grid-2" style="margin-top:12px;">
+          <div>
+            <strong>Cyber & Vulnérabilités</strong>
+            <div id="rss-cyber" class="rss-grid"></div>
+          </div>
+          <div>
+            <strong>Tech & IT</strong>
+            <div id="rss-tech" class="rss-grid"></div>
+          </div>
+        </div>
+        <div class="grid-2" style="margin-top:12px;">
+          <div>
+            <strong>Cloud & Systèmes</strong>
+            <div id="rss-cloud" class="rss-grid"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal" id="certifs">
+      <h2>Certifications</h2>
+      <div class="cards">
+        <div class="card">
+          <h3>PIX</h3>
+          <p>Niveau numérique validé.</p>
+        </div>
+        <div class="card">
+          <h3>SecNumacadémie</h3>
+          <p>Bonnes pratiques cybersécurité.</p>
+        </div>
+        <div class="card">
+          <h3>Autres</h3>
+          <p>À compléter selon tes certifications.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal" id="contact">
+      <h2>Contact</h2>
+      <div class="contact">
+        <div class="card">
+          <h3>Coordonnées</h3>
+          <p>Email : ragotnaimpro@gmail.com</p>
+          <p>Téléphone : 0782307536</p>
+          <p>LinkedIn : linkedin.com/in/naim</p>
+          <p>
+            Contacter via Gmail :
+            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=ragotnaimpro@gmail.com&su=Contact%20Portfolio%20BTS%20SIO&body=Bonjour%20Naim%2C%0A%0AJe%20souhaite%20vous%20contacter%20concernant%20votre%20portfolio.%0A" target="_blank" rel="noopener">
+              Ouvrir Gmail
+            </a>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal" id="passions">
+      <h2>Passions</h2>
+      <div class="cards">
+        <div class="card">
+          <h3>Technologies</h3>
+          <p>Explorer les nouvelles technologies et tester en labo.</p>
+        </div>
+        <div class="card">
+          <h3>Impression 3D</h3>
+          <p>Créer et tester avec l'impression 3D.</p>
+        </div>
+        <div class="card">
+          <h3>Drones</h3>
+          <p>Piloter et filmer avec des drones.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">Portfolio BTS SIO SISR · Naim · <span id="year"></span></div>
+
+    <script>
+      const reveal = () => {
+        document.querySelectorAll('.reveal').forEach((el) => {
+          const rect = el.getBoundingClientRect();
+          if (rect.top < window.innerHeight - 60) {
+            el.classList.add('show');
+          }
+        });
+      };
+      window.addEventListener('scroll', reveal);
+      reveal();
+      document.getElementById('year').textContent = new Date().getFullYear();
+
+      const rssSources = {
+        cyber: [
+          { url: "https://www.cisa.gov/cybersecurity-advisories/alerts.xml", name: "CISA" },
+          { url: "https://www.cert.at/cert-at.en.blog.rss_2.0.xml", name: "CERT.at" }
+        ],
+        tech: [
+          { url: "https://hnrss.org/frontpage", name: "Hacker News" },
+          { url: "https://www.nist.gov/news-events/news/rss.xml", name: "NIST News" }
+        ],
+        cloud: [
+          { url: "https://aws.amazon.com/blogs/aws/feed/", name: "AWS Blog" },
+          { url: "https://aws.amazon.com/security/security-bulletins/rss/", name: "AWS Bulletins" }
+        ],
+      };
+
+      async function fetchRss(url) {
+        const endpoint = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+        try {
+          const res = await fetch(endpoint);
+          const data = await res.json();
+          if (data && data.contents) return data.contents;
+        } catch (e) {
+          // fallback below
+        }
+        const fallback = `https://r.jina.ai/http://${url.replace(/^https?:\/\//, "")}`;
+        const res2 = await fetch(fallback);
+        return await res2.text();
+      }
+
+      function parseRss(xmlText) {
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(xmlText, "text/xml");
+        return Array.from(xml.querySelectorAll("item")).slice(0, 4).map((item) => {
+          const media = item.querySelector("media\\:thumbnail, media\\:content, enclosure");
+          const img = media?.getAttribute("url") || "";
+          return {
+            title: item.querySelector("title")?.textContent || "Sans titre",
+            link: item.querySelector("link")?.textContent || "#",
+            date: item.querySelector("pubDate")?.textContent || "",
+            img
+          };
+        });
+      }
+
+      async function loadRss(targetId, sources, fallbackItems) {
+        const container = document.getElementById(targetId);
+        container.innerHTML = "";
+        try {
+          for (const s of sources) {
+            const xml = await fetchRss(s.url);
+            const items = parseRss(xml);
+            items.forEach((i) => {
+              const a = document.createElement("a");
+              a.className = "rss-card";
+              a.href = i.link;
+              a.target = "_blank";
+              a.rel = "noopener";
+              const fallbackImg = `https://image.thum.io/get/width/300/${i.link}`;
+              const thumb = i.img
+                ? `<img src="${i.img}" alt="aperçu" />`
+                : `<img src="${fallbackImg}" alt="aperçu" />`;
+              a.innerHTML = `
+                <div class="rss-thumb">${thumb}</div>
+                <div>
+                  <div class="rss-title">${i.title}</div>
+                  <div class="rss-source">${s.name}</div>
+                  <div class="rss-meta">${i.date}</div>
+                </div>
+              `;
+              container.appendChild(a);
+            });
+          }
+          if (!container.children.length) throw new Error("empty");
+        } catch (e) {
+          container.innerHTML = "";
+          (fallbackItems || []).forEach((i) => {
+            const a = document.createElement("a");
+            a.className = "rss-card";
+            a.href = i.link;
+            a.target = "_blank";
+            a.rel = "noopener";
+            const fallbackImg = `https://image.thum.io/get/width/300/${i.link}`;
+            const thumb = i.img
+              ? `<img src="${i.img}" alt="aperçu" />`
+              : `<img src="${fallbackImg}" alt="aperçu" />`;
+            a.innerHTML = `
+              <div class="rss-thumb">${thumb}</div>
+              <div>
+                <div class="rss-title">${i.title}</div>
+                <div class="rss-source">${i.source}</div>
+                <div class="rss-meta">${i.date}</div>
+              </div>
+            `;
+            container.appendChild(a);
+          });
+        }
+      }
+
+      const fallbackCyber = [
+        { title: "Aperçu Cyber CISA", link: "https://www.cisa.gov/cybersecurity-advisories/alerts", source: "CISA", date: "Flux de démonstration", img: "" },
+        { title: "Aperçu CERT.at", link: "https://www.cert.at", source: "CERT.at", date: "Flux de démonstration", img: "" }
+      ];
+      const fallbackTech = [
+        { title: "Aperçu Hacker News", link: "https://news.ycombinator.com", source: "Hacker News", date: "Flux de démonstration", img: "" },
+        { title: "Aperçu NIST News", link: "https://www.nist.gov/news-events/news", source: "NIST", date: "Flux de démonstration", img: "" }
+      ];
+      const fallbackInfra = [
+        { title: "Aperçu CERT.at Infra", link: "https://www.cert.at", source: "CERT.at", date: "Flux de démonstration", img: "" }
+      ];
+      const fallbackCloud = [
+        { title: "Aperçu AWS Blog", link: "https://aws.amazon.com/blogs/aws/", source: "AWS", date: "Flux de démonstration", img: "" },
+        { title: "Aperçu AWS Bulletins", link: "https://aws.amazon.com/security/security-bulletins/", source: "AWS", date: "Flux de démonstration", img: "" }
+      ];
+
+      loadRss("rss-cyber", rssSources.cyber, fallbackCyber);
+      loadRss("rss-tech", rssSources.tech, fallbackTech);
+      loadRss("rss-cloud", rssSources.cloud, fallbackCloud);
+    </script>
+  </body>
+</html>
