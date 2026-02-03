@@ -25,7 +25,6 @@
         margin: 0;
         font-family: "Manrope", "Segoe UI", sans-serif;
         color: var(--ink);
-        line-height: 1.55;
         background:
           radial-gradient(circle at 80% 10%, #ffe9b7 0, transparent 45%),
           radial-gradient(circle at 15% 15%, #c7f2ee 0, transparent 40%),
@@ -165,18 +164,6 @@
       .section h2 {
         margin: 0 0 14px;
         font-size: 22px;
-        position: relative;
-        display: inline-block;
-      }
-      .section h2::after {
-        content: "";
-        position: absolute;
-        left: 0;
-        bottom: -6px;
-        width: 48px;
-        height: 3px;
-        border-radius: 999px;
-        background: linear-gradient(90deg, var(--brand), #0ea5a4);
       }
 
       .cards {
@@ -203,75 +190,10 @@
         color: var(--muted);
         font-size: 14px;
       }
-      .list {
-        margin: 8px 0 0;
-        padding-left: 18px;
-        color: var(--muted);
-        font-size: 14px;
-        list-style: none;
-        padding-left: 0;
-      }
-      .list li {
-        margin: 4px 0;
-        padding-left: 18px;
-        position: relative;
-      }
-      .list li::before {
-        content: "";
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, var(--brand), #0ea5a4);
-        position: absolute;
-        left: 0;
-        top: 7px;
-      }
-      .points {
-        margin: 6px 0 0;
-        padding-left: 0;
-        list-style: none;
-        color: var(--muted);
-        font-size: 13px;
-      }
-      .points li {
-        margin: 4px 0;
-        padding-left: 16px;
-        position: relative;
-      }
-      .points li::before {
-        content: "•";
-        position: absolute;
-        left: 0;
-        color: var(--brand);
-        font-weight: 800;
-      }
 
       .card:hover {
         transform: translateY(-3px);
         box-shadow: var(--shadow);
-      }
-      .pill-compare {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 6px 10px;
-        border-radius: 999px;
-        background: #e0f2fe;
-        color: #0369a1;
-        font-size: 12px;
-        font-weight: 800;
-      }
-      .compare {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 16px;
-        margin-top: 16px;
-      }
-      .compare .card {
-        border-left: 4px solid #0f766e;
-      }
-      .compare .card.slam {
-        border-left-color: #f59e0b;
       }
 
       .tags {
@@ -352,78 +274,25 @@
         color: var(--muted);
         font-size: 12px;
       }
-      .section + .section {
-        margin-top: 6px;
-      }
       .rss-grid {
         display: grid;
         gap: 12px;
       }
-      .rss-card {
-        display: grid;
-        grid-template-columns: 110px 1fr;
-        gap: 12px;
-        padding: 10px;
+      .rss-item {
+        padding: 10px 12px;
         border: 1px solid var(--line);
-        border-radius: 14px;
+        border-radius: 12px;
         background: #f8fafc;
+      }
+      .rss-item a {
+        color: var(--ink);
         text-decoration: none;
-        color: inherit;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        font-weight: 700;
       }
-      .rss-card:hover {
-        transform: translateY(-3px);
-        box-shadow: var(--shadow);
-      }
-      .rss-thumb {
-        width: 110px;
-        height: 80px;
-        border-radius: 10px;
-        background: linear-gradient(135deg, #e2e8f0, #f8fafc);
-        display: grid;
-        place-items: center;
-        font-size: 12px;
+      .rss-item small {
         color: var(--muted);
-        overflow: hidden;
-      }
-      .rss-thumb img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
         display: block;
-      }
-      .rss-title {
-        font-weight: 800;
-        font-size: 14px;
-        margin-bottom: 6px;
-      }
-      .rss-meta {
-        color: var(--muted);
-        font-size: 12px;
-      }
-      .rss-source {
-        color: #0e7490;
-        font-size: 12px;
-        font-weight: 700;
-      }
-      .rss-grid {
-        margin-top: 8px;
-      }
-      .rss-links {
-        margin: 6px 0 10px;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-      }
-      .rss-links a {
-        font-size: 12px;
-        font-weight: 700;
-        color: #0e7490;
-        text-decoration: none;
-        border: 1px solid #e2e8f0;
-        padding: 4px 8px;
-        border-radius: 999px;
-        background: #f8fafc;
+        margin-top: 6px;
       }
 
       .pill {
@@ -462,9 +331,6 @@
         .grid-2 { grid-template-columns: 1fr; }
         .contact { grid-template-columns: 1fr; }
         .split { grid-template-columns: 1fr; }
-        .compare { grid-template-columns: 1fr; }
-        .rss-card { grid-template-columns: 1fr; }
-        .rss-thumb { width: 100%; height: 160px; }
       }
     </style>
   </head>
@@ -497,14 +363,15 @@
           J'aime analyser, documenter et automatiser pour livrer des solutions stables.
         </p>
         <div class="cta">
+          <button class="btn btn-primary" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Me contacter</button>
+          <button class="btn btn-ghost" onclick="document.getElementById('projets').scrollIntoView({behavior:'smooth'})">Voir mes projets</button>
+          <a class="btn btn-ghost" href="cv_naim.pdf" download>Télécharger CV</a>
           <a
-            class="btn btn-primary"
+            class="btn btn-ghost"
             href="https://mail.google.com/mail/?view=cm&fs=1&to=ragotnaimpro@gmail.com&su=Contact%20Portfolio%20BTS%20SIO&body=Bonjour%20Naim%2C%0A%0AJe%20souhaite%20vous%20contacter%20concernant%20votre%20portfolio.%0A"
             target="_blank"
             rel="noopener"
-          >Me contacter</a>
-          <button class="btn btn-ghost" onclick="document.getElementById('projets').scrollIntoView({behavior:'smooth'})">Voir mes projets</button>
-          <a class="btn btn-ghost" href="cv_naim.pdf" download>Télécharger CV</a>
+          >Email direct (Gmail)</a>
         </div>
       </div>
       <div class="hero-card">
@@ -634,27 +501,15 @@
       <div class="cards">
         <div class="card">
           <h3>Plan d'upgrade pare-feu saturé</h3>
-          <ul class="points">
-            <li>Analyse de saturation et contraintes</li>
-            <li>Choix matériel et budget</li>
-            <li>Plan de migration et sauvegardes</li>
-          </ul>
+          <p>Analyse de saturation, plan de migration, choix matériel, budget, sauvegardes.</p>
         </div>
         <div class="card">
           <h3>Masterisation parc bancaire</h3>
-          <ul class="points">
-            <li>Procédures de préparation</li>
-            <li>Sécurisation et nomenclature</li>
-            <li>Documentation de déploiement</li>
-          </ul>
+          <p>Procédures de préparation, sécurisation, nomenclature et documentation.</p>
         </div>
         <div class="card">
           <h3>Supervision réseau</h3>
-          <ul class="points">
-            <li>Monitoring des services</li>
-            <li>Alertes et tableaux de bord</li>
-            <li>Suivi des SLA</li>
-          </ul>
+          <p>Alertes, monitoring, tableaux de bord et suivi des services.</p>
         </div>
       </div>
     </section>
@@ -664,19 +519,15 @@
       <div class="cards">
         <div class="card">
           <h3>Upgrade pare-feu</h3>
-          <ul class="points">
-            <li><strong>Objectif</strong> : réduire la saturation et sécuriser le périmètre</li>
-            <li><strong>Actions</strong> : audit, choix matériel, budget, sauvegardes, plan de migration</li>
-            <li><strong>Résultat</strong> : plan structuré et continuité de service</li>
-          </ul>
+          <p><strong>Objectif</strong> : réduire la saturation et sécuriser le périmètre.</p>
+          <p><strong>Actions</strong> : audit, choix matériel, budget, sauvegardes, plan de migration.</p>
+          <p><strong>Résultat</strong> : plan structuré et continuité de service.</p>
         </div>
         <div class="card">
           <h3>Masterisation</h3>
-          <ul class="points">
-            <li><strong>Objectif</strong> : déploiement homogène des postes</li>
-            <li><strong>Actions</strong> : procédure, nomenclature, sécurisation, documentation</li>
-            <li><strong>Résultat</strong> : intégration rapide et fiable des postes</li>
-          </ul>
+          <p><strong>Objectif</strong> : déploiement homogène des postes.</p>
+          <p><strong>Actions</strong> : procédure, nomenclature, sécurisation, documentation.</p>
+          <p><strong>Résultat</strong> : intégration rapide et fiable des postes.</p>
         </div>
       </div>
     </section>
@@ -687,116 +538,41 @@
         <div class="timeline-item">
           <strong>Technicien systèmes et réseaux (alternance)</strong>
           <div style="color:var(--muted);">Coaxis Fauguerolles · Juill. 2023 - Déc. 2024</div>
-          <ul class="points">
-            <li>Configuration firewalls & VPN</li>
-            <li>Supervision réseau avec Zabbix</li>
-            <li>Maintenance postes & mise en rack</li>
-            <li>Gestion des incidents clients</li>
-          </ul>
+          <div>Configuration firewalls & VPN, supervision Zabbix, maintenance postes, mise en rack, gestion incidents.</div>
         </div>
         <div class="timeline-item">
           <strong>Technicien alarme vidéo-surveillance</strong>
           <div style="color:var(--muted);">Verisure / Ariane Sécurité · Déc. 2024 - Mai 2025</div>
-          <ul class="points">
-            <li>Installation & mise en service</li>
-            <li>Conseil et relation client</li>
-            <li>Suivi des interventions</li>
-          </ul>
+          <div>Installation et mise en service, conseil, relation client, suivi des interventions.</div>
         </div>
         <div class="timeline-item">
           <strong>Technicien du territoire</strong>
           <div style="color:var(--muted);">La Régie · Mai 2025 - Sept. 2025</div>
-          <ul class="points">
-            <li>Collecte et transport</li>
-            <li>Traçabilité via tablette</li>
-            <li>Organisation des tournées</li>
-          </ul>
+          <div>Collecte et transport, traçabilité via tablette, organisation des tournées.</div>
         </div>
         <div class="timeline-item">
           <strong>Serveur extra</strong>
           <div style="color:var(--muted);">La Pataterie · Oct. 2022 - Août 2023</div>
-          <ul class="points">
-            <li>Accueil client</li>
-            <li>Encaissement</li>
-            <li>Gestion du rythme en forte affluence</li>
-          </ul>
+          <div>Accueil client, encaissement, gestion du rythme en forte affluence.</div>
         </div>
       </div>
     </section>
 
     <section class="section reveal" id="formations">
       <h2>Formations</h2>
-      <div class="card">
-        <h3>BTS SIO — options SISR & SLAM</h3>
-        <p>
-          Le BTS SIO forme aux métiers de l’informatique avec deux options.
-          <strong>SISR</strong> (Systèmes & Réseaux) : administration systèmes, réseaux, sécurité,
-          virtualisation, supervision, sauvegardes et support.
-          <strong>SLAM</strong> (Solutions Logicielles & Applications) : développement web/app,
-          bases de données, APIs, tests et maintenance applicative.
-        </p>
-        <p><strong>Matières principales (BTS SIO) :</strong></p>
-        <ul class="list">
-          <li>Mathématiques</li>
-          <li>Anglais</li>
-          <li>Culture générale & expression</li>
-          <li>CEJM (culture économique, juridique & managériale)</li>
-          <li>Réseaux</li>
-          <li>Systèmes</li>
-          <li>Cybersécurité</li>
-          <li>Projets / ateliers de professionnalisation</li>
-        </ul>
-        <div class="cards">
-          <div class="card">
-            <h3>Support & ITSM</h3>
-            <p>Gestion d’incidents, suivi des demandes, procédures et documentation.</p>
-          </div>
-          <div class="card">
-            <h3>Systèmes</h3>
-            <p>Administration Windows/Linux, comptes, droits, GPO, services.</p>
-          </div>
-          <div class="card">
-            <h3>Réseaux</h3>
-            <p>TCP/IP, DNS, DHCP, VLAN, routage, VPN, supervision.</p>
-          </div>
-          <div class="card">
-            <h3>Sécurité</h3>
-            <p>Durcissement, sauvegardes, MFA, cybersécurité, bonnes pratiques.</p>
-          </div>
-          <div class="card">
-            <h3>Virtualisation</h3>
-            <p>VMware/Hyper-V, ressources, haute disponibilité, snapshots.</p>
-          </div>
-          <div class="card">
-            <h3>Développement & BDD</h3>
-            <p>Notions web/app, bases de données, APIs, tests, maintenance.</p>
-          </div>
-          <div class="card">
-            <h3>Gestion de projet</h3>
-            <p>Analyse des besoins, budget, planification, livrables.</p>
-          </div>
-          <div class="card">
-            <h3>Communication pro</h3>
-            <p>Expression écrite/orale, travail en équipe, relation client.</p>
-          </div>
+      <div class="cards">
+        <div class="card">
+          <h3>BTS SIO SISR</h3>
+          <p>STUDI · En cours</p>
         </div>
-        </p>
-        <p>
-          <strong>Métiers SISR :</strong> administrateur systèmes & réseaux, technicien réseau,
-          technicien support, technicien cybersécurité.
-          <br />
-          <strong>Métiers SLAM :</strong> développeur web/app, analyste-programmeur, intégrateur,
-          support applicatif.
-        </p>
-        <p>
-          <strong>Poursuites d’études :</strong> licence pro, bachelor IT, école d’ingénieur,
-          spécialisation cybersécurité ou cloud.
-        </p>
-        <p style="margin-top:12px;">
-          <strong>Parcours personnel :</strong> BTS SIO SISR (STUDI · en cours),
-          niveau BTS SIO SISR (Campus numérique Agen · 2023–2024),
-          Bac STI2D Énergie & Environnement (Sainte Catherine · 2023).
-        </p>
+        <div class="card">
+          <h3>Niveau BTS SIO SISR</h3>
+          <p>Campus numérique Agen · Août 2023 - Déc. 2024</p>
+        </div>
+        <div class="card">
+          <h3>Bac STI2D Énergie & Environnement</h3>
+          <p>Sainte Catherine Villeneuve-sur-Lot · 2023</p>
+        </div>
       </div>
       <div style="margin-top:12px;" class="cards">
         <div class="card">
@@ -812,26 +588,58 @@
 
     <section class="section reveal" id="veille">
       <h2>Veille technologique</h2>
-      <div class="card">
+      <div class="grid-2">
+        <div class="card">
+          <h3>Objectif</h3>
+          <p>Suivre l'actualité cyber, les vulnérabilités critiques et les tendances infra.</p>
+          <p>Outils : Feedly / Inoreader + alertes éditeurs.</p>
+        </div>
+        <div class="card">
+          <h3>Rythme</h3>
+          <p>Quotidien : alertes critiques · Hebdo : synthèse & notes.</p>
+        </div>
+      </div>
+      <div style="margin-top:16px;" class="cards">
+        <div class="card">
+          <h3>Cyber / Vulnérabilités (RSS)</h3>
+          <p>• CISA Alerts (RSS)</p>
+          <p>• NIST Cybersecurity News (RSS)</p>
+          <p>• NIST Cybersecurity Insights Blog (RSS)</p>
+        </div>
+        <div class="card">
+          <h3>Tech / IT général (RSS)</h3>
+          <p>• Hacker News Frontpage (RSS)</p>
+          <p>• NIST News (RSS)</p>
+        </div>
+        <div class="card">
+          <h3>CERT & organismes (RSS)</h3>
+          <p>• CERT.at Blog (RSS)</p>
+          <p>• CERT-FR : suivi direct du site + réseaux officiels</p>
+        </div>
+      </div>
+      <div style="margin-top:12px;" class="card">
+        <h3>Flux RSS utilisés</h3>
+        <p>https://www.cisa.gov/cybersecurity-advisories/alerts.xml</p>
+        <p>https://www.nist.gov/news-events/cybersecurity/rss.xml</p>
+        <p>https://www.nist.gov/blogs/cybersecurity-insights/rss.xml</p>
+        <p>https://hnrss.org/frontpage</p>
+        <p>https://www.nist.gov/news-events/news/rss.xml</p>
+        <p>https://www.cert.at/cert-at.en.blog.rss_2.0.xml</p>
+      </div>
+      <div style="margin-top:16px;" class="card">
         <h3>Veille en direct (RSS)</h3>
         <p style="color:var(--muted); font-size:13px;">
-          3 sections simples avec aperçus cliquables : Cyber, Tech, Cloud. 
-          Si tu ouvres le fichier en local et que rien n'apparaît, certains navigateurs bloquent les appels externes.
+          Chargement automatique des derniers titres. Si tu ouvres le fichier en local et que rien
+          n'apparaît, c'est normal : certains navigateurs bloquent les appels externes en local.
         </p>
-        <div class="grid-2" style="margin-top:12px;">
+        <div class="grid-2" style="margin-top:10px;">
           <div>
-            <strong>Cyber & Vulnérabilités</strong>
+            <strong>Cyber / vulnérabilités</strong>
             <div id="rss-cyber" class="rss-grid"></div>
           </div>
           <div>
-            <strong>Tech & IT</strong>
+            <strong>Tech / IT</strong>
             <div id="rss-tech" class="rss-grid"></div>
-          </div>
-        </div>
-        <div class="grid-2" style="margin-top:12px;">
-          <div>
-            <strong>Cloud & Systèmes</strong>
-            <div id="rss-cloud" class="rss-grid"></div>
           </div>
         </div>
       </div>
@@ -863,12 +671,15 @@
           <p>Email : ragotnaimpro@gmail.com</p>
           <p>Téléphone : 0782307536</p>
           <p>LinkedIn : linkedin.com/in/naim</p>
-          <p>
-            Contacter via Gmail :
-            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=ragotnaimpro@gmail.com&su=Contact%20Portfolio%20BTS%20SIO&body=Bonjour%20Naim%2C%0A%0AJe%20souhaite%20vous%20contacter%20concernant%20votre%20portfolio.%0A" target="_blank" rel="noopener">
-              Ouvrir Gmail
-            </a>
-          </p>
+        </div>
+        <div class="card">
+          <h3>Message rapide</h3>
+          <form>
+            <input placeholder="Nom" />
+            <input placeholder="Email" />
+            <textarea rows="4" placeholder="Votre message"></textarea>
+            <button type="button" class="btn btn-primary">Envoyer</button>
+          </form>
         </div>
       </div>
     </section>
@@ -891,7 +702,7 @@
       </div>
     </section>
 
-    <div class="footer">Portfolio BTS SIO SISR · Naim · <span id="year"></span></div>
+    <div class="footer">Portfolio BTS SIO SISR test· Naim · <span id="year"></span></div>
 
     <script>
       const reveal = () => {
@@ -908,121 +719,54 @@
 
       const rssSources = {
         cyber: [
-          { url: "https://www.cisa.gov/cybersecurity-advisories/alerts.xml", name: "CISA" },
-          { url: "https://www.cert.at/cert-at.en.blog.rss_2.0.xml", name: "CERT.at" }
+          "https://www.cisa.gov/cybersecurity-advisories/alerts.xml",
+          "https://www.nist.gov/news-events/cybersecurity/rss.xml"
         ],
         tech: [
-          { url: "https://hnrss.org/frontpage", name: "Hacker News" },
-          { url: "https://www.nist.gov/news-events/news/rss.xml", name: "NIST News" }
-        ],
-        cloud: [
-          { url: "https://aws.amazon.com/blogs/aws/feed/", name: "AWS Blog" },
-          { url: "https://aws.amazon.com/security/security-bulletins/rss/", name: "AWS Bulletins" }
-        ],
+          "https://hnrss.org/frontpage",
+          "https://www.nist.gov/news-events/news/rss.xml"
+        ]
       };
 
       async function fetchRss(url) {
         const endpoint = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
-        try {
-          const res = await fetch(endpoint);
-          const data = await res.json();
-          if (data && data.contents) return data.contents;
-        } catch (e) {
-          // fallback below
-        }
-        const fallback = `https://r.jina.ai/http://${url.replace(/^https?:\/\//, "")}`;
-        const res2 = await fetch(fallback);
-        return await res2.text();
+        const res = await fetch(endpoint);
+        const data = await res.json();
+        return data.contents;
       }
 
       function parseRss(xmlText) {
         const parser = new DOMParser();
         const xml = parser.parseFromString(xmlText, "text/xml");
-        return Array.from(xml.querySelectorAll("item")).slice(0, 4).map((item) => {
-          const media = item.querySelector("media\\:thumbnail, media\\:content, enclosure");
-          const img = media?.getAttribute("url") || "";
-          return {
-            title: item.querySelector("title")?.textContent || "Sans titre",
-            link: item.querySelector("link")?.textContent || "#",
-            date: item.querySelector("pubDate")?.textContent || "",
-            img
-          };
-        });
+        return Array.from(xml.querySelectorAll("item")).slice(0, 5).map((item) => ({
+          title: item.querySelector("title")?.textContent || "Sans titre",
+          link: item.querySelector("link")?.textContent || "#",
+          date: item.querySelector("pubDate")?.textContent || ""
+        }));
       }
 
-      async function loadRss(targetId, sources, fallbackItems) {
+      async function loadRss(targetId, urls) {
         const container = document.getElementById(targetId);
         container.innerHTML = "";
         try {
-          for (const s of sources) {
-            const xml = await fetchRss(s.url);
+          for (const url of urls) {
+            const xml = await fetchRss(url);
             const items = parseRss(xml);
             items.forEach((i) => {
-              const a = document.createElement("a");
-              a.className = "rss-card";
-              a.href = i.link;
-              a.target = "_blank";
-              a.rel = "noopener";
-              const fallbackImg = `https://image.thum.io/get/width/300/${i.link}`;
-              const thumb = i.img
-                ? `<img src="${i.img}" alt="aperçu" />`
-                : `<img src="${fallbackImg}" alt="aperçu" />`;
-              a.innerHTML = `
-                <div class="rss-thumb">${thumb}</div>
-                <div>
-                  <div class="rss-title">${i.title}</div>
-                  <div class="rss-source">${s.name}</div>
-                  <div class="rss-meta">${i.date}</div>
-                </div>
-              `;
-              container.appendChild(a);
+              const div = document.createElement("div");
+              div.className = "rss-item";
+              div.innerHTML = `<a href="${i.link}" target="_blank" rel="noopener">${i.title}</a>
+                <small>${i.date}</small>`;
+              container.appendChild(div);
             });
           }
-          if (!container.children.length) throw new Error("empty");
         } catch (e) {
-          container.innerHTML = "";
-          (fallbackItems || []).forEach((i) => {
-            const a = document.createElement("a");
-            a.className = "rss-card";
-            a.href = i.link;
-            a.target = "_blank";
-            a.rel = "noopener";
-            const fallbackImg = `https://image.thum.io/get/width/300/${i.link}`;
-            const thumb = i.img
-              ? `<img src="${i.img}" alt="aperçu" />`
-              : `<img src="${fallbackImg}" alt="aperçu" />`;
-            a.innerHTML = `
-              <div class="rss-thumb">${thumb}</div>
-              <div>
-                <div class="rss-title">${i.title}</div>
-                <div class="rss-source">${i.source}</div>
-                <div class="rss-meta">${i.date}</div>
-              </div>
-            `;
-            container.appendChild(a);
-          });
+          container.innerHTML = "<div class='rss-item'>Impossible de charger les flux pour le moment.</div>";
         }
       }
 
-      const fallbackCyber = [
-        { title: "Aperçu Cyber CISA", link: "https://www.cisa.gov/cybersecurity-advisories/alerts", source: "CISA", date: "Flux de démonstration", img: "" },
-        { title: "Aperçu CERT.at", link: "https://www.cert.at", source: "CERT.at", date: "Flux de démonstration", img: "" }
-      ];
-      const fallbackTech = [
-        { title: "Aperçu Hacker News", link: "https://news.ycombinator.com", source: "Hacker News", date: "Flux de démonstration", img: "" },
-        { title: "Aperçu NIST News", link: "https://www.nist.gov/news-events/news", source: "NIST", date: "Flux de démonstration", img: "" }
-      ];
-      const fallbackInfra = [
-        { title: "Aperçu CERT.at Infra", link: "https://www.cert.at", source: "CERT.at", date: "Flux de démonstration", img: "" }
-      ];
-      const fallbackCloud = [
-        { title: "Aperçu AWS Blog", link: "https://aws.amazon.com/blogs/aws/", source: "AWS", date: "Flux de démonstration", img: "" },
-        { title: "Aperçu AWS Bulletins", link: "https://aws.amazon.com/security/security-bulletins/", source: "AWS", date: "Flux de démonstration", img: "" }
-      ];
-
-      loadRss("rss-cyber", rssSources.cyber, fallbackCyber);
-      loadRss("rss-tech", rssSources.tech, fallbackTech);
-      loadRss("rss-cloud", rssSources.cloud, fallbackCloud);
+      loadRss("rss-cyber", rssSources.cyber);
+      loadRss("rss-tech", rssSources.tech);
     </script>
   </body>
 </html>
