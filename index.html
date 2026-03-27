@@ -13,8 +13,8 @@
     <section class="hero reveal is-visible">
       <article class="hero-main">
         <div class="eyebrow">Portfolio BTS SIO SISR + poste de pilotage local</div>
-        <h1>BTS SIO, projets, devis et outils sur une meme base.</h1>
-        <p>Le site rassemble un espace BTS, un espace entreprise pour NJR Solutions et des outils utiles au quotidien sans melanger les usages.</p>
+        <h1>BTS SIO, services locaux et demandes en ligne sur une meme base.</h1>
+        <p>Le site rassemble une vitrine publique pour NJR Solutions, un espace BTS prive et un parcours de demande plus simple pour les visiteurs.</p>
         <div class="actions">
           <a class="btn btn--primary" href="bts.html" data-private-only>Ouvrir l'espace BTS</a>
           <a class="btn btn--secondary" href="projets.html" data-private-only>Explorer les projets</a>
@@ -90,8 +90,8 @@
         </article>
         <article class="portal-card portal-card--business">
           <div class="eyebrow">Espace Entreprise</div>
-          <h3>Ton hub services, interventions, clients et estimation.</h3>
-          <p>Services proposes, brief client, checklist d'intervention, suivi local et acces direct au simulateur NJR.</p>
+          <h3>Services, demandes et estimation sur un parcours plus lisible.</h3>
+          <p>Le visiteur retrouve les activites, les demandes types, les prestations et l'acces direct au bon simulateur.</p>
           <div class="portal-points">
             <span>Offres claires</span>
             <span>Brief client</span>
@@ -100,7 +100,7 @@
           </div>
           <div class="actions">
             <a class="btn btn--accent" href="entreprise.html">Entrer dans l'espace entreprise</a>
-            <a class="btn btn--secondary" href="outils.html">Ouvrir les outils</a>
+            <a class="btn btn--secondary" href="devis_njr.html">Ouvrir les demandes</a>
           </div>
         </article>
       </div>
@@ -115,24 +115,24 @@
       </div>
       <div class="cards-grid cards-grid--wide">
         <article class="card">
-          <h3>Espace BTS</h3>
-          <p>Checklist locale, progression, ressources E4 / E5, notes de travail et acces rapide a tes supports.</p>
-          <div style="margin-top:14px;"><a href="bts.html">Ouvrir BTS</a></div>
+          <h3>Demande informatique</h3>
+          <p>Pour PC lent, installation, imprimante, Wi-Fi, reseau local, sauvegarde ou petite maintenance pro.</p>
+          <div style="margin-top:14px;"><a href="demande-informatique.html">Ouvrir informatique</a></div>
         </article>
         <article class="card">
-          <h3>Projets valorises</h3>
-          <p>Cas techniques filtrables, plus lisibles pour un oral, une candidature ou un client.</p>
-          <div style="margin-top:14px;" data-private-only><a href="projets.html">Ouvrir projets</a></div>
+          <h3>Demande nettoyage</h3>
+          <p>Pour maison, vitres, remise en etat, voiture, utilitaire, terrasse et exterieur.</p>
+          <div style="margin-top:14px;"><a href="demande-nettoyage.html">Ouvrir nettoyage</a></div>
         </article>
         <article class="card">
-          <h3>NJR Solutions</h3>
-          <p>Services proposes, argumentaire, brief client et passerelle directe vers le simulateur.</p>
+          <h3>Espace entreprise</h3>
+          <p>Pour comprendre les activites, les zones, les estimations et la logique de demande mise en place.</p>
           <div style="margin-top:14px;"><a href="entreprise.html">Ouvrir entreprise</a></div>
         </article>
         <article class="card">
-          <h3>Outils quotidiens</h3>
-          <p>Bloc notes, mini suivi prospects / interventions et outils de preparation rapide.</p>
-          <div style="margin-top:14px;"><a href="outils.html">Ouvrir outils</a></div>
+          <h3>Contact direct</h3>
+          <p>Pour ecrire un message, recuperer les coordonnees et basculer vite vers le bon parcours.</p>
+          <div style="margin-top:14px;"><a href="contact.html">Ouvrir contact</a></div>
         </article>
       </div>
     </section>
@@ -170,11 +170,31 @@
     <section class="section reveal">
       <div class="section__head">
         <div>
+          <h2>Parcours de demande</h2>
+          <p>Le visiteur est guide vers le bon univers, voit une estimation indicative et envoie ensuite une demande propre.</p>
+        </div>
+      </div>
+      <div class="cards-grid cards-grid--wide" id="home-quote-steps"></div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
           <h2>Repères utiles</h2>
           <p>Quelques points simples suffisent a comprendre l'approche de NJR Solutions avant meme de contacter le site.</p>
         </div>
       </div>
       <div class="cards-grid" id="trust-points"></div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
+          <h2>Demandes les plus frequentes</h2>
+          <p>Ces entrees aident a se reconnaitre plus vite dans le bon parcours sans lire tout le catalogue.</p>
+        </div>
+      </div>
+      <div class="cards-grid cards-grid--wide" id="service-lanes"></div>
     </section>
 
     <section class="section reveal" data-private-only>
@@ -251,6 +271,19 @@
       </div>
       <div class="cards-grid cards-grid--wide" id="home-resources"></div>
     </section>
+
+    <section class="section reveal">
+      <div class="cta-band">
+        <div>
+          <h2>Besoin d'un devis ou d'un premier echange ?</h2>
+          <p>Le parcours public est deja pret pour l'informatique, le nettoyage et la prise de contact directe.</p>
+        </div>
+        <div class="cta-band__actions">
+          <a class="btn btn--accent" href="devis_njr.html">Choisir une demande</a>
+          <a class="btn btn--secondary" href="contact.html">Contacter NJR Solutions</a>
+        </div>
+      </div>
+    </section>
   </main>
   <div id="app-footer"></div>
   <script src="assets/js/site.js"></script>
@@ -261,7 +294,9 @@
     renderScenarioCards("scenario-grid");
     renderServiceCards("service-cards");
     renderServicePacks("service-packs");
+    renderQuoteSteps("home-quote-steps");
     renderTrustPoints("trust-points");
+    renderServiceLanes("service-lanes");
     initLiveFeedBoard({
       containerId: "home-feed-board",
       statusId: "home-feeds-status",

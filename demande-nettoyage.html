@@ -274,6 +274,17 @@
           <button class="btn btn--secondary" type="button" id="reset-request">Reinitialiser</button>
         </div>
         <p class="notice" id="request-status">Nom + email ou telephone + au moins une prestation suffisent pour preparer le message.</p>
+        <div class="quality-card">
+          <div class="quality-card__head">
+            <h3>Qualite de la demande</h3>
+            <strong class="quality-card__score" id="request-quality-score">0%</strong>
+          </div>
+          <div class="quality-meter">
+            <div class="quality-meter__fill" id="request-quality-fill"></div>
+          </div>
+          <p class="notice" id="request-quality-status">Ajoute une prestation et un contact pour preparer une demande claire.</p>
+          <div class="quality-list" id="request-quality-list"></div>
+        </div>
         <div class="send-flow">
           <article class="send-flow__card">
             <h3>Envoi client</h3>
@@ -327,6 +338,10 @@
     const travelZoneField = document.getElementById("travel-zone");
     const clientContextField = document.getElementById("client-context");
     const preview = document.getElementById("request-preview");
+    const qualityScore = document.getElementById("request-quality-score");
+    const qualityFill = document.getElementById("request-quality-fill");
+    const qualityStatus = document.getElementById("request-quality-status");
+    const qualityList = document.getElementById("request-quality-list");
 
     function selectedItems() {
       return CATALOG.filter((item) => selected.has(item.id));
@@ -468,6 +483,33 @@
         : "Choisis une prestation pour generer l'apercu du message.";
     }
 
+    function updateRequestQuality() {
+      const checks = [
+        { title: "Prestations choisies", ok: selectedItems().length > 0, note: "Au moins une prestation" },
+        { title: "Identite", ok: clientNameField.value.trim().length > 1, note: "Nom ou entreprise" },
+        { title: "Retour possible", ok: clientEmailField.value.trim() || clientPhoneField.value.trim(), note: "Email ou telephone" },
+        { title: "Contexte utile", ok: clientContextField.value.trim().length >= 12, note: "Surface, vehicule ou contexte" },
+        { title: "Zone ou ville", ok: clientCityField.value.trim().length >= 2 || travelZoneField.value !== "free", note: "Ville ou secteur" }
+      ];
+      const done = checks.filter((item) => item.ok).length;
+      const percent = Math.round((done / checks.length) * 100);
+      qualityScore.textContent = `${percent}%`;
+      qualityFill.style.width = `${percent}%`;
+      qualityList.innerHTML = checks.map((item) => `
+        <div class="quality-item ${item.ok ? "is-done" : ""}">
+          <strong>${item.title}</strong>
+          <span>${item.ok ? "OK" : item.note}</span>
+        </div>
+      `).join("");
+      qualityStatus.textContent = percent >= 100
+        ? "Demande prete a etre envoyee."
+        : percent >= 80
+          ? "La demande est presque complete. Un dernier detail peut la rendre encore plus exploitable."
+          : percent >= 60
+            ? "La base est bonne. Ajoute encore un peu de contexte pour aller plus vite."
+            : "Ajoute une prestation et un contact pour preparer une demande claire.";
+    }
+
     function openGmailCompose() {
       const popup = window.open(buildGmailUrl(), "_blank", "noopener");
       return Boolean(popup);
@@ -526,11 +568,13 @@
       renderCatalog();
       renderCart();
       updatePreview();
+      updateRequestQuality();
     });
 
     travelZoneField.addEventListener("change", () => {
       renderCart();
       updatePreview();
+      updateRequestQuality();
     });
 
     document.getElementById("send-request").addEventListener("click", () => {
@@ -568,17 +612,25 @@
       renderCatalog();
       renderCart();
       updatePreview();
+      updateRequestQuality();
       showToast("Demande reinitialisee.", "success");
     });
 
     [clientNameField, clientCityField, clientEmailField, clientPhoneField, clientContextField, serviceFrequencyField].forEach((field) => {
-      field?.addEventListener("input", updatePreview);
-      field?.addEventListener("change", updatePreview);
+      field?.addEventListener("input", () => {
+        updatePreview();
+        updateRequestQuality();
+      });
+      field?.addEventListener("change", () => {
+        updatePreview();
+        updateRequestQuality();
+      });
     });
 
     renderCatalog();
     renderCart();
     updatePreview();
+    updateRequestQuality();
   </script>
 </body>
 </html>

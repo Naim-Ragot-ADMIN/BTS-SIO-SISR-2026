@@ -20,6 +20,52 @@ const PORTFOLIO_DATA = {
     { title: "Parcours simple", text: "Le site aide a cadrer une demande rapidement, sans jargon ni formulaire trop lourd." },
     { title: "Trace claire", text: "Compte-rendu, recapitulatif ou fiche d'intervention selon le besoin traite." }
   ],
+  serviceLanes: [
+    {
+      title: "Depannage & installation",
+      badge: "Informatique",
+      text: "Pour PC lent, poste neuf, imprimante, remise en route ou intervention de proximite.",
+      points: ["Particulier", "TPE", "Sur place ou a distance"],
+      link: "demande-informatique.html",
+      cta: "Demande informatique"
+    },
+    {
+      title: "Wi-Fi, box & petit reseau",
+      badge: "Informatique",
+      text: "Pour connexion instable, imprimante reseau, partage simple et environnement maison ou bureau.",
+      points: ["Wi-Fi", "Box", "Petit bureau"],
+      link: "demande-informatique.html",
+      cta: "Ouvrir le parcours info"
+    },
+    {
+      title: "Maison, vitres & remise au propre",
+      badge: "Nettoyage",
+      text: "Pour entretien ponctuel, regulier, vitres, logement vide ou remise en etat legere.",
+      points: ["Maison", "Vitres", "Ponctuel ou regulier"],
+      link: "demande-nettoyage.html",
+      cta: "Demande nettoyage"
+    },
+    {
+      title: "Auto & exterieur",
+      badge: "Nettoyage",
+      text: "Pour voiture, utilitaire, terrasse, cour, balcon ou mobilier exterieur.",
+      points: ["Auto", "Terrasse", "Vehicule pro"],
+      link: "demande-nettoyage.html",
+      cta: "Ouvrir le parcours nettoyage"
+    }
+  ],
+  responseCommitments: [
+    { title: "Demande rapide", text: "Nom, contact utile et prestations suffisent pour preparer une demande exploitable." },
+    { title: "Lecture immediate", text: "Chaque page montre le bon univers, les services utiles et un montant de depart lisible." },
+    { title: "Zone locale claire", text: "Villeneuve-sur-Lot, Pujols et Bias restent sans frais sur les demandes courantes." },
+    { title: "Suivi propre", text: "Le message, le recapitulatif et la trace d'intervention restent simples a reutiliser." }
+  ],
+  requestPrep: [
+    { title: "Coordonnees utiles", text: "Nom ou entreprise, puis email ou telephone pour permettre un retour rapide." },
+    { title: "Prestations selectionnees", text: "Une ou plusieurs prestations suffisent a cadrer le besoin des le depart." },
+    { title: "Contexte concret", text: "Quelques lignes sur le probleme, la surface, le materiel ou la situation font gagner du temps." },
+    { title: "Zone ou urgence", text: "La ville, le secteur ou le niveau d'urgence aident a prioriser la bonne reponse." }
+  ],
   projects: [
     { title: "Plan d'upgrade d'un pare-feu sature", angle: "bts entreprise reseau securite", type: "Reseau / securite", impact: "Audit, choix materiel, budget et continuite de service.", result: "Situation E5 forte et cas realiste de prestation d'infrastructure.", level: "Fort", link: "COURS/08-E5/README.md" },
     { title: "Masterisation et normalisation du parc", angle: "bts entreprise documentation", type: "Postes / deploiement", impact: "Procedure, nomenclature, preparation et documentation.", result: "Montre une logique reproductible et un vrai sens de l'organisation.", level: "Fort", link: "README.md" },
@@ -1263,6 +1309,51 @@ function renderServicePacks(containerId) {
       <div class="inline-actions">
         <a class="btn btn--secondary btn--small" href="${pack.link}">Ouvrir la demande adaptee</a>
       </div>
+    </article>
+  `).join("");
+}
+
+function renderServiceLanes(containerId) {
+  const container = $("#" + containerId);
+  if (!container) return;
+  container.innerHTML = PORTFOLIO_DATA.serviceLanes.map((lane) => `
+    <article class="card lane-card">
+      <div class="card__top">
+        <div>
+          <h3>${lane.title}</h3>
+          <p>${lane.text}</p>
+        </div>
+        <span class="pill">${lane.badge}</span>
+      </div>
+      <div class="feature-list">
+        ${lane.points.map((point, index) => `<span class="tag tag--${tagClass(index)}">${point}</span>`).join("")}
+      </div>
+      <div class="inline-actions">
+        <a class="btn btn--secondary btn--small" href="${lane.link}">${lane.cta}</a>
+      </div>
+    </article>
+  `).join("");
+}
+
+function renderResponseCommitments(containerId) {
+  const container = $("#" + containerId);
+  if (!container) return;
+  container.innerHTML = PORTFOLIO_DATA.responseCommitments.map((item, index) => `
+    <article class="card card--compact">
+      <span class="step-badge">${String(index + 1).padStart(2, "0")}</span>
+      <h3>${item.title}</h3>
+      <p>${item.text}</p>
+    </article>
+  `).join("");
+}
+
+function renderRequestPrep(containerId) {
+  const container = $("#" + containerId);
+  if (!container) return;
+  container.innerHTML = PORTFOLIO_DATA.requestPrep.map((item) => `
+    <article class="card card--compact">
+      <h3>${item.title}</h3>
+      <p>${item.text}</p>
     </article>
   `).join("");
 }

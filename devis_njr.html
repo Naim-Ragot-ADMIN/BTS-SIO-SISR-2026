@@ -85,6 +85,16 @@
     </section>
 
     <section class="section reveal">
+      <div class="section__head">
+        <div>
+          <h2>Avant d'envoyer</h2>
+          <p>Quelques informations simples suffisent pour rendre la demande plus utile sans la rallonger inutilement.</p>
+        </div>
+      </div>
+      <div class="cards-grid cards-grid--wide" id="request-prep"></div>
+    </section>
+
+    <section class="section reveal">
       <div class="tools-grid">
         <article class="tool">
           <h3>Quel simulateur ouvrir ?</h3>
@@ -122,11 +132,34 @@
     <section class="section reveal">
       <div class="section__head">
         <div>
+          <h2>Demandes les plus frequentes</h2>
+          <p>Ces exemples aident a choisir la bonne page meme si le besoin n'est pas encore parfaitement formule.</p>
+        </div>
+      </div>
+      <div class="cards-grid cards-grid--wide" id="service-lanes"></div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
           <h2>Questions frequentes</h2>
           <p>Une FAQ courte leve les blocages classiques avant d'entrer dans le detail des simulateurs.</p>
         </div>
       </div>
       <div class="faq-list" id="quote-faq"></div>
+    </section>
+
+    <section class="section reveal">
+      <div class="cta-band">
+        <div>
+          <h2>Un besoin particulier ou un doute sur le bon parcours ?</h2>
+          <p>La page contact permet de preparer un message direct si le besoin ne rentre pas encore parfaitement dans les simulateurs.</p>
+        </div>
+        <div class="cta-band__actions">
+          <a class="btn btn--accent" href="contact.html">Passer par le contact</a>
+          <a class="btn btn--secondary" href="entreprise.html">Voir les activites</a>
+        </div>
+      </div>
     </section>
 
     <section class="section reveal" data-private-only>
@@ -146,6 +179,8 @@
   <script>
     initSite("devis_njr.html");
     renderQuoteSteps("quote-steps");
+    renderRequestPrep("request-prep");
+    renderServiceLanes("service-lanes");
     renderFaq("quote-faq", PORTFOLIO_DATA.quoteFaq);
 
     const needField = document.getElementById("simulator-need");

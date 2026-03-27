@@ -122,6 +122,16 @@
     <section class="section reveal">
       <div class="section__head">
         <div>
+          <h2>Parcours les plus demandes</h2>
+          <p>Une lecture rapide des demandes qui reviennent le plus, avec un lien direct vers la bonne page.</p>
+        </div>
+      </div>
+      <div class="cards-grid cards-grid--wide" id="service-lanes"></div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
           <h2>Demandes concretes</h2>
           <p>Cette zone reprend des cas de figure parlants pour aider un visiteur a se reconnaitre plus vite dans l'offre.</p>
         </div>
@@ -158,6 +168,16 @@
     <section class="section reveal">
       <div class="section__head">
         <div>
+          <h2>Engagements de service</h2>
+          <p>Des reperes utiles pour montrer comment NJR Solutions traite une demande des le premier contact.</p>
+        </div>
+      </div>
+      <div class="cards-grid cards-grid--wide" id="response-commitments"></div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
           <h2>Questions frequentes</h2>
           <p>Une FAQ courte aide a lever les doutes les plus courants avant meme qu'un prospect te contacte.</p>
         </div>
@@ -173,6 +193,19 @@
         </div>
       </div>
       <div class="cards-grid" id="trust-points"></div>
+    </section>
+
+    <section class="section reveal">
+      <div class="cta-band">
+        <div>
+          <h2>Passer au bon parcours sans perdre de temps</h2>
+          <p>Chaque activite dispose de sa propre page de demande, d'un message pre-rempli et d'une estimation lisible.</p>
+        </div>
+        <div class="cta-band__actions">
+          <a class="btn btn--accent" href="devis_njr.html">Ouvrir le centre des demandes</a>
+          <a class="btn btn--secondary" href="contact.html">Contacter NJR Solutions</a>
+        </div>
+      </div>
     </section>
 
     <section class="section reveal" data-private-only>
@@ -255,7 +288,9 @@
     renderCoverageCards("coverage-grid");
     renderServiceOffers("service-offers");
     renderServicePacks("service-packs");
+    renderServiceLanes("service-lanes");
     renderScenarioCards("business-scenarios");
+    renderResponseCommitments("response-commitments");
     renderFaq("business-faq", PORTFOLIO_DATA.businessFaq);
     renderTrustPoints("trust-points");
     initBriefTool();
