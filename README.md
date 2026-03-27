@@ -17,12 +17,14 @@ Le depot contient une version source complete du site, avec des pages privees BT
 
 Pour publier uniquement la version publique :
 
-1. Executer `.\build-public.ps1`
+1. Executer `node .\build-public.mjs`
 2. Verifier le dossier `dist`
 3. Connecter le depot a Cloudflare Pages
 4. Utiliser ces parametres :
-   - Build command : `powershell -ExecutionPolicy Bypass -File .\build-public.ps1`
+   - Build command : `node build-public.mjs`
    - Build output directory : `dist`
+
+Le script `build-public.ps1` reste disponible pour construire la meme version publique localement sous Windows.
 
 La version publique publiee inclut uniquement :
 - accueil
