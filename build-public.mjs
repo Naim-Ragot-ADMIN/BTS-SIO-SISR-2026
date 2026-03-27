@@ -13,6 +13,9 @@ const publicFiles = [
   "demande-nettoyage.html",
   "contact.html",
   "veille.html",
+  "mentions-legales.html",
+  "conditions-generales.html",
+  "confidentialite.html",
   "cv_naim.pdf"
 ];
 

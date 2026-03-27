@@ -18,6 +18,7 @@
         <div class="actions">
           <a class="btn btn--primary" href="projets.html">Voir les situations techniques</a>
           <a class="btn btn--secondary" href="scripts.html">Bibliotheque scripts</a>
+          <a class="btn btn--secondary" href="#situation-jury">Fiche situation jury</a>
           <a class="btn btn--secondary" href="contact.html">Acces jury / recruteur</a>
         </div>
         <div class="stats-grid stats-grid--4">
@@ -41,6 +42,16 @@
           <p>Tu peux utiliser cette page comme tableau de bord de preparation, puis basculer sur les projets ou les ressources selon ce qu'il te manque.</p>
         </div>
       </aside>
+    </section>
+
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
+          <h2>Ce qui frappe un jury</h2>
+          <p>Une situation bien defendue montre a la fois la comprehension du besoin, les preuves techniques et une vraie analyse critique.</p>
+        </div>
+      </div>
+      <div class="cards-grid cards-grid--wide" id="jury-highlights"></div>
     </section>
 
     <section class="section reveal">
@@ -77,11 +88,31 @@
     <section class="section reveal">
       <div class="section__head">
         <div>
+          <h2>Livrables qui font pro</h2>
+          <p>Des supports concrets rendent le dossier plus net et facilitent la defense d'une situation devant le jury.</p>
+        </div>
+      </div>
+      <div class="cards-grid cards-grid--wide" id="bts-deliverables"></div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
           <h2>Trame d'oral rapide</h2>
           <p>Une structure simple pour rester clair quand tu presentes une situation professionnelle.</p>
         </div>
       </div>
       <div class="cards-grid" id="oral-blocks"></div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
+          <h2>Plan de passage</h2>
+          <p>Cette trame sert a garder un fil solide quand il faut aller vite sans perdre la logique de la situation.</p>
+        </div>
+      </div>
+      <div class="cards-grid cards-grid--wide" id="bts-milestones"></div>
     </section>
 
     <section class="section reveal">
@@ -129,6 +160,44 @@
           </div>
           <textarea id="jury-answer-note" class="field-area" rows="4" placeholder="Note ici ta reponse courte, ton angle ou ton plan de reponse."></textarea>
           <p class="notice" id="jury-question-status">Question 1 sur 1</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal" id="situation-jury">
+      <div class="tools-grid">
+        <article class="tool">
+          <h3>Fiche situation jury</h3>
+          <p>Prepare une fiche courte, propre et exportable pour une situation E5 ou une demonstration technique forte.</p>
+          <div style="display:grid;gap:10px">
+            <input id="situation-card-title" class="field" placeholder="Nom de la situation" />
+            <textarea id="situation-card-context" class="field-area" rows="3" placeholder="Contexte, besoin, environnement, risque ou objectif de depart..."></textarea>
+            <textarea id="situation-card-actions" class="field-area" rows="4" placeholder="Actions menees, outils, commandes, choix techniques, tests effectues..."></textarea>
+            <textarea id="situation-card-result" class="field-area" rows="3" placeholder="Resultat obtenu, impact, amelioration, correction, limites..."></textarea>
+            <textarea id="situation-card-proof" class="field-area" rows="3" placeholder="Preuves a montrer: captures, scripts, schema, supervision, documentation..."></textarea>
+            <input id="situation-card-skills" class="field" placeholder="Competences mobilisees: systeme, reseau, securite, support, documentation..." />
+          </div>
+          <div class="quality-card">
+            <div class="quality-card__head">
+              <h3>Solidite de la fiche</h3>
+              <strong class="quality-card__score" id="situation-card-score">0%</strong>
+            </div>
+            <div class="quality-meter">
+              <div class="quality-meter__fill" id="situation-card-fill"></div>
+            </div>
+            <div class="quality-list" id="situation-card-list"></div>
+          </div>
+          <div class="actions">
+            <button class="btn btn--secondary" id="copy-situation-card">Copier</button>
+            <button class="btn btn--secondary" id="download-situation-card">Telecharger</button>
+            <button class="btn btn--secondary" id="clear-situation-card">Reinitialiser</button>
+          </div>
+          <p class="notice" id="situation-card-status">Complete la situation pour obtenir une fiche exploitable devant le jury.</p>
+        </article>
+        <article class="tool">
+          <h3>Fiche generee</h3>
+          <p>Cette fiche peut servir de support de revision, de trame d'oral ou de base pour structurer une annexe claire.</p>
+          <div class="brief-output" id="situation-card-output">La fiche situation apparaitra ici.</div>
         </article>
       </div>
     </section>
@@ -255,10 +324,14 @@
     renderChecklist("checklist","progress-text","progress-bar","priority-label");
     initChecklistReset("reset-checklist",["checklist","progress-text","progress-bar","priority-label"]);
     initNoteTool("focus-note","note-status","copy-note","clear-note");
+    renderJuryHighlights("jury-highlights");
     renderBtsSkills("bts-skills");
+    renderBtsDeliverables("bts-deliverables");
     renderOralBlocks("oral-blocks");
+    renderBtsMilestones("bts-milestones");
     initBtsTimerTool();
     initBtsJuryTool();
+    initSituationCardBuilder();
     initBtsOralTool();
     initEvidencePlanner();
     initLiveFeedBoard({

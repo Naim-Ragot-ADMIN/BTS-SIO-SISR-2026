@@ -66,6 +66,24 @@ const PORTFOLIO_DATA = {
     { title: "Contexte concret", text: "Quelques lignes sur le probleme, la surface, le materiel ou la situation font gagner du temps." },
     { title: "Zone ou urgence", text: "La ville, le secteur ou le niveau d'urgence aident a prioriser la bonne reponse." }
   ],
+  juryHighlights: [
+    { title: "Contexte compris", text: "Le jury doit comprendre rapidement le besoin initial, l'environnement et l'enjeu concret." },
+    { title: "Choix justifies", text: "Les outils, commandes, tests et decisions doivent etre relies a un vrai raisonnement technique." },
+    { title: "Preuves visibles", text: "Captures, scripts, schemas, supervision ou documentation rendent la situation beaucoup plus solide." },
+    { title: "Analyse critique", text: "Expliquer les limites, risques et pistes d'amelioration donne une vraie posture professionnelle." }
+  ],
+  btsMilestones: [
+    { title: "Cadrer", text: "Definir la situation, le besoin, le contexte et l'objectif avant toute explication technique." },
+    { title: "Prouver", text: "Montrer des preuves concretes: commandes, scripts, captures, tests et documentation." },
+    { title: "Expliquer", text: "Presenter les choix, les etapes et les verifications avec un vocabulaire simple mais rigoureux." },
+    { title: "Conclure", text: "Terminer par le resultat, l'impact, les limites et ce qui serait ameliore a plus grande echelle." }
+  ],
+  btsDeliverables: [
+    { title: "Fiche situation", text: "Une synthese exploitable en revision, en oral ou en annexe de presentation." },
+    { title: "Trame orale", text: "Une base courte pour presenter une situation sans perdre le fil devant le jury." },
+    { title: "Pack preuves", text: "Une checklist de pieces a montrer pour eviter les oublis de derniere minute." },
+    { title: "Veille utile", text: "Des sujets recents et credibles a reinjecter dans tes exemples BTS." }
+  ],
   projects: [
     { title: "Plan d'upgrade d'un pare-feu sature", angle: "bts entreprise reseau securite", type: "Reseau / securite", impact: "Audit, choix materiel, budget et continuite de service.", result: "Situation E5 forte et cas realiste de prestation d'infrastructure.", level: "Fort", link: "COURS/08-E5/README.md" },
     { title: "Masterisation et normalisation du parc", angle: "bts entreprise documentation", type: "Postes / deploiement", impact: "Procedure, nomenclature, preparation et documentation.", result: "Montre une logique reproductible et un vrai sens de l'organisation.", level: "Fort", link: "README.md" },
@@ -304,6 +322,16 @@ function safeJsonParse(value, fallback) {
 
 function readStore(key, fallback) { return safeJsonParse(localStorage.getItem(key), fallback); }
 function writeStore(key, value) { localStorage.setItem(key, JSON.stringify(value)); }
+
+function slugify(value) {
+  return String(value || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "")
+    || "element";
+}
 
 function hashString(input) {
   let h1 = 0x811c9dc5;
@@ -743,8 +771,11 @@ function renderFooter() {
           <a href="contact.html">Contact</a>
         </article>
         <article class="footer-card">
-          <strong>Mission</strong>
+          <strong>Informations</strong>
           <span class="notice">${PORTFOLIO_DATA.company.mission}</span>
+          <a href="mentions-legales.html">Mentions legales</a>
+          <a href="conditions-generales.html">Conditions generales</a>
+          <a href="confidentialite.html">Confidentialite</a>
         </article>
       </div>
       <div class="footer-bottom">${PORTFOLIO_DATA.identity.name} · BTS SIO SISR · ${PORTFOLIO_DATA.company.name} · ${new Date().getFullYear()}</div>
@@ -764,6 +795,9 @@ function getQuickLinks() {
     { label: "Atelier devis", href: "atelier-devis.html", type: "Page", keywords: "devis prive admin generateur", private: true },
     { label: "Veille", href: "veille.html", type: "Page", keywords: "veille rss cyber" },
     { label: "Contact", href: "contact.html", type: "Page", keywords: "contact email telephone" },
+    { label: "Mentions legales", href: "mentions-legales.html", type: "Page", keywords: "legal mentions hebergement editeur" },
+    { label: "Conditions generales", href: "conditions-generales.html", type: "Page", keywords: "conditions devis intervention tarifs" },
+    { label: "Confidentialite", href: "confidentialite.html", type: "Page", keywords: "privacy donnees personnelles localstorage" },
     { label: "CV PDF", href: "cv_naim.pdf", type: "Fichier", keywords: "cv pdf recrutement" },
     { label: "Script AD Forest", href: "automation-scripts/deploy-ad-forest.ps1", type: "Script", keywords: "ad active directory forest powershell", private: true },
     { label: "Script Zabbix Grafana", href: "automation-scripts/deploy-zabbix-grafana.sh", type: "Script", keywords: "zabbix grafana docker bash monitoring", private: true }
@@ -1258,6 +1292,41 @@ function renderBtsSkills(containerId) {
     <article class="card">
       <h3>${skill.title}</h3>
       <p>${skill.text}</p>
+    </article>
+  `).join("");
+}
+
+function renderJuryHighlights(containerId) {
+  const container = $("#" + containerId);
+  if (!container) return;
+  container.innerHTML = PORTFOLIO_DATA.juryHighlights.map((item, index) => `
+    <article class="card card--compact">
+      <span class="step-badge">${String(index + 1).padStart(2, "0")}</span>
+      <h3>${item.title}</h3>
+      <p>${item.text}</p>
+    </article>
+  `).join("");
+}
+
+function renderBtsMilestones(containerId) {
+  const container = $("#" + containerId);
+  if (!container) return;
+  container.innerHTML = PORTFOLIO_DATA.btsMilestones.map((step, index) => `
+    <article class="card card--compact">
+      <span class="step-badge">${String(index + 1).padStart(2, "0")}</span>
+      <h3>${step.title}</h3>
+      <p>${step.text}</p>
+    </article>
+  `).join("");
+}
+
+function renderBtsDeliverables(containerId) {
+  const container = $("#" + containerId);
+  if (!container) return;
+  container.innerHTML = PORTFOLIO_DATA.btsDeliverables.map((item) => `
+    <article class="card">
+      <h3>${item.title}</h3>
+      <p>${item.text}</p>
     </article>
   `).join("");
 }
@@ -1773,6 +1842,119 @@ function initBtsTimerTool() {
   $("#reset-oral-timer")?.addEventListener("click", reset);
   duration?.addEventListener("change", reset);
   reset();
+}
+
+function initSituationCardBuilder() {
+  const output = $("#situation-card-output");
+  if (!output) return;
+  const status = $("#situation-card-status");
+  const score = $("#situation-card-score");
+  const fill = $("#situation-card-fill");
+  const list = $("#situation-card-list");
+  const storageKey = "naim_portfolio_situation_card_v1";
+  const fields = {
+    title: $("#situation-card-title"),
+    context: $("#situation-card-context"),
+    actions: $("#situation-card-actions"),
+    result: $("#situation-card-result"),
+    proof: $("#situation-card-proof"),
+    skills: $("#situation-card-skills")
+  };
+
+  const saved = readStore(storageKey, null);
+  if (saved) {
+    Object.entries(fields).forEach(([key, field]) => {
+      if (field) field.value = saved[key] || "";
+    });
+  }
+
+  const collect = () => Object.fromEntries(Object.entries(fields).map(([key, field]) => [key, field?.value.trim() || ""]));
+
+  const updateQuality = (data) => {
+    const checks = [
+      { title: "Situation nommee", ok: data.title.length >= 4, note: "Titre de situation" },
+      { title: "Contexte clair", ok: data.context.length >= 20, note: "Besoin et environnement" },
+      { title: "Actions detaillees", ok: data.actions.length >= 25, note: "Etapes et outils" },
+      { title: "Resultat concret", ok: data.result.length >= 15, note: "Impact ou correction" },
+      { title: "Preuves citees", ok: data.proof.length >= 10, note: "Captures, scripts ou docs" },
+      { title: "Competences reliees", ok: data.skills.length >= 8, note: "Competences BTS" }
+    ];
+    const done = checks.filter((item) => item.ok).length;
+    const percent = Math.round((done / checks.length) * 100);
+    if (score) score.textContent = `${percent}%`;
+    if (fill) fill.style.width = `${percent}%`;
+    if (list) {
+      list.innerHTML = checks.map((item) => `
+        <div class="quality-item ${item.ok ? "is-done" : ""}">
+          <strong>${item.title}</strong>
+          <span>${item.ok ? "OK" : item.note}</span>
+        </div>
+      `).join("");
+    }
+    if (status) {
+      status.textContent = percent >= 100
+        ? "Fiche situation prete pour revision, oral ou export."
+        : percent >= 80
+          ? "La fiche est tres solide. Un dernier detail peut encore la renforcer."
+          : percent >= 60
+            ? "La base est bonne. Il manque encore quelques elements convaincants pour le jury."
+            : "Complete la situation pour obtenir une fiche exploitable devant le jury.";
+    }
+  };
+
+  const render = (persist = true) => {
+    const data = collect();
+    output.textContent = [
+      "Fiche situation jury",
+      "",
+      `Situation : ${data.title || "Titre a preciser"}`,
+      `Contexte : ${data.context || "Contexte a preciser"}`,
+      "",
+      "Actions et choix techniques :",
+      data.actions || "Actions a preciser",
+      "",
+      "Resultat obtenu :",
+      data.result || "Resultat a preciser",
+      "",
+      "Preuves a montrer :",
+      data.proof || "Preuves a preciser",
+      "",
+      "Competences mobilisees :",
+      data.skills || "Competences a preciser",
+      "",
+      "Conseil oral : commencer par le besoin, justifier les choix, montrer la preuve la plus forte, puis conclure par l'impact et l'analyse critique."
+    ].join("\n");
+    if (persist) {
+      writeStore(storageKey, data);
+    }
+    updateQuality(data);
+  };
+
+  Object.values(fields).forEach((field) => {
+    field?.addEventListener("input", () => render());
+    field?.addEventListener("change", () => render());
+  });
+
+  $("#copy-situation-card")?.addEventListener("click", async () => {
+    await copyText(output.textContent, "Fiche situation copiee.");
+  });
+
+  $("#download-situation-card")?.addEventListener("click", () => {
+    const title = collect().title || "situation-bts";
+    downloadTextFile(`fiche-situation-${slugify(title)}.txt`, output.textContent, "text/plain;charset=utf-8");
+    showToast("Fiche situation telechargee.", "success");
+  });
+
+  $("#clear-situation-card")?.addEventListener("click", () => {
+    Object.values(fields).forEach((field) => {
+      if (field) field.value = "";
+    });
+    localStorage.removeItem(storageKey);
+    render(false);
+    showToast("Fiche situation reinitialisee.", "success");
+  });
+
+  render(Boolean(saved));
 }
 
 function initEvidencePlanner() {
