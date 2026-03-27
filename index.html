@@ -1,772 +1,278 @@
 <!doctype html>
 <html lang="fr">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Portfolio BTS SIO SISR - Naim</title>
-    <style>
-      @import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Fraunces:wght@600;700&display=swap");
-
-      :root {
-        --ink: #0b1020;
-        --muted: #5b647a;
-        --brand: #0f766e;
-        --brand-2: #f59e0b;
-        --paper: #ffffff;
-        --bg: #f4f1ea;
-        --line: #e5e7eb;
-        --shadow: 0 20px 60px rgba(15, 23, 42, 0.12);
-      }
-
-      * { box-sizing: border-box; }
-      html { scroll-behavior: smooth; }
-
-      body {
-        margin: 0;
-        font-family: "Manrope", "Segoe UI", sans-serif;
-        color: var(--ink);
-        background:
-          radial-gradient(circle at 80% 10%, #ffe9b7 0, transparent 45%),
-          radial-gradient(circle at 15% 15%, #c7f2ee 0, transparent 40%),
-          radial-gradient(circle at 80% 80%, #dbeafe 0, transparent 40%),
-          var(--bg);
-      }
-
-      header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 24px 56px;
-        position: sticky;
-        top: 0;
-        background: rgba(244, 241, 234, 0.85);
-        backdrop-filter: blur(8px);
-        z-index: 10;
-      }
-
-      .logo {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        font-weight: 800;
-        letter-spacing: 0.4px;
-      }
-
-      .logo-badge {
-        width: 42px;
-        height: 42px;
-        border-radius: 12px;
-        background: linear-gradient(135deg, var(--brand), #0f766e);
-        color: white;
-        display: grid;
-        place-items: center;
-        font-weight: 800;
-      }
-
-      nav a {
-        text-decoration: none;
-        color: var(--ink);
-        margin-left: 18px;
-        font-weight: 700;
-        font-size: 13px;
-      }
-
-      .hero {
-        max-width: 1160px;
-        margin: 0 auto;
-        padding: 56px 56px 24px;
-        display: grid;
-        grid-template-columns: 1.15fr 0.85fr;
-        gap: 42px;
-      }
-
-      .hero h1 {
-        font-family: "Fraunces", serif;
-        font-size: 52px;
-        line-height: 1.04;
-        margin: 0 0 18px;
-      }
-
-      .hero p {
-        color: var(--muted);
-        font-size: 18px;
-        margin: 0 0 22px;
-      }
-
-      .chip {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        background: #fef3c7;
-        color: #92400e;
-        padding: 6px 10px;
-        border-radius: 999px;
-        font-size: 12px;
-        font-weight: 800;
-      }
-
-      .cta {
-        display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
-      }
-
-      .btn {
-        border: none;
-        padding: 12px 20px;
-        border-radius: 12px;
-        font-weight: 800;
-        cursor: pointer;
-        font-size: 14px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        text-decoration: none;
-        color: inherit;
-      }
-
-      .btn-primary {
-        background: var(--brand);
-        color: white;
-        box-shadow: var(--shadow);
-      }
-
-      .btn-ghost {
-        background: transparent;
-        border: 1px solid var(--line);
-      }
-
-      .hero-card {
-        background: var(--paper);
-        border-radius: 22px;
-        padding: 22px;
-        box-shadow: var(--shadow);
-        display: grid;
-        gap: 14px;
-      }
-
-      .metric {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 12px;
-        border-radius: 12px;
-        background: #f8fafc;
-        font-weight: 700;
-      }
-
-      .section {
-        max-width: 1160px;
-        margin: 0 auto;
-        padding: 28px 56px;
-      }
-
-      .section h2 {
-        margin: 0 0 14px;
-        font-size: 22px;
-      }
-
-      .cards {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 16px;
-      }
-
-      .card {
-        background: var(--paper);
-        border-radius: 18px;
-        padding: 16px;
-        border: 1px solid var(--line);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-      }
-
-      .card h3 {
-        margin: 0 0 6px;
-        font-size: 16px;
-      }
-
-      .card p {
-        margin: 0;
-        color: var(--muted);
-        font-size: 14px;
-      }
-
-      .card:hover {
-        transform: translateY(-3px);
-        box-shadow: var(--shadow);
-      }
-
-      .tags {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-      }
-
-      .tag {
-        background: #ecfeff;
-        color: #0e7490;
-        padding: 6px 10px;
-        border-radius: 999px;
-        font-size: 12px;
-        font-weight: 700;
-      }
-
-      .grid-2 {
-        display: grid;
-        grid-template-columns: 1.1fr 0.9fr;
-        gap: 20px;
-      }
-
-      .timeline {
-        display: grid;
-        gap: 12px;
-      }
-
-      .timeline-item {
-        background: var(--paper);
-        border-radius: 16px;
-        padding: 14px 16px;
-        border: 1px solid var(--line);
-        display: grid;
-        gap: 6px;
-      }
-
-      .skill {
-        display: grid;
-        gap: 8px;
-      }
-
-      .bar {
-        height: 8px;
-        background: #e5e7eb;
-        border-radius: 999px;
-        overflow: hidden;
-      }
-
-      .bar > span {
-        display: block;
-        height: 100%;
-        background: linear-gradient(90deg, var(--brand), #0ea5a4);
-      }
-
-      .contact {
-        display: grid;
-        grid-template-columns: 1.1fr 0.9fr;
-        gap: 20px;
-      }
-
-      .contact form {
-        display: grid;
-        gap: 10px;
-      }
-
-      input, textarea {
-        width: 100%;
-        padding: 10px 12px;
-        border-radius: 12px;
-        border: 1px solid var(--line);
-        font-size: 14px;
-      }
-
-      .footer {
-        text-align: center;
-        padding: 30px 56px 50px;
-        color: var(--muted);
-        font-size: 12px;
-      }
-      .rss-grid {
-        display: grid;
-        gap: 12px;
-      }
-      .rss-item {
-        padding: 10px 12px;
-        border: 1px solid var(--line);
-        border-radius: 12px;
-        background: #f8fafc;
-      }
-      .rss-item a {
-        color: var(--ink);
-        text-decoration: none;
-        font-weight: 700;
-      }
-      .rss-item small {
-        color: var(--muted);
-        display: block;
-        margin-top: 6px;
-      }
-
-      .pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 6px 12px;
-        border-radius: 999px;
-        background: #f1f5f9;
-        font-size: 12px;
-        font-weight: 700;
-        color: #0f172a;
-      }
-
-      .split {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 16px;
-      }
-
-      .reveal {
-        opacity: 0;
-        transform: translateY(12px);
-        transition: opacity 0.6s ease, transform 0.6s ease;
-      }
-
-      .reveal.show {
-        opacity: 1;
-        transform: translateY(0);
-      }
-
-      @media (max-width: 900px) {
-        header { padding: 20px 24px; }
-        .hero { grid-template-columns: 1fr; padding: 28px 24px; }
-        .section { padding: 24px; }
-        .grid-2 { grid-template-columns: 1fr; }
-        .contact { grid-template-columns: 1fr; }
-        .split { grid-template-columns: 1fr; }
-      }
-    </style>
-  </head>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Naim Ragot · Accueil</title>
+  <meta name="description" content="Accueil du portfolio BTS SIO SISR de Naim Ragot et vitrine de travail NJR Solutions." />
+  <link rel="stylesheet" href="assets/css/site.css" />
+</head>
 <body>
-    <header>
-      <div class="logo">
-        <div class="logo-badge">N</div>
-        Naim · Portfolio BTS SIO SISR
-      </div>
-      <nav>
-        <a href="#profil">Profil</a>
-        <a href="#competences">Compétences</a>
-        <a href="#projets">Projets</a>
-        <a href="#stages">Expériences</a>
-        <a href="#formations">Formations</a>
-        <a href="#bts">Dossier BTS</a>
-        <a href="#veille">Veille</a>
-        <a href="#certifs">Certifs</a>
-        <a href="#contact">Contact</a>
-        <a href="#passions">Passions</a>
-      </nav>
-    </header>
-
-    <section class="hero">
-      <div>
-        <div class="chip">BTS SIO · SISR</div>
-        <h1>Portfolio BTS SIO SISR — systèmes, réseaux, sécurité.</h1>
-        <p>
-          Étudiant SISR, je construis des environnements fiables et sécurisés.
-          J'aime analyser, documenter et automatiser pour livrer des solutions stables.
-        </p>
-        <div class="cta">
-          <button class="btn btn-primary" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Me contacter</button>
-          <button class="btn btn-ghost" onclick="document.getElementById('projets').scrollIntoView({behavior:'smooth'})">Voir mes projets</button>
-          <a class="btn btn-ghost" href="cv_naim.pdf" download>Télécharger CV</a>
-          <a
-            class="btn btn-ghost"
-            href="https://mail.google.com/mail/?view=cm&fs=1&to=ragotnaimpro@gmail.com&su=Contact%20Portfolio%20BTS%20SIO&body=Bonjour%20Naim%2C%0A%0AJe%20souhaite%20vous%20contacter%20concernant%20votre%20portfolio.%0A"
-            target="_blank"
-            rel="noopener"
-          >Email direct (Gmail)</a>
+  <div id="app-header"></div>
+  <main class="site-shell page">
+    <section class="hero reveal is-visible">
+      <article class="hero-main">
+        <div class="eyebrow">Portfolio BTS SIO SISR + poste de pilotage local</div>
+        <h1>BTS SIO, projets, devis et outils sur une meme base.</h1>
+        <p>Le site rassemble un espace BTS, un espace entreprise pour NJR Solutions et des outils utiles au quotidien sans melanger les usages.</p>
+        <div class="actions">
+          <a class="btn btn--primary" href="bts.html" data-private-only>Ouvrir l'espace BTS</a>
+          <a class="btn btn--secondary" href="projets.html" data-private-only>Explorer les projets</a>
+          <a class="btn btn--secondary" href="scripts.html" data-private-only>Scripts automation</a>
+          <a class="btn btn--secondary" href="cv_naim.pdf" download>Telecharger le CV</a>
+          <a class="btn btn--accent" href="devis_njr.html">Simulateur de devis</a>
         </div>
-      </div>
-      <div class="hero-card">
-        <div class="metric">Localisation <span>France</span></div>
-        <div class="metric">Disponibilité <span>Alternance / Stage</span></div>
-        <div class="metric">Spécialité <span>Réseaux · Sécurité · Support</span></div>
-        <div class="metric">Objectif <span>Admin Sys & Net</span></div>
-        <div class="metric">Stack <span>Windows · Linux · AD</span></div>
-      </div>
-    </section>
-
-    <section class="section reveal" id="profil">
-      <h2>Profil</h2>
-      <div class="grid-2">
-        <div class="card">
-          <p>
-            Étudiant en BTS SIO option SISR, j’ai de solides bases en support IT,
-            réseaux et systèmes. Je cherche à apporter des solutions fiables,
-            sécurisées et faciles à maintenir.
-          </p>
+        <div class="stats-grid stats-grid--3">
+          <div class="mini-panel"><div class="label">Projets valorises</div><div class="kpi" id="stat-projects">0</div></div>
+          <div class="mini-panel"><div class="label">Ressources utiles</div><div class="kpi" id="stat-resources">0</div></div>
+          <div class="mini-panel"><div class="label">Offres entreprise</div><div class="kpi" id="stat-services">0</div></div>
         </div>
-        <div class="card">
-          <h3>Objectifs BTS</h3>
-          <p>Conduite de projets, support N1/N2, administration systèmes, réseau et sécurité.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section reveal" id="infos">
-      <h2>Infos personnelles</h2>
-      <div class="cards">
-        <div class="card">
-          <h3>Coordonnées</h3>
-          <p>Email : ragotnaimpro@gmail.com</p>
-          <p>Téléphone : 0782307536</p>
-          <p>Adresse : 10 rue tout y croit, 47300 Villeneuve-sur-Lot</p>
-        </div>
-        <div class="card">
-          <h3>Langues</h3>
-          <p>Français : langue maternelle</p>
-          <p>Anglais : B1 (intermédiaire)</p>
-        </div>
-        <div class="card">
-          <h3>Permis</h3>
-          <p>Permis B · Permis A2</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section reveal" id="competences">
-      <h2>Compétences clés</h2>
-      <div class="cards">
-        <div class="card">
-          <h3>Systèmes</h3>
-          <p>Windows Server, Linux, GPO, sauvegardes, déploiements.</p>
-        </div>
-        <div class="card">
-          <h3>Réseaux</h3>
-          <p>TCP/IP, VLAN, DHCP, DNS, VPN, supervision.</p>
-        </div>
-        <div class="card">
-          <h3>Sécurité</h3>
-          <p>Pare-feu, durcissement, MFA, bonnes pratiques.</p>
-        </div>
-        <div class="card">
-          <h3>Automatisation</h3>
-          <p>PowerShell, Bash, documentation, procédures.</p>
-        </div>
-      </div>
-      <div style="margin-top:12px;" class="tags">
-        <div class="tag">Windows Server</div>
-        <div class="tag">Linux</div>
-        <div class="tag">Active Directory</div>
-        <div class="tag">VMware</div>
-        <div class="tag">vCenter</div>
-        <div class="tag">Zabbix</div>
-        <div class="tag">Cisco</div>
-        <div class="tag">Fortigate</div>
-        <div class="tag">PHPIPAM</div>
-        <div class="tag">VoIP</div>
-        <div class="tag">Azure</div>
-      </div>
-      <div style="margin-top:16px;" class="cards">
-        <div class="card skill">
-          <strong>Administration Windows</strong>
-          <div class="bar"><span style="width:80%"></span></div>
-        </div>
-        <div class="card skill">
-          <strong>Linux & services</strong>
-          <div class="bar"><span style="width:70%"></span></div>
-        </div>
-        <div class="card skill">
-          <strong>Réseaux & sécurité</strong>
-          <div class="bar"><span style="width:75%"></span></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section reveal" id="bts">
-      <h2>Dossier BTS SIO</h2>
-      <div class="split">
-        <div class="card">
-          <span class="pill">Bloc 1</span>
-          <h3>Support & incidents</h3>
-          <p>Analyse, résolution, suivi des demandes et amélioration continue.</p>
-        </div>
-        <div class="card">
-          <span class="pill">Bloc 2</span>
-          <h3>Administration & sécurité</h3>
-          <p>Comptes, droits, sauvegardes, VPN et continuité de service.</p>
-        </div>
-        <div class="card">
-          <span class="pill">Bloc 3</span>
-          <h3>Infrastructure réseau</h3>
-          <p>VLAN, DNS/DHCP, pare-feu, supervision et QoS.</p>
-        </div>
-        <div class="card">
-          <span class="pill">Bloc 4</span>
-          <h3>Mode projet</h3>
-          <p>Besoin, budget, plan de migration, documentation et communication.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section reveal" id="projets">
-      <h2>Projets</h2>
-      <div class="cards">
-        <div class="card">
-          <h3>Plan d'upgrade pare-feu saturé</h3>
-          <p>Analyse de saturation, plan de migration, choix matériel, budget, sauvegardes.</p>
-        </div>
-        <div class="card">
-          <h3>Masterisation parc bancaire</h3>
-          <p>Procédures de préparation, sécurisation, nomenclature et documentation.</p>
-        </div>
-        <div class="card">
-          <h3>Supervision réseau</h3>
-          <p>Alertes, monitoring, tableaux de bord et suivi des services.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section reveal" id="details">
-      <h2>Projets détaillés</h2>
-      <div class="cards">
-        <div class="card">
-          <h3>Upgrade pare-feu</h3>
-          <p><strong>Objectif</strong> : réduire la saturation et sécuriser le périmètre.</p>
-          <p><strong>Actions</strong> : audit, choix matériel, budget, sauvegardes, plan de migration.</p>
-          <p><strong>Résultat</strong> : plan structuré et continuité de service.</p>
-        </div>
-        <div class="card">
-          <h3>Masterisation</h3>
-          <p><strong>Objectif</strong> : déploiement homogène des postes.</p>
-          <p><strong>Actions</strong> : procédure, nomenclature, sécurisation, documentation.</p>
-          <p><strong>Résultat</strong> : intégration rapide et fiable des postes.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section reveal" id="stages">
-      <h2>Expériences professionnelles</h2>
-      <div class="timeline">
-        <div class="timeline-item">
-          <strong>Technicien systèmes et réseaux (alternance)</strong>
-          <div style="color:var(--muted);">Coaxis Fauguerolles · Juill. 2023 - Déc. 2024</div>
-          <div>Configuration firewalls & VPN, supervision Zabbix, maintenance postes, mise en rack, gestion incidents.</div>
-        </div>
-        <div class="timeline-item">
-          <strong>Technicien alarme vidéo-surveillance</strong>
-          <div style="color:var(--muted);">Verisure / Ariane Sécurité · Déc. 2024 - Mai 2025</div>
-          <div>Installation et mise en service, conseil, relation client, suivi des interventions.</div>
-        </div>
-        <div class="timeline-item">
-          <strong>Technicien du territoire</strong>
-          <div style="color:var(--muted);">La Régie · Mai 2025 - Sept. 2025</div>
-          <div>Collecte et transport, traçabilité via tablette, organisation des tournées.</div>
-        </div>
-        <div class="timeline-item">
-          <strong>Serveur extra</strong>
-          <div style="color:var(--muted);">La Pataterie · Oct. 2022 - Août 2023</div>
-          <div>Accueil client, encaissement, gestion du rythme en forte affluence.</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section reveal" id="formations">
-      <h2>Formations</h2>
-      <div class="cards">
-        <div class="card">
-          <h3>BTS SIO SISR</h3>
-          <p>STUDI · En cours</p>
-        </div>
-        <div class="card">
-          <h3>Niveau BTS SIO SISR</h3>
-          <p>Campus numérique Agen · Août 2023 - Déc. 2024</p>
-        </div>
-        <div class="card">
-          <h3>Bac STI2D Énergie & Environnement</h3>
-          <p>Sainte Catherine Villeneuve-sur-Lot · 2023</p>
-        </div>
-      </div>
-      <div style="margin-top:12px;" class="cards">
-        <div class="card">
-          <h3>Langues</h3>
-          <p>Français : langue maternelle · Anglais : B1</p>
-        </div>
-        <div class="card">
-          <h3>Permis</h3>
-          <p>Permis B · Permis A2</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section reveal" id="veille">
-      <h2>Veille technologique</h2>
-      <div class="grid-2">
-        <div class="card">
-          <h3>Objectif</h3>
-          <p>Suivre l'actualité cyber, les vulnérabilités critiques et les tendances infra.</p>
-          <p>Outils : Feedly / Inoreader + alertes éditeurs.</p>
-        </div>
-        <div class="card">
-          <h3>Rythme</h3>
-          <p>Quotidien : alertes critiques · Hebdo : synthèse & notes.</p>
-        </div>
-      </div>
-      <div style="margin-top:16px;" class="cards">
-        <div class="card">
-          <h3>Cyber / Vulnérabilités (RSS)</h3>
-          <p>• CISA Alerts (RSS)</p>
-          <p>• NIST Cybersecurity News (RSS)</p>
-          <p>• NIST Cybersecurity Insights Blog (RSS)</p>
-        </div>
-        <div class="card">
-          <h3>Tech / IT général (RSS)</h3>
-          <p>• Hacker News Frontpage (RSS)</p>
-          <p>• NIST News (RSS)</p>
-        </div>
-        <div class="card">
-          <h3>CERT & organismes (RSS)</h3>
-          <p>• CERT.at Blog (RSS)</p>
-          <p>• CERT-FR : suivi direct du site + réseaux officiels</p>
-        </div>
-      </div>
-      <div style="margin-top:12px;" class="card">
-        <h3>Flux RSS utilisés</h3>
-        <p>https://www.cisa.gov/cybersecurity-advisories/alerts.xml</p>
-        <p>https://www.nist.gov/news-events/cybersecurity/rss.xml</p>
-        <p>https://www.nist.gov/blogs/cybersecurity-insights/rss.xml</p>
-        <p>https://hnrss.org/frontpage</p>
-        <p>https://www.nist.gov/news-events/news/rss.xml</p>
-        <p>https://www.cert.at/cert-at.en.blog.rss_2.0.xml</p>
-      </div>
-      <div style="margin-top:16px;" class="card">
-        <h3>Veille en direct (RSS)</h3>
-        <p style="color:var(--muted); font-size:13px;">
-          Chargement automatique des derniers titres. Si tu ouvres le fichier en local et que rien
-          n'apparaît, c'est normal : certains navigateurs bloquent les appels externes en local.
-        </p>
-        <div class="grid-2" style="margin-top:10px;">
-          <div>
-            <strong>Cyber / vulnérabilités</strong>
-            <div id="rss-cyber" class="rss-grid"></div>
-          </div>
-          <div>
-            <strong>Tech / IT</strong>
-            <div id="rss-tech" class="rss-grid"></div>
+      </article>
+      <aside class="hero-side">
+        <div class="mini-panel">
+          <img class="hero-logo" src="assets/img/logo-njr.png" alt="Logo NJR Solutions" />
+          <h3>Positionnement</h3>
+          <div class="metric-list" style="margin-top:12px">
+            <div class="metric"><span>Specialite</span><strong>Systemes · Reseaux · Securite</strong></div>
+            <div class="metric"><span>Objectif</span><strong>Admin Sys & Net</strong></div>
+            <div class="metric"><span>Zone</span><strong>Villeneuve-sur-Lot</strong></div>
+            <div class="metric"><span>Disponibilite</span><strong>Alternance · Stage · Prestations</strong></div>
           </div>
         </div>
+        <div class="mini-panel">
+          <h3>Lecture rapide</h3>
+          <p>Une entree pour le BTS, une entree pour l'activite pro et une presentation plus nette du profil global sans repetition d'une page a l'autre.</p>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
+          <h2>Qui je suis</h2>
+          <p>Une presentation courte pour comprendre le profil et les activites sans devoir lire tout le site.</p>
+        </div>
+      </div>
+      <div class="cards-grid cards-grid--wide">
+        <article class="card">
+          <h3>Naim Ragot</h3>
+          <p>Etudiant en BTS SIO option SISR, avec une orientation claire vers l'administration systeme, les reseaux, la securite de base et l'automatisation PowerShell.</p>
+        </article>
+        <article class="card">
+          <h3>NJR Solutions</h3>
+          <p>Une base de services de proximite avec deux univers distincts: l'informatique et le nettoyage, chacun avec son propre parcours de demande.</p>
+        </article>
       </div>
     </section>
 
-    <section class="section reveal" id="certifs">
-      <h2>Certifications</h2>
-      <div class="cards">
-        <div class="card">
-          <h3>PIX</h3>
-          <p>Niveau numérique validé.</p>
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
+          <h2>Deux espaces distincts</h2>
+          <p>Le site est maintenant pense comme deux univers complementaires: un pour reussir le BTS, un pour piloter NJR Solutions.</p>
         </div>
-        <div class="card">
-          <h3>SecNumacadémie</h3>
-          <p>Bonnes pratiques cybersécurité.</p>
-        </div>
-        <div class="card">
-          <h3>Autres</h3>
-          <p>À compléter selon tes certifications.</p>
-        </div>
+      </div>
+      <div class="portal-grid">
+        <article class="portal-card portal-card--bts" data-private-only>
+          <div class="eyebrow">Espace BTS</div>
+          <h3>Ton hub examen, preuves et preparation orale.</h3>
+          <p>Checklist, ressources E4 / E5, notes, projets a montrer, trame orale et supports de presentation.</p>
+          <div class="portal-points">
+            <span>Checklist locale</span>
+            <span>Ressources BTS</span>
+            <span>Situations E5</span>
+            <span>Preparation orale</span>
+          </div>
+          <div class="actions">
+            <a class="btn btn--primary" href="bts.html">Entrer dans l'espace BTS</a>
+            <a class="btn btn--secondary" href="projets.html">Voir les projets</a>
+          </div>
+        </article>
+        <article class="portal-card portal-card--business">
+          <div class="eyebrow">Espace Entreprise</div>
+          <h3>Ton hub services, interventions, clients et estimation.</h3>
+          <p>Services proposes, brief client, checklist d'intervention, suivi local et acces direct au simulateur NJR.</p>
+          <div class="portal-points">
+            <span>Offres claires</span>
+            <span>Brief client</span>
+            <span>Suivi local</span>
+            <span>Devis rapide</span>
+          </div>
+          <div class="actions">
+            <a class="btn btn--accent" href="entreprise.html">Entrer dans l'espace entreprise</a>
+            <a class="btn btn--secondary" href="outils.html">Ouvrir les outils</a>
+          </div>
+        </article>
       </div>
     </section>
 
-    <section class="section reveal" id="contact">
-      <h2>Contact</h2>
-      <div class="contact">
-        <div class="card">
-          <h3>Coordonnées</h3>
-          <p>Email : ragotnaimpro@gmail.com</p>
-          <p>Téléphone : 0782307536</p>
-          <p>LinkedIn : linkedin.com/in/naim</p>
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
+          <h2>Points d'entree rapides</h2>
+          <p>Acces direct a la bonne page selon le contexte: jury, client, recrutement ou preparation locale.</p>
         </div>
-        <div class="card">
-          <h3>Message rapide</h3>
-          <form>
-            <input placeholder="Nom" />
-            <input placeholder="Email" />
-            <textarea rows="4" placeholder="Votre message"></textarea>
-            <button type="button" class="btn btn-primary">Envoyer</button>
-          </form>
-        </div>
+      </div>
+      <div class="cards-grid cards-grid--wide">
+        <article class="card">
+          <h3>Espace BTS</h3>
+          <p>Checklist locale, progression, ressources E4 / E5, notes de travail et acces rapide a tes supports.</p>
+          <div style="margin-top:14px;"><a href="bts.html">Ouvrir BTS</a></div>
+        </article>
+        <article class="card">
+          <h3>Projets valorises</h3>
+          <p>Cas techniques filtrables, plus lisibles pour un oral, une candidature ou un client.</p>
+          <div style="margin-top:14px;" data-private-only><a href="projets.html">Ouvrir projets</a></div>
+        </article>
+        <article class="card">
+          <h3>NJR Solutions</h3>
+          <p>Services proposes, argumentaire, brief client et passerelle directe vers le simulateur.</p>
+          <div style="margin-top:14px;"><a href="entreprise.html">Ouvrir entreprise</a></div>
+        </article>
+        <article class="card">
+          <h3>Outils quotidiens</h3>
+          <p>Bloc notes, mini suivi prospects / interventions et outils de preparation rapide.</p>
+          <div style="margin-top:14px;"><a href="outils.html">Ouvrir outils</a></div>
+        </article>
       </div>
     </section>
 
-    <section class="section reveal" id="passions">
-      <h2>Passions</h2>
-      <div class="cards">
-        <div class="card">
-          <h3>Technologies</h3>
-          <p>Explorer les nouvelles technologies et tester en labo.</p>
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
+          <h2>Demandes types</h2>
+          <p>Cette zone montre rapidement quels besoins peuvent etre pris en charge, sans obliger le visiteur a deviner ce que recouvre chaque activite.</p>
         </div>
-        <div class="card">
-          <h3>Impression 3D</h3>
-          <p>Créer et tester avec l'impression 3D.</p>
+      </div>
+      <div class="cards-grid cards-grid--wide" id="scenario-grid"></div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
+          <h2>Services proposes</h2>
+          <p>Les principales prestations sont presentees de facon lisible, avec une separation nette entre informatique et nettoyage.</p>
         </div>
-        <div class="card">
-          <h3>Drones</h3>
-          <p>Piloter et filmer avec des drones.</p>
+      </div>
+      <div class="cards-grid cards-grid--wide" id="service-cards"></div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
+          <h2>Packs rapides</h2>
+          <p>Ces entrees donnent une lecture immediate des demandes les plus courantes et des budgets de depart.</p>
         </div>
+      </div>
+      <div class="cards-grid pack-grid" id="service-packs"></div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
+          <h2>Repères utiles</h2>
+          <p>Quelques points simples suffisent a comprendre l'approche de NJR Solutions avant meme de contacter le site.</p>
+        </div>
+      </div>
+      <div class="cards-grid" id="trust-points"></div>
+    </section>
+
+    <section class="section reveal" data-private-only>
+      <div class="section__head">
+        <div>
+          <h2>Automatisation et lab</h2>
+          <p>Le site integre maintenant une vraie bibliotheque de scripts pour montrer ton approche infra et gagner du temps en labo.</p>
+        </div>
+      </div>
+      <div class="cards-grid cards-grid--wide">
+        <article class="card">
+          <h3>Bibliotheque scripts</h3>
+          <p>Active Directory, DHCP, IIS, Zabbix, Grafana et d'autres bases prêtes a adapter selon ton contexte.</p>
+          <div class="inline-actions">
+            <a class="btn btn--secondary btn--small" href="scripts.html">Ouvrir la bibliotheque</a>
+            <a class="btn btn--secondary btn--small" href="automation-scripts/deploy-ad-forest.ps1" download>Script AD</a>
+          </div>
+        </article>
+        <article class="card">
+          <h3>Valeur BTS</h3>
+          <p>Ces scripts te donnent des preuves plus concretes pour illustrer l'automatisation, l'administration Windows Server et la supervision.</p>
+          <div class="inline-actions">
+            <a class="btn btn--secondary btn--small" href="bts.html">Relier au BTS</a>
+            <a class="btn btn--secondary btn--small" href="projets.html" data-private-only>Voir les situations</a>
+          </div>
+        </article>
       </div>
     </section>
 
-    <div class="footer">Portfolio BTS SIO SISR· Naim · <span id="year"></span></div>
+    <section class="section reveal" data-private-only>
+      <div class="section__head">
+        <div>
+          <h2>Pilotage rapide</h2>
+          <p>Un apercu immediat de ton espace de travail local: progression BTS, suivi, veille et activite recente du site.</p>
+        </div>
+      </div>
+      <div class="stats-grid stats-grid--4" id="workspace-snapshot"></div>
+    </section>
 
-    <script>
-      const reveal = () => {
-        document.querySelectorAll('.reveal').forEach((el) => {
-          const rect = el.getBoundingClientRect();
-          if (rect.top < window.innerHeight - 60) {
-            el.classList.add('show');
-          }
-        });
-      };
-      window.addEventListener('scroll', reveal);
-      reveal();
-      document.getElementById('year').textContent = new Date().getFullYear();
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
+          <h2>Veille en direct</h2>
+          <p>Un resume rapide des alertes et publications recentes pour donner de la vie au portfolio et nourrir tes exemples BTS.</p>
+        </div>
+        <div class="actions" style="margin-top:0">
+          <button class="btn btn--secondary" id="home-feeds-refresh">Actualiser</button>
+          <a class="btn btn--secondary" href="veille.html">Ouvrir la veille complete</a>
+        </div>
+      </div>
+      <div class="feed-toolbar">
+        <span class="notice" id="home-feeds-status">Chargement des flux officiels...</span>
+        <span class="notice" id="home-feeds-meta">Mise a jour en attente.</span>
+      </div>
+      <div class="feed-board" id="home-feed-board"></div>
+    </section>
 
-      const rssSources = {
-        cyber: [
-          "https://www.cisa.gov/cybersecurity-advisories/alerts.xml",
-          "https://www.nist.gov/news-events/cybersecurity/rss.xml"
-        ],
-        tech: [
-          "https://hnrss.org/frontpage",
-          "https://www.nist.gov/news-events/news/rss.xml"
-        ]
-      };
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
+          <h2>Parcours et posture</h2>
+          <p>Une lecture concise de ton experience pour inspirer confiance des la page d'accueil.</p>
+        </div>
+      </div>
+      <div class="cards-grid" id="timeline-grid"></div>
+    </section>
 
-      async function fetchRss(url) {
-        const endpoint = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
-        const res = await fetch(endpoint);
-        const data = await res.json();
-        return data.contents;
-      }
-
-      function parseRss(xmlText) {
-        const parser = new DOMParser();
-        const xml = parser.parseFromString(xmlText, "text/xml");
-        return Array.from(xml.querySelectorAll("item")).slice(0, 5).map((item) => ({
-          title: item.querySelector("title")?.textContent || "Sans titre",
-          link: item.querySelector("link")?.textContent || "#",
-          date: item.querySelector("pubDate")?.textContent || ""
-        }));
-      }
-
-      async function loadRss(targetId, urls) {
-        const container = document.getElementById(targetId);
-        container.innerHTML = "";
-        try {
-          for (const url of urls) {
-            const xml = await fetchRss(url);
-            const items = parseRss(xml);
-            items.forEach((i) => {
-              const div = document.createElement("div");
-              div.className = "rss-item";
-              div.innerHTML = `<a href="${i.link}" target="_blank" rel="noopener">${i.title}</a>
-                <small>${i.date}</small>`;
-              container.appendChild(div);
-            });
-          }
-        } catch (e) {
-          container.innerHTML = "<div class='rss-item'>Impossible de charger les flux pour le moment.</div>";
-        }
-      }
-
-      loadRss("rss-cyber", rssSources.cyber);
-      loadRss("rss-tech", rssSources.tech);
-    </script>
-  </body>
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
+          <h2>Ressources immediates</h2>
+          <p>Les documents et points d'appui les plus utiles sont accessibles des la page d'accueil.</p>
+        </div>
+      </div>
+      <div class="cards-grid cards-grid--wide" id="home-resources"></div>
+    </section>
+  </main>
+  <div id="app-footer"></div>
+  <script src="assets/js/site.js"></script>
+  <script>
+    initSite("index.html");
+    setStats("stat-projects","stat-resources","stat-services");
+    renderWorkspaceSnapshot("workspace-snapshot");
+    renderScenarioCards("scenario-grid");
+    renderServiceCards("service-cards");
+    renderServicePacks("service-packs");
+    renderTrustPoints("trust-points");
+    initLiveFeedBoard({
+      containerId: "home-feed-board",
+      statusId: "home-feeds-status",
+      metaId: "home-feeds-meta",
+      refreshButtonId: "home-feeds-refresh",
+      feedIds: ["cert-fr","cisa","cert-eu-advisories"],
+      limit: 2,
+      compact: true
+    });
+    renderTimeline("timeline-grid");
+    renderResourceHighlights("home-resources",4);
+  </script>
+</body>
 </html>

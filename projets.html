@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Naim Ragot · Projets</title>
+  <meta name="description" content="Projets techniques et situations professionnelles BTS de Naim Ragot." />
+  <link rel="stylesheet" href="assets/css/site.css" />
+</head>
+<body>
+  <div id="app-header"></div>
+  <main class="site-shell page">
+    <section class="section reveal is-visible">
+      <div class="section__head">
+        <div>
+          <h2>Projets, cas et situations professionnelles</h2>
+          <p>Tu peux filtrer les cartes selon l'usage: dossier BTS, securite, documentation ou contexte entreprise.</p>
+          <p class="notice" id="project-count">0 projet affiche</p>
+        </div>
+        <input id="project-search" class="search" placeholder="Rechercher un projet, une techno ou un mot-cle..." />
+      </div>
+      <div class="filters" id="project-filters">
+        <button class="is-active" data-filter="all">Tous</button>
+        <button data-filter="bts">BTS</button>
+        <button data-filter="entreprise">Entreprise</button>
+        <button data-filter="reseau">Reseau</button>
+        <button data-filter="securite">Securite</button>
+        <button data-filter="documentation">Documentation</button>
+      </div>
+      <div class="cards-grid cards-grid--wide" id="projects-grid" style="margin-top:18px"></div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
+          <h2>Experience et credibilite</h2>
+          <p>Un rappel du parcours qui donne du contexte a tes projets et montre la coherence de ton evolution.</p>
+        </div>
+      </div>
+      <div class="cards-grid" id="timeline-grid"></div>
+    </section>
+  </main>
+  <div id="app-footer"></div>
+  <script src="assets/js/site.js"></script>
+  <script>
+    const siteState = initSite("projets.html");
+    if (siteState.allowPage) {
+      initProjectFilters("project-filters","projects-grid","project-search","project-count");
+      initProjectSearch("project-search","projects-grid","project-filters","project-count");
+      renderTimeline("timeline-grid");
+    }
+  </script>
+</body>
+</html>

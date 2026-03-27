@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Naim Ragot · Centre de simulation</title>
+  <meta name="description" content="Centre des simulateurs NJR Solutions avec acces separe aux activites informatique et nettoyage." />
+  <link rel="stylesheet" href="assets/css/site.css" />
+</head>
+<body>
+  <div id="app-header"></div>
+  <main class="site-shell page">
+    <section class="hero reveal is-visible">
+      <article class="hero-main">
+        <div class="eyebrow">Centre des demandes · NJR Solutions</div>
+        <h1>Choisis l'activite et envoie une demande simple.</h1>
+        <p>Le parcours montre l'essentiel: le bon univers, les prestations utiles et une demande rapide. Les generateurs avances restent dans l'espace prive.</p>
+        <div class="actions">
+          <a class="btn btn--primary" href="demande-informatique.html">Demande informatique</a>
+          <a class="btn btn--accent" href="demande-nettoyage.html">Demande nettoyage</a>
+          <a class="btn btn--secondary" href="atelier-devis.html" data-private-only>Atelier devis</a>
+        </div>
+      </article>
+      <aside class="hero-side">
+        <div class="mini-panel">
+          <img class="hero-logo" src="assets/img/logo-njr.png" alt="Logo NJR Solutions" />
+          <h3>Lecture rapide</h3>
+          <div class="metric-list" style="margin-top:12px">
+            <div class="metric"><span>Public</span><strong>Demande simple</strong></div>
+            <div class="metric"><span>Prive</span><strong>Atelier devis</strong></div>
+            <div class="metric"><span>Parcours</span><strong>Plus intuitif</strong></div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
+          <h2>Choisir l'activite</h2>
+          <p>Chaque page a son propre simulateur, ses propres prix et une logique adaptee au bon metier.</p>
+        </div>
+      </div>
+      <div class="portal-grid">
+        <article class="portal-card portal-card--bts">
+          <div class="eyebrow">NJR Solutions Informatique</div>
+          <h3>Support, installation, reseau et accompagnement numerique.</h3>
+          <p>Le visiteur choisit ses prestations par categorie, visualise une estimation simple et envoie une demande claire sans details techniques inutiles.</p>
+          <div class="portal-points">
+            <span>Support</span>
+            <span>Reseau</span>
+            <span>Sauvegarde</span>
+            <span>Demande rapide</span>
+          </div>
+          <div class="actions">
+            <a class="btn btn--primary" href="demande-informatique.html">Ouvrir informatique</a>
+          </div>
+        </article>
+
+        <article class="portal-card portal-card--business">
+          <div class="eyebrow">NJR Solutions Nettoyage</div>
+          <h3>Maison, auto, exterieur et remises au propre.</h3>
+          <p>Le visiteur choisit les prestations utiles par univers, visualise le deplacement et envoie une demande simple a traiter.</p>
+          <div class="portal-points">
+            <span>Maison</span>
+            <span>Auto</span>
+            <span>Exterieur</span>
+            <span>Demande rapide</span>
+          </div>
+          <div class="actions">
+            <a class="btn btn--accent" href="demande-nettoyage.html">Ouvrir nettoyage</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
+          <h2>Comment ca marche</h2>
+          <p>Le centre de devis suit maintenant une logique plus claire, inspiree des bons parcours de conversion pour les services.</p>
+        </div>
+      </div>
+      <div class="cards-grid cards-grid--wide" id="quote-steps"></div>
+    </section>
+
+    <section class="section reveal">
+      <div class="tools-grid">
+        <article class="tool">
+          <h3>Quel simulateur ouvrir ?</h3>
+          <p>Si le visiteur hesite, ce mini aiguillage l'envoie vers le bon parcours sans friction.</p>
+          <div style="display:grid;gap:12px;margin-top:14px">
+            <label>Type de besoin
+              <select id="simulator-need" class="select">
+                <option value="">Choisir un besoin</option>
+                <option value="info">PC lent, installation, Wi-Fi, imprimante, sauvegarde</option>
+                <option value="clean">Maison, vitres, terrasse, voiture, utilitaire, exterieur</option>
+              </select>
+            </label>
+            <label>Niveau d'urgence
+              <select id="simulator-urgency" class="select">
+                <option>Normale</option>
+                <option>Haute</option>
+                <option>Critique</option>
+              </select>
+            </label>
+            <button class="btn btn--primary" type="button" id="open-recommended-simulator">Voir la recommandation</button>
+          </div>
+          <p class="notice" id="simulator-router-status" style="margin-top:12px">Le site peut orienter automatiquement le visiteur vers le bon simulateur.</p>
+        </article>
+        <article class="tool">
+          <h3>Recommendation rapide</h3>
+          <p>Un resultat simple, lisible et directement actionnable.</p>
+          <div class="brief-output" id="simulator-router-output">Choisis un besoin pour afficher la recommandation.</div>
+          <div class="actions">
+            <a class="btn btn--secondary" id="simulator-router-link" href="demande-informatique.html">Ouvrir le simulateur recommande</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
+          <h2>Questions frequentes</h2>
+          <p>Une FAQ courte leve les blocages classiques avant d'entrer dans le detail des simulateurs.</p>
+        </div>
+      </div>
+      <div class="faq-list" id="quote-faq"></div>
+    </section>
+
+    <section class="section reveal" data-private-only>
+      <div class="section__head">
+        <div>
+          <h2>Atelier prive</h2>
+          <p>Ton generateur complet reste disponible dans un espace separe pour les devis plus pousses.</p>
+        </div>
+      </div>
+      <div class="actions">
+        <a class="btn btn--secondary" href="atelier-devis.html">Ouvrir l'atelier devis</a>
+      </div>
+    </section>
+  </main>
+  <div id="app-footer"></div>
+  <script src="assets/js/site.js"></script>
+  <script>
+    initSite("devis_njr.html");
+    renderQuoteSteps("quote-steps");
+    renderFaq("quote-faq", PORTFOLIO_DATA.quoteFaq);
+
+    const needField = document.getElementById("simulator-need");
+    const urgencyField = document.getElementById("simulator-urgency");
+    const result = document.getElementById("simulator-router-output");
+    const resultLink = document.getElementById("simulator-router-link");
+    const status = document.getElementById("simulator-router-status");
+
+    function renderSimulatorRecommendation() {
+      const need = needField.value;
+      const urgency = urgencyField.value;
+
+      if (!need) {
+        result.textContent = "Choisis un besoin pour afficher la recommandation.";
+        resultLink.href = "demande-informatique.html";
+        status.textContent = "Le site peut orienter automatiquement le visiteur vers le bon simulateur.";
+        return;
+      }
+
+      const isInfo = need === "info";
+      const page = isInfo ? "demande-informatique.html" : "demande-nettoyage.html";
+      const label = isInfo ? "NJR Solutions Informatique" : "NJR Solutions Nettoyage";
+      const intro = isInfo
+        ? "Ce besoin releve du pole informatique."
+        : "Ce besoin releve du pole nettoyage.";
+      const advice = isInfo
+        ? "Le simulateur permet de qualifier le contexte, le mode d'intervention, les prestations techniques et les categories de services."
+        : "Le simulateur permet de preciser la frequence, la zone de deplacement et les prestations maison, auto ou exterieures.";
+      const urgencyNote = urgency === "Critique"
+        ? "Comme l'urgence est critique, le visiteur a interet a remplir le contexte le plus precis possible."
+        : urgency === "Haute"
+          ? "Avec une urgence haute, le formulaire aide a preparer une demande plus rapide a traiter."
+          : "Avec une urgence normale, le parcours standard suffit pour cadrer le besoin proprement.";
+
+      result.textContent = `${intro}\n\nRecommendation: ${label}\n\n${advice}\n${urgencyNote}`;
+      resultLink.href = page;
+      resultLink.textContent = `Ouvrir ${label}`;
+      status.textContent = `Recommandation mise a jour pour le pole ${isInfo ? "informatique" : "nettoyage"}.`;
+    }
+
+    document.getElementById("open-recommended-simulator").addEventListener("click", renderSimulatorRecommendation);
+    needField.addEventListener("change", renderSimulatorRecommendation);
+    urgencyField.addEventListener("change", renderSimulatorRecommendation);
+  </script>
+</body>
+</html>

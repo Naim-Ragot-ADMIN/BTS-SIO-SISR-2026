@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Naim Ragot · Outils</title>
+  <meta name="description" content="Outils locaux de productivite pour le BTS et NJR Solutions." />
+  <link rel="stylesheet" href="assets/css/site.css" />
+</head>
+<body>
+  <div id="app-header"></div>
+  <main class="site-shell page">
+    <section class="section reveal is-visible">
+      <div class="section__head">
+        <div>
+          <h2>Outils quotidiens</h2>
+          <p>Cette page sert de mini cockpit local: notes, suivi de contacts, preparation rapide et actions utiles.</p>
+        </div>
+      </div>
+      <div class="tools-grid">
+        <article class="tool">
+          <h3>Note de travail</h3>
+          <p>Un seul endroit pour noter ton focus du moment.</p>
+          <textarea id="focus-note" class="field-area" placeholder="Exemple : relancer un prospect, documenter un script, preparer une demo..."></textarea>
+          <div class="actions">
+            <button class="btn btn--secondary" id="copy-note">Copier</button>
+            <button class="btn btn--secondary" id="clear-note">Effacer</button>
+          </div>
+          <p class="notice" id="note-status">Sauvegarde locale active.</p>
+        </article>
+        <article class="tool">
+          <h3>Coordonnees rapides</h3>
+          <p>Pratique pendant un appel, une presentation ou un rendez-vous.</p>
+          <div class="contact-list">
+            <div class="contact-line"><span>Email</span><strong id="email-target">ragotnaimpro@gmail.com</strong></div>
+            <div class="contact-line"><span>Telephone</span><strong id="phone-target">07 82 30 75 36</strong></div>
+            <div class="contact-line"><span>Zone</span><strong>Villeneuve-sur-Lot · France</strong></div>
+          </div>
+          <div class="actions">
+            <button class="btn btn--secondary" id="copy-email">Copier l'email</button>
+            <button class="btn btn--secondary" id="copy-phone">Copier le telephone</button>
+            <a class="btn btn--primary" href="mailto:ragotnaimpro@gmail.com">Envoyer un email</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
+          <h2>Mini suivi prospects / interventions</h2>
+          <p>Tu peux ajouter un contact, une mission ou un rappel. Tout reste stocke en local dans le navigateur.</p>
+        </div>
+      </div>
+      <div class="split-grid">
+        <article class="tool">
+          <div style="display:grid;gap:10px">
+            <input id="lead-name" class="field" placeholder="Nom du client ou de la mission" />
+            <select id="lead-type" class="select">
+              <option>Client</option>
+              <option>Prospect</option>
+              <option>Mission</option>
+            </select>
+            <select id="lead-status" class="select">
+              <option>A traiter</option>
+              <option>En cours</option>
+              <option>A relancer</option>
+              <option>Termine</option>
+            </select>
+            <input id="lead-date" class="field" placeholder="Date ou echeance" />
+            <textarea id="lead-note" class="field-area" rows="4" placeholder="Note, contexte, details utiles..."></textarea>
+            <button class="btn btn--primary" id="lead-add">Ajouter</button>
+          </div>
+        </article>
+        <article class="tool">
+          <div class="lead-list" id="lead-list"></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
+          <h2>Sauvegarde locale</h2>
+          <p>Exporte ou restaure les donnees locales du site pour garder tes notes, suivis et brouillons sous la main.</p>
+        </div>
+      </div>
+      <div class="tools-grid">
+        <article class="tool">
+          <h3>Exporter ou importer</h3>
+          <p>Pratique avant un changement de navigateur, un nettoyage ou pour conserver une copie de tes donnees locales.</p>
+          <div class="actions">
+            <button class="btn btn--primary" id="export-local-data">Exporter mes donnees</button>
+            <button class="btn btn--secondary" id="import-local-trigger">Importer une sauvegarde</button>
+            <input id="import-local-data" class="hidden-file-input" type="file" accept="application/json" />
+          </div>
+        </article>
+        <article class="tool">
+          <h3>Etat du stockage local</h3>
+          <p>Ce bloc te montre ce qui est actuellement memorise sur ce navigateur pour ton portfolio.</p>
+          <div class="lead-list" id="data-hub-summary"></div>
+          <div class="actions">
+            <button class="btn btn--secondary" id="clear-local-data">Vider les donnees locales</button>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+  <div id="app-footer"></div>
+  <script src="assets/js/site.js"></script>
+  <script>
+    const siteState = initSite("outils.html");
+    if (siteState.allowPage) {
+      initNoteTool("focus-note","note-status","copy-note","clear-note");
+      initCopyEmail("copy-email","email-target");
+      initCopyPhone("copy-phone","phone-target");
+      initLeadTool();
+      initDataHub();
+    }
+  </script>
+</body>
+</html>

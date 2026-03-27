@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Naim Ragot · Scripts d'automatisation</title>
+  <meta name="description" content="Bibliotheque de scripts d'automatisation infra pour le BTS SIO SISR et les laboratoires systeme, reseau et supervision." />
+  <link rel="stylesheet" href="assets/css/site.css" />
+</head>
+<body>
+  <div id="app-header"></div>
+  <main class="site-shell page">
+    <section class="hero reveal is-visible">
+      <article class="hero-main">
+        <div class="eyebrow">Bibliotheque scripts · BTS + labo</div>
+        <h1>Des scripts d'automatisation concrets pour l'infra, le support et la supervision.</h1>
+        <p>Cette page regroupe des scripts que tu peux montrer au BTS, reutiliser en labo et adapter ensuite a tes propres environnements. Ils ont ete reecrits proprement a partir de documentations officielles pour rester utiles et presentables.</p>
+        <div class="actions">
+          <a class="btn btn--primary" href="#windows-scripts">Scripts Windows Server</a>
+          <a class="btn btn--secondary" href="#monitoring-scripts">Monitoring et observabilite</a>
+          <a class="btn btn--accent" href="bts.html">Retour espace BTS</a>
+        </div>
+        <div class="stats-grid stats-grid--4">
+          <div class="mini-panel"><div class="label">Scripts</div><div class="kpi">5</div></div>
+          <div class="mini-panel"><div class="label">Cibles</div><div class="kpi">AD · DHCP · IIS</div></div>
+          <div class="mini-panel"><div class="label">Supervision</div><div class="kpi">Zabbix · Grafana</div></div>
+          <div class="mini-panel"><div class="label">Usage</div><div class="kpi">BTS · Labo</div></div>
+        </div>
+      </article>
+      <aside class="hero-side">
+        <div class="mini-panel">
+          <h3>Comment t'en servir</h3>
+          <div class="metric-list" style="margin-top:12px">
+            <div class="metric"><span>Pour le BTS</span><strong>Montrer ta logique d'automatisation</strong></div>
+            <div class="metric"><span>En labo</span><strong>Gagner du temps sur les deploiements</strong></div>
+            <div class="metric"><span>En vrai</span><strong>Adapter avant production</strong></div>
+          </div>
+        </div>
+        <div class="mini-panel">
+          <h3>Important</h3>
+          <p>Ces scripts sont volontairement propres et generalistes. Ils sont faits pour servir de base solide, pas pour etre lances en production sans adaptation, validation et tests prealables.</p>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
+          <h2>Recherche rapide dans la bibliotheque</h2>
+          <p>Filtre les scripts par techno, usage ou type pour trouver plus vite ce que tu veux montrer ou reutiliser.</p>
+        </div>
+        <input id="scripts-search" class="search" placeholder="Chercher AD, DHCP, Grafana, Docker, IIS..." />
+      </div>
+      <div class="filters" id="scripts-filters">
+        <button class="is-active" data-script-filter="all">Tous</button>
+        <button data-script-filter="windows">Windows</button>
+        <button data-script-filter="powershell">PowerShell</button>
+        <button data-script-filter="monitoring">Monitoring</button>
+        <button data-script-filter="bash">Bash</button>
+      </div>
+      <p class="notice" id="scripts-count" style="margin-top:14px">5 scripts affiches</p>
+    </section>
+
+    <section class="section reveal" id="windows-scripts">
+      <div class="section__head">
+        <div>
+          <h2>Windows Server et Active Directory</h2>
+          <p>Des bases serieuses pour automatiser un lab AD, creer des utilisateurs en masse, configurer DHCP et monter un site IIS.</p>
+        </div>
+      </div>
+      <div class="script-shell">
+        <article class="script-card" data-script-item data-tags="windows powershell ad active-directory">
+          <div class="card__top">
+            <div>
+              <h3>Deployer une foret Active Directory</h3>
+              <p>Installe le role AD DS, verifie les prerequis et cree une nouvelle foret avec DNS integre.</p>
+            </div>
+            <span class="badge">PowerShell</span>
+          </div>
+          <div class="script-meta">
+            <span class="pill">AD DS</span>
+            <span class="pill">Windows Server</span>
+            <span class="pill">Labo / maquette</span>
+          </div>
+          <p class="notice">Prerequis: console admin, Windows Server, mot de passe DSRM securestring.</p>
+          <div class="inline-actions">
+            <a class="btn btn--secondary btn--small" href="automation-scripts/deploy-ad-forest.ps1" download>Telecharger</a>
+            <a class="btn btn--secondary btn--small" href="https://learn.microsoft.com/en-us/powershell/module/addsdeployment/install-addsforest" target="_blank" rel="noopener">Source officielle</a>
+            <button class="btn btn--secondary btn--small" type="button" data-copy-target="code-ad-forest">Copier le script</button>
+          </div>
+          <pre class="script-code" id="code-ad-forest"><code>param(
+    [Parameter(Mandatory = $true)]
+    [string]$DomainName,
+
+    [Parameter(Mandatory = $true)]
+    [securestring]$SafeModeAdministratorPassword,
+
+    [string]$DomainNetbiosName = "",
+    [string]$DatabasePath = "C:\\Windows\\NTDS",
+    [string]$LogPath = "C:\\Windows\\NTDS",
+    [string]$SysvolPath = "C:\\Windows\\SYSVOL",
+    [switch]$NoRebootOnCompletion
+)
+
+Set-StrictMode -Version Latest
+$ErrorActionPreference = "Stop"
+
+Install-WindowsFeature -Name AD-Domain-Services -IncludeManagementTools
+Import-Module ADDSDeployment
+
+$commonParams = @{
+    DomainName                    = $DomainName
+    DomainNetbiosName             = $DomainNetbiosName
+    SafeModeAdministratorPassword = $SafeModeAdministratorPassword
+    InstallDns                    = $true
+    CreateDnsDelegation           = $false
+    DatabasePath                  = $DatabasePath
+    LogPath                       = $LogPath
+    SysvolPath                    = $SysvolPath
+}
+
+Test-ADDSForestInstallation @commonParams
+Install-ADDSForest @commonParams -Force:$true -Confirm:$false</code></pre>
+        </article>
+
+        <article class="script-card" data-script-item data-tags="windows powershell ad active-directory csv users">
+          <div class="card__top">
+            <div>
+              <h3>Importer des utilisateurs et OU depuis un CSV</h3>
+              <p>Cree automatiquement les OU, les comptes et les groupes de base a partir d'un fichier CSV.</p>
+            </div>
+            <span class="badge">PowerShell</span>
+          </div>
+          <div class="script-meta">
+            <span class="pill">Active Directory</span>
+            <span class="pill">CSV</span>
+            <span class="pill">Onboarding</span>
+          </div>
+          <p class="notice">Colonnes attendues: <code>GivenName,Surname,SamAccountName,UserPrincipalName,OU,DisplayName,Department,Title,Group</code>.</p>
+          <div class="inline-actions">
+            <a class="btn btn--secondary btn--small" href="automation-scripts/import-ad-users-and-ou.ps1" download>Telecharger</a>
+            <a class="btn btn--secondary btn--small" href="https://learn.microsoft.com/en-us/powershell/module/activedirectory/new-aduser" target="_blank" rel="noopener">Source officielle</a>
+            <button class="btn btn--secondary btn--small" type="button" data-copy-target="code-ad-users">Copier le script</button>
+          </div>
+          <pre class="script-code" id="code-ad-users"><code>param(
+    [Parameter(Mandatory = $true)]
+    [string]$CsvPath,
+    [Parameter(Mandatory = $true)]
+    [string]$RootDN,
+    [Parameter(Mandatory = $true)]
+    [securestring]$DefaultPassword
+)
+
+Import-Module ActiveDirectory
+$users = Import-Csv -LiteralPath $CsvPath
+
+foreach ($user in $users) {
+    $ouName = if ($user.OU) { $user.OU.Trim() } else { "Utilisateurs" }
+    $ouDn = "OU=$ouName,$RootDN"
+    $displayName = if ($user.DisplayName) { $user.DisplayName } else { "$($user.GivenName) $($user.Surname)" }
+
+    if (-not (Get-ADOrganizationalUnit -LDAPFilter "(distinguishedName=$ouDn)" -ErrorAction SilentlyContinue)) {
+        New-ADOrganizationalUnit -Name $ouName -Path $RootDN -ProtectedFromAccidentalDeletion $true | Out-Null
+    }
+
+    if (-not (Get-ADUser -Filter "SamAccountName -eq '$($user.SamAccountName)'" -ErrorAction SilentlyContinue)) {
+        New-ADUser -Name $displayName -GivenName $user.GivenName -Surname $user.Surname `
+            -DisplayName $displayName -SamAccountName $user.SamAccountName `
+            -UserPrincipalName $user.UserPrincipalName -Department $user.Department `
+            -Title $user.Title -Path $ouDn -AccountPassword $DefaultPassword `
+            -ChangePasswordAtLogon $true -Enabled $true
+    }
+}</code></pre>
+        </article>
+
+        <article class="script-card" data-script-item data-tags="windows powershell dhcp dns reseau">
+          <div class="card__top">
+            <div>
+              <h3>Deployer DHCP et preparer une zone DNS</h3>
+              <p>Installe le role DHCP, autorise le serveur dans l'AD, cree une plage IPv4 et pose les options principales.</p>
+            </div>
+            <span class="badge">PowerShell</span>
+          </div>
+          <div class="script-meta">
+            <span class="pill">DHCP</span>
+            <span class="pill">DNS</span>
+            <span class="pill">Reseau local</span>
+          </div>
+          <p class="notice">Adapte aux labs SISR pour automatiser les scopes et les options DNS / passerelle.</p>
+          <div class="inline-actions">
+            <a class="btn btn--secondary btn--small" href="automation-scripts/deploy-dhcp-dns.ps1" download>Telecharger</a>
+            <a class="btn btn--secondary btn--small" href="https://learn.microsoft.com/en-us/powershell/module/dhcpserver/add-dhcpserverv4scope" target="_blank" rel="noopener">Source officielle</a>
+            <button class="btn btn--secondary btn--small" type="button" data-copy-target="code-dhcp-dns">Copier le script</button>
+          </div>
+          <pre class="script-code" id="code-dhcp-dns"><code>param(
+    [Parameter(Mandatory = $true)]
+    [string]$ScopeName,
+    [Parameter(Mandatory = $true)]
+    [ipaddress]$StartRange,
+    [Parameter(Mandatory = $true)]
+    [ipaddress]$EndRange,
+    [Parameter(Mandatory = $true)]
+    [ipaddress]$SubnetMask,
+    [Parameter(Mandatory = $true)]
+    [ipaddress]$ScopeId,
+    [Parameter(Mandatory = $true)]
+    [ipaddress]$Router,
+    [Parameter(Mandatory = $true)]
+    [ipaddress[]]$DnsServers,
+    [Parameter(Mandatory = $true)]
+    [string]$DnsDomain
+)
+
+Install-WindowsFeature -Name DHCP -IncludeManagementTools
+Import-Module DhcpServer
+
+netsh dhcp add securitygroups | Out-Null
+Restart-Service -Name DHCPServer -Force
+
+Add-DhcpServerv4Scope -Name $ScopeName -StartRange $StartRange.IPAddressToString `
+    -EndRange $EndRange.IPAddressToString -SubnetMask $SubnetMask.IPAddressToString -State Active
+
+Set-DhcpServerv4OptionValue -ScopeId $ScopeId.IPAddressToString `
+    -DnsDomain $DnsDomain `
+    -DnsServer ($DnsServers | ForEach-Object { $_.IPAddressToString }) `
+    -Router $Router.IPAddressToString</code></pre>
+        </article>
+
+        <article class="script-card" data-script-item data-tags="windows powershell iis web">
+          <div class="card__top">
+            <div>
+              <h3>Deployer un site IIS et son App Pool</h3>
+              <p>Installe IIS, cree un pool d'applications, deploie le site et le demarre automatiquement.</p>
+            </div>
+            <span class="badge">PowerShell</span>
+          </div>
+          <div class="script-meta">
+            <span class="pill">IIS</span>
+            <span class="pill">WebAdministration</span>
+            <span class="pill">Publication</span>
+          </div>
+          <p class="notice">Pratique pour une maquette intranet, un portail local ou un serveur web Windows en labo.</p>
+          <div class="inline-actions">
+            <a class="btn btn--secondary btn--small" href="automation-scripts/deploy-iis-site.ps1" download>Telecharger</a>
+            <a class="btn btn--secondary btn--small" href="https://learn.microsoft.com/en-us/powershell/module/webadministration/new-website" target="_blank" rel="noopener">Source officielle</a>
+            <button class="btn btn--secondary btn--small" type="button" data-copy-target="code-iis-site">Copier le script</button>
+          </div>
+          <pre class="script-code" id="code-iis-site"><code>param(
+    [Parameter(Mandatory = $true)]
+    [string]$SiteName,
+    [Parameter(Mandatory = $true)]
+    [string]$PhysicalPath,
+    [int]$Port = 80,
+    [string]$HostHeader = "",
+    [string]$AppPoolName = ""
+)
+
+Install-WindowsFeature -Name Web-Server -IncludeManagementTools
+Import-Module WebAdministration
+
+if (-not $AppPoolName) { $AppPoolName = $SiteName }
+if (-not (Test-Path -LiteralPath $PhysicalPath)) { New-Item -ItemType Directory -Path $PhysicalPath -Force | Out-Null }
+if (-not (Test-Path -LiteralPath "IIS:\\AppPools\\$AppPoolName")) { New-WebAppPool -Name $AppPoolName | Out-Null }
+if (-not (Test-Path -LiteralPath "IIS:\\Sites\\$SiteName")) {
+    New-Website -Name $SiteName -Port $Port -HostHeader $HostHeader `
+        -PhysicalPath $PhysicalPath -ApplicationPool $AppPoolName | Out-Null
+}
+Start-Website -Name $SiteName</code></pre>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal" id="monitoring-scripts">
+      <div class="section__head">
+        <div>
+          <h2>Monitoring, observabilite et stack Docker</h2>
+          <p>Une base simple pour lancer rapidement Zabbix et Grafana sur un hote Linux avec Docker.</p>
+        </div>
+      </div>
+      <div class="script-shell">
+        <article class="script-card" data-script-item data-tags="monitoring bash zabbix grafana docker observabilite">
+          <div class="card__top">
+            <div>
+              <h3>Deployer Zabbix + Grafana via Docker</h3>
+              <p>Clone le depot officiel Zabbix Docker, lance la stack de base puis demarre un conteneur Grafana avec volume persistant.</p>
+            </div>
+            <span class="badge">Bash</span>
+          </div>
+          <div class="script-meta">
+            <span class="pill">Zabbix</span>
+            <span class="pill">Grafana</span>
+            <span class="pill">Docker</span>
+          </div>
+          <p class="notice">Prerequis: Docker et Docker Compose deja installes, acces internet et machine Linux ou VM labo.</p>
+          <div class="inline-actions">
+            <a class="btn btn--secondary btn--small" href="automation-scripts/deploy-zabbix-grafana.sh" download>Telecharger</a>
+            <a class="btn btn--secondary btn--small" href="https://www.zabbix.com/documentation/current/en/manual/installation/containers" target="_blank" rel="noopener">Source Zabbix</a>
+            <a class="btn btn--secondary btn--small" href="https://grafana.com/docs/grafana/latest/setup-grafana/installation/docker/" target="_blank" rel="noopener">Source Grafana</a>
+            <button class="btn btn--secondary btn--small" type="button" data-copy-target="code-zabbix-grafana">Copier le script</button>
+          </div>
+          <pre class="script-code" id="code-zabbix-grafana"><code>#!/usr/bin/env bash
+set -euo pipefail
+
+ZABBIX_VERSION="${ZABBIX_VERSION:-7.4}"
+WORKDIR="${WORKDIR:-/opt/monitoring}"
+ZABBIX_REPO="${WORKDIR}/zabbix-docker"
+GRAFANA_VOLUME="${GRAFANA_VOLUME:-grafana-storage}"
+
+mkdir -p "${WORKDIR}"
+
+if [ ! -d "${ZABBIX_REPO}/.git" ]; then
+  git clone https://github.com/zabbix/zabbix-docker.git "${ZABBIX_REPO}"
+fi
+
+cd "${ZABBIX_REPO}"
+git fetch --tags --force
+git checkout "${ZABBIX_VERSION}"
+
+docker compose -f docker-compose_v3_alpine_mysql_latest.yaml up -d
+docker volume create "${GRAFANA_VOLUME}" &gt;/dev/null
+
+if ! docker ps -a --format '{{.Names}}' | grep -qx 'grafana'; then
+  docker run -d --name grafana --restart unless-stopped -p 3000:3000 \
+    -v "${GRAFANA_VOLUME}:/var/lib/grafana" grafana/grafana-enterprise
+fi</code></pre>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
+          <h2>Notes d'usage</h2>
+          <p>Le but est de disposer d'une base technique serieuse et presentable, pas d'un catalogue de copier-coller aveugle.</p>
+        </div>
+      </div>
+      <div class="cards-grid cards-grid--wide">
+        <article class="card">
+          <h3>Pour le BTS</h3>
+          <p>Ces scripts peuvent servir de support de demonstration pour l'automatisation, la standardisation, l'administration Windows Server et la supervision.</p>
+        </article>
+        <article class="card">
+          <h3>Pour le labo</h3>
+          <p>Commence sur des VM ou une maquette isolee, puis adapte les variables, ports, chemins et conventions de nommage a ton environnement.</p>
+        </article>
+        <article class="card">
+          <h3>Pour la prod</h3>
+          <p>Avant usage reel: ajoute du logging, gere les secrets proprement, teste les prechecks et relis chaque commande avec ton contexte exact.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+  <div id="app-footer"></div>
+  <script src="assets/js/site.js"></script>
+  <script>
+    const siteState = initSite("scripts.html");
+    if (!siteState.allowPage) {
+    } else {
+
+    document.querySelectorAll("[data-copy-target]").forEach((button) => {
+      button.addEventListener("click", async () => {
+        const target = document.getElementById(button.dataset.copyTarget);
+        if (!target) return;
+        await copyText(target.textContent, "Script copie.");
+      });
+    });
+
+    const scriptCards = Array.from(document.querySelectorAll("[data-script-item]"));
+    const scriptSearch = document.getElementById("scripts-search");
+    const scriptFilters = document.getElementById("scripts-filters");
+    const scriptCount = document.getElementById("scripts-count");
+    let activeScriptFilter = "all";
+
+    function renderScriptFilters() {
+      const query = (scriptSearch.value || "").trim().toLowerCase();
+      let visible = 0;
+      scriptCards.forEach((card) => {
+        const tags = card.dataset.tags || "";
+        const text = card.textContent.toLowerCase();
+        const filterMatch = activeScriptFilter === "all" || tags.includes(activeScriptFilter);
+        const queryMatch = !query || text.includes(query) || tags.includes(query);
+        const show = filterMatch && queryMatch;
+        card.style.display = show ? "" : "none";
+        if (show) visible += 1;
+      });
+      scriptCount.textContent = `${visible} script${visible > 1 ? "s" : ""} affiche${visible > 1 ? "s" : ""}`;
+    }
+
+    scriptFilters.querySelectorAll("[data-script-filter]").forEach((button) => {
+      button.addEventListener("click", () => {
+        scriptFilters.querySelectorAll("[data-script-filter]").forEach((item) => item.classList.remove("is-active"));
+        button.classList.add("is-active");
+        activeScriptFilter = button.dataset.scriptFilter;
+        renderScriptFilters();
+      });
+    });
+
+    scriptSearch.addEventListener("input", renderScriptFilters);
+    renderScriptFilters();
+    }
+  </script>
+</body>
+</html>

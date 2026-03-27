@@ -1,0 +1,1592 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Naim Ragot · NJR Solutions Informatique</title>
+  <meta name="description" content="Simulateur de devis NJR Solutions Informatique avec prestations support, reseau et hygiene numerique." />
+  <link rel="stylesheet" href="assets/css/site.css" />
+  <style>
+    .quote-hero h1 { max-width: 14ch; }
+    .quote-layout,
+    .quote-main,
+    .quote-actions-grid,
+    .quote-summary-grid,
+    .quote-fields-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .quote-layout {
+      grid-template-columns: 1.08fr 0.92fr;
+      align-items: start;
+    }
+
+    .quote-main { grid-template-columns: 1fr; }
+    .quote-preview-panel { position: sticky; top: 108px; }
+
+    .catalog-grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    .catalog-card {
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(247, 250, 252, 0.92));
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      box-shadow: var(--shadow);
+      display: grid;
+      gap: 12px;
+      grid-template-rows: auto auto 1fr auto;
+    }
+
+    .catalog-card__head,
+    .quote-line__head,
+    .summary-line,
+    .quote-preview__top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .catalog-card__price {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--brand);
+    }
+
+    .quote-fields-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .quote-actions-grid,
+    .quote-summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+    .quote-line {
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      background: rgba(255, 255, 255, 0.84);
+      padding: 16px;
+      display: grid;
+      gap: 12px;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    }
+
+    .quote-line.is-focused {
+      border-color: rgba(217, 119, 6, 0.48);
+      box-shadow: 0 18px 36px rgba(217, 119, 6, 0.14);
+      transform: translateY(-2px);
+    }
+
+    .quote-line__grid {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: 1.3fr 0.55fr 0.55fr 0.7fr;
+    }
+
+    .quote-preview {
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      background: #fffdfa;
+      box-shadow: var(--shadow-strong);
+      overflow: hidden;
+    }
+
+    .quote-preview__body {
+      padding: 24px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .quote-preview__logo {
+      width: 70px;
+      height: 70px;
+      border-radius: 18px;
+      overflow: hidden;
+      background: #040404;
+      border: 1px solid rgba(198, 122, 18, 0.22);
+      box-shadow: var(--shadow);
+      flex: 0 0 auto;
+    }
+
+    .quote-preview__logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .quote-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .quote-table th,
+    .quote-table td {
+      padding: 10px 8px;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+      vertical-align: top;
+    }
+
+    .quote-table th {
+      text-align: left;
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .quote-table .r { text-align: right; }
+
+    .quote-box {
+      border-radius: 18px;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      background: #f8fafc;
+      padding: 16px;
+      white-space: pre-wrap;
+    }
+
+    .quote-box strong {
+      display: block;
+      margin-bottom: 8px;
+      white-space: normal;
+    }
+
+    .filter-chip {
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.76);
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .filter-chip.is-active {
+      background: var(--ink);
+      color: white;
+    }
+
+    .quote-note {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .quote-preview__meta {
+      text-align: right;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .quote-total {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--brand);
+    }
+
+    details.quote-advanced {
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      background: rgba(255, 255, 255, 0.84);
+      padding: 16px 18px;
+    }
+
+    details.quote-advanced summary {
+      cursor: pointer;
+      font-weight: 800;
+      list-style: none;
+    }
+
+    details.quote-advanced summary::-webkit-details-marker { display: none; }
+
+    .draft-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .assistant-grid {
+      display: grid;
+      gap: 18px;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .progress-card {
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      background: rgba(255, 255, 255, 0.88);
+      padding: 18px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .progress-track {
+      height: 12px;
+      border-radius: 999px;
+      background: #e7edf4;
+      overflow: hidden;
+    }
+
+    .progress-track > span {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--brand), #14b8a6);
+    }
+
+    .bullet-list,
+    .recommend-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .bullet-item,
+    .recommend-item {
+      border-radius: 16px;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      background: #f8fafc;
+      padding: 12px 14px;
+    }
+
+    .status-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      background: rgba(15, 118, 110, 0.12);
+      color: var(--brand);
+    }
+
+    .autosave-note {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .catalog-card .btn {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .catalog-card .btn.btn--primary {
+      background: linear-gradient(135deg, #d97706, var(--warm));
+      box-shadow: 0 16px 34px rgba(198, 122, 18, 0.26);
+    }
+
+    .cart-panel {
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(15, 118, 110, 0.92));
+      color: white;
+      padding: 22px;
+      box-shadow: var(--shadow-strong);
+      transition: transform 0.22s ease, box-shadow 0.22s ease;
+    }
+
+    .cart-panel .quote-note,
+    .cart-panel .notice {
+      color: rgba(255,255,255,0.8);
+    }
+
+    .cart-grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: 0.8fr 1.2fr 0.7fr;
+      align-items: start;
+    }
+
+    .cart-kpi {
+      border-radius: 18px;
+      background: rgba(255,255,255,0.08);
+      padding: 16px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .cart-kpi strong {
+      font-size: 1.8rem;
+      line-height: 1;
+    }
+
+    .cart-total {
+      font-size: 2rem;
+      line-height: 1;
+    }
+
+    .cart-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .cart-line {
+      display: grid;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .cart-line__main {
+      display: grid;
+      gap: 4px;
+    }
+
+    .cart-line__meta {
+      font-size: 12px;
+      color: rgba(255,255,255,0.78);
+    }
+
+    .cart-line__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .cart-line__actions .btn {
+      min-width: 0;
+    }
+
+    .cart-empty {
+      border-radius: 18px;
+      background: rgba(255,255,255,0.08);
+      padding: 14px 16px;
+      font-size: 13px;
+    }
+
+    .cart-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-end;
+      align-items: center;
+    }
+
+    .cart-summary-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .cart-summary-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 11px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.1);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .cart-panel.is-highlighted {
+      transform: translateY(-3px);
+      box-shadow: 0 28px 72px rgba(15, 23, 42, 0.34);
+    }
+
+    @media (max-width: 1120px) {
+      .quote-layout,
+      .assistant-grid,
+      .cart-grid,
+      .quote-actions-grid,
+      .quote-summary-grid,
+      .quote-fields-grid,
+      .quote-line__grid {
+        grid-template-columns: 1fr;
+      }
+
+      .quote-preview-panel { position: static; }
+    }
+  </style>
+</head>
+<body>
+  <div id="app-header"></div>
+  <main class="site-shell page">
+    <section class="hero quote-hero reveal is-visible">
+      <article class="hero-main">
+        <div class="eyebrow">NJR Solutions Informatique</div>
+        <h1>Un simulateur pense pour les besoins informatiques du quotidien.</h1>
+        <p>Cette page est dediee a l'activite informatique: depannage, optimisation, reseau local, sauvegarde, hygiene numerique et accompagnement technique de proximite.</p>
+        <div class="actions">
+          <a class="btn btn--primary" href="#catalogue">Choisir les prestations</a>
+          <a class="btn btn--secondary" href="#cart-panel">Voir le panier</a>
+          <button class="btn btn--secondary" type="button" id="copy-summary">Copier le recapitulatif</button>
+          <button class="btn btn--accent" type="button" id="send-request">Envoyer la demande</button>
+        </div>
+      </article>
+      <aside class="hero-side">
+        <div class="mini-panel">
+          <img class="hero-logo" src="assets/img/logo-njr.png" alt="Logo NJR Solutions Informatique" />
+          <h3>Ce que couvre la page</h3>
+          <div class="metric-list" style="margin-top:12px">
+            <div class="metric"><span>Support</span><strong>Depannage et optimisation</strong></div>
+            <div class="metric"><span>Infrastructure</span><strong>Reseau, Wi-Fi, acces</strong></div>
+            <div class="metric"><span>Securite</span><strong>Sauvegarde et hygiene numerique</strong></div>
+          </div>
+        </div>
+        <div class="mini-panel">
+          <h3>Important</h3>
+          <p>Le simulateur sert a cadrer une demande de devis informatique. La validation finale depend toujours du materiel, du contexte reel et des contraintes relevees pendant l'echange.</p>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section reveal" id="catalogue">
+      <div class="section__head">
+        <div>
+          <h2>Catalogue informatique</h2>
+          <p>Le visiteur part d'offres compréhensibles, puis adapte les quantites, les options et le contexte selon son besoin.</p>
+        </div>
+        <div class="filters" id="catalog-filters"></div>
+      </div>
+      <div class="catalog-grid" id="catalog-grid"></div>
+    </section>
+
+    <section class="section reveal" id="cart-panel">
+      <div class="cart-panel">
+        <div class="section__head">
+          <div>
+            <h2>Panier devis informatique</h2>
+            <p class="quote-note">Le visiteur voit tout de suite ce qui est deja ajoute au devis, le total estime et peut reprendre la composition sans se perdre.</p>
+          </div>
+          <div class="cart-actions">
+            <button class="btn btn--secondary" type="button" id="cart-jump">Modifier les prestations</button>
+            <button class="btn btn--secondary" type="button" id="cart-copy">Copier le panier</button>
+            <button class="btn btn--secondary" type="button" id="cart-clear">Vider le panier</button>
+            <button class="btn btn--accent" type="button" id="cart-send">Demander ce devis</button>
+          </div>
+        </div>
+        <div class="cart-grid" style="margin-top:18px">
+          <div class="cart-kpi">
+            <span class="quote-note">Prestations</span>
+            <strong id="cart-count">0</strong>
+            <span class="quote-note">Lignes actuellement selectionnees</span>
+          </div>
+          <div class="cart-kpi">
+            <span class="quote-note">Contenu du panier</span>
+            <div class="cart-list" id="cart-items" aria-live="polite"></div>
+          </div>
+          <div class="cart-kpi">
+            <span class="quote-note">Total estime TTC</span>
+            <strong class="cart-total" id="cart-total">0,00 EUR</strong>
+            <span class="quote-note" id="cart-hint">Ajoute une prestation pour demarrer une estimation.</span>
+            <div class="cart-summary-pills" id="cart-breakdown"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
+          <h2>Composer la demande informatique</h2>
+          <p>Le client renseigne son contexte, ajoute les services utiles et visualise tout de suite une estimation plus claire.</p>
+        </div>
+      </div>
+      <div class="quote-layout">
+        <div class="quote-main">
+          <article class="tool">
+            <h3>Informations client</h3>
+            <div class="quote-fields-grid" style="margin-top:14px">
+              <label>Type
+                <select id="client-type" class="select">
+                  <option>Particulier</option>
+                  <option>Professionnel</option>
+                  <option>Association</option>
+                </select>
+              </label>
+              <label>Entreprise
+                <input id="client-company" class="field" placeholder="Nom de l'entreprise si besoin" />
+              </label>
+              <label>Prenom*
+                <input id="client-firstname" class="field" placeholder="Prenom" />
+              </label>
+              <label>Nom*
+                <input id="client-lastname" class="field" placeholder="Nom" />
+              </label>
+              <label>Email*
+                <input id="client-email" class="field" type="email" placeholder="Email" />
+              </label>
+              <label>Telephone*
+                <input id="client-phone" class="field" placeholder="Telephone" />
+              </label>
+              <label>Urgence
+                <select id="request-urgency" class="select">
+                  <option>Normale</option>
+                  <option>Haute</option>
+                  <option>Critique</option>
+                </select>
+              </label>
+              <label>Mode d'intervention
+                <select id="intervention-mode" class="select">
+                  <option>Sur site</option>
+                  <option>A distance</option>
+                  <option>A confirmer</option>
+                </select>
+              </label>
+            </div>
+            <label style="margin-top:10px">Adresse / ville
+              <textarea id="client-address" class="field-area" rows="3" placeholder="Ville, adresse ou zone d'intervention"></textarea>
+            </label>
+            <label style="margin-top:10px">Contexte / besoin
+              <textarea id="client-context" class="field-area" rows="4" placeholder="Probleme rencontre, materiel concerne, urgence, contraintes..."></textarea>
+            </label>
+          </article>
+
+          <article class="tool">
+            <div class="status-line">
+              <div>
+                <h3>Assistant de demande</h3>
+                <p class="quote-note">Le site t'aide a completer la demande, a voir ce qu'il manque et a repérer les complements utiles.</p>
+              </div>
+              <span class="status-badge" id="request-status">A structurer</span>
+            </div>
+            <div class="assistant-grid" style="margin-top:14px">
+              <div class="progress-card">
+                <div class="status-line">
+                  <strong>Progression</strong>
+                  <span id="completion-rate">0%</span>
+                </div>
+                <div class="progress-track"><span id="completion-bar"></span></div>
+                <div class="bullet-list" id="missing-items"></div>
+              </div>
+              <div class="progress-card">
+                <div class="status-line">
+                  <strong>Recommandations</strong>
+                  <span class="autosave-note" id="autosave-status">Auto-sauvegarde inactive</span>
+                </div>
+                <div class="recommend-list" id="smart-recommendations"></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="tool">
+            <div class="quote-preview__top">
+              <div>
+                <h3>Prestations selectionnees</h3>
+                <p class="quote-note">Chaque ligne reste editable pour affiner la demande avant envoi.</p>
+              </div>
+              <div class="actions" style="margin-top:0">
+                <button class="btn btn--secondary" type="button" id="add-custom-line">Ajouter une ligne libre</button>
+              </div>
+            </div>
+            <div id="quote-lines" style="display:grid;gap:14px;margin-top:14px"></div>
+          </article>
+
+          <details class="quote-advanced tool" open>
+            <summary>Options et brouillons</summary>
+            <div style="display:grid;gap:18px;margin-top:16px">
+              <div class="quote-actions-grid">
+                <label>Numero de simulation
+                  <input id="request-number" class="field" />
+                </label>
+                <label>Date
+                  <input id="quote-date" class="field" type="date" />
+                </label>
+                <label>Validite en jours
+                  <input id="validity-days" class="field" type="number" min="1" value="30" />
+                </label>
+                <label>Date limite
+                  <input id="validity-date" class="field" type="date" />
+                </label>
+                <label>Objet
+                  <input id="quote-subject" class="field" placeholder="Exemple : remise en etat poste et Wi-Fi" />
+                </label>
+                <label>Reference interne
+                  <input id="quote-reference" class="field" placeholder="Optionnel" />
+                </label>
+              </div>
+
+              <div class="quote-actions-grid">
+                <label>Remise %
+                  <input id="discount-percent" class="field" type="number" step="0.01" min="0" value="0" />
+                </label>
+                <label>Frais de deplacement HT
+                  <input id="travel-fees" class="field" type="number" step="0.01" min="0" value="0" />
+                </label>
+                <label>TVA %
+                  <input id="tax-rate" class="field" type="number" step="0.01" min="0" value="20" />
+                </label>
+                <label>Acompte %
+                  <input id="deposit-percent" class="field" type="number" step="0.01" min="0" max="100" value="30" />
+                </label>
+                <label>Mode de paiement
+                  <select id="payment-method" class="select">
+                    <option>Virement bancaire</option>
+                    <option>Carte bancaire</option>
+                    <option>Cheque</option>
+                    <option>Especes</option>
+                  </select>
+                </label>
+                <label>Echeance
+                  <input id="payment-deadline" class="field" value="Paiement a reception de facture" />
+                </label>
+              </div>
+
+              <label>Conditions particulieres
+                <textarea id="special-terms" class="field-area" rows="4" placeholder="Infos utiles, perimetre, exclusions, contraintes de realisation..."></textarea>
+              </label>
+
+              <div class="quote-actions-grid">
+                <label>Brouillons locaux
+                  <select id="saved-drafts" class="select"></select>
+                </label>
+                <div class="draft-toolbar" style="align-self:end">
+                  <button class="btn btn--primary" type="button" id="save-draft">Sauvegarder</button>
+                  <button class="btn btn--secondary" type="button" id="load-draft">Charger</button>
+                  <button class="btn btn--secondary" type="button" id="new-request">Nouveau numero</button>
+                  <button class="btn btn--secondary" type="button" id="delete-draft">Supprimer</button>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <aside class="quote-preview-panel">
+          <article class="quote-preview">
+            <div class="quote-preview__body">
+              <div class="quote-preview__top">
+                <div class="brand" style="align-items:flex-start">
+                  <div class="quote-preview__logo">
+                    <img src="assets/img/logo-njr.png" alt="Logo NJR Solutions Informatique" />
+                  </div>
+                  <div>
+                    <h3 style="margin:0">NJR Solutions Informatique</h3>
+                    <p class="quote-note" style="margin:6px 0 0">Simulation informatique preparee automatiquement pour faciliter la prise de contact.</p>
+                  </div>
+                </div>
+                <div class="quote-preview__meta" id="preview-meta"></div>
+              </div>
+
+              <div class="quote-summary-grid">
+                <div class="quote-box" id="preview-company"></div>
+                <div class="quote-box" id="preview-client"></div>
+              </div>
+
+              <div class="quote-box" id="preview-subject"></div>
+
+              <table class="quote-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Prestations</th>
+                    <th class="r">Qte</th>
+                    <th>Unite</th>
+                    <th class="r">PU HT</th>
+                    <th class="r">Total HT</th>
+                  </tr>
+                </thead>
+                <tbody id="preview-lines"></tbody>
+              </table>
+
+              <div class="quote-box" id="preview-totals"></div>
+              <div class="quote-box" id="preview-terms"></div>
+            </div>
+          </article>
+        </aside>
+      </div>
+    </section>
+  </main>
+  <div id="app-footer"></div>
+
+  <template id="quote-line-template">
+    <div class="quote-line">
+      <div class="quote-line__head">
+        <div>
+          <strong class="line-title">Prestation</strong>
+          <div class="notice">Tu peux ajuster librement la ligne.</div>
+        </div>
+        <button type="button" class="btn btn--secondary line-remove">Retirer</button>
+      </div>
+      <div class="quote-line__grid">
+        <label>Description
+          <input class="field line-description" />
+        </label>
+        <label>Qte
+          <input class="field line-qty" type="number" min="0" step="0.01" value="1" />
+        </label>
+        <label>Unite
+          <input class="field line-unit" value="forfait" />
+        </label>
+        <label>PU HT
+          <input class="field line-price" type="number" min="0" step="0.01" value="0" />
+        </label>
+      </div>
+      <label>Details
+        <textarea class="field-area line-details" rows="3"></textarea>
+      </label>
+    </div>
+  </template>
+
+  <script src="assets/js/site.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
+  <script>
+    initSite("njr-solutions-informatique.html");
+
+    const COMPANY = {
+      name: "NJR Solutions Informatique",
+      legal: "Entreprise individuelle",
+      siret: "99422100000015",
+      tva: "FR21994221000",
+      email: "ragotnaimpro@gmail.com",
+      phone: "07 82 30 75 36",
+      address: "Villeneuve-sur-Lot\nFrance",
+      manager: "Naim Yael Joshua Ragot"
+    };
+
+    const CATALOG = [
+      { id: "diag-poste", category: "support", title: "Diagnostic et depannage poste", pitch: "Diagnostic logiciel, verification generale, remise en etat et stabilisation.", unit: "forfait", price: 69, details: "Ideal pour un poste lent, instable ou avec erreurs recurrentes." },
+      { id: "optimisation-poste", category: "support", title: "Optimisation complete Windows", pitch: "Nettoyage, optimisation, mises a jour, controle de base et recommandations.", unit: "forfait", price: 89, details: "Convient a une machine qui a besoin d'un passage complet." },
+      { id: "reseau-wifi", category: "reseau", title: "Reseau local et Wi-Fi", pitch: "Diagnostic de couverture, configuration simple, verification de l'acces et du partage.", unit: "forfait", price: 95, details: "Pour reseau local, imprimante, box ou Wi-Fi domestique / petite structure." },
+      { id: "sauvegarde-transfert", category: "securite", title: "Sauvegarde et transfert de donnees", pitch: "Preparation, copie, verification et conseils pour ne pas perdre les donnees utiles.", unit: "forfait", price: 79, details: "Sauvegarde avant intervention ou migration vers un autre support." },
+      { id: "hygiene-numerique", category: "securite", title: "Hygiene numerique et securite de base", pitch: "Mots de passe, MFA, mises a jour, verifications simples et bonnes pratiques.", unit: "forfait", price: 65, details: "Pour remettre des bases saines et rassurer l'utilisateur." },
+      { id: "documentation", category: "documentation", title: "Documentation et fiche d'intervention", pitch: "Compte-rendu, conseils, procedures simples et trace propre de l'intervention.", unit: "forfait", price: 49, details: "Utile pour entreprise, association ou client qui veut un suivi clair." },
+      { id: "maintenance-horaire", category: "support", title: "Assistance horaire", pitch: "Temps technique ponctuel pour besoin specifique, installation ou accompagnement.", unit: "heure", price: 35, details: "Facturation au temps passe pour intervention ciblee." },
+      { id: "audit-base", category: "reseau", title: "Audit informatique de base", pitch: "Premier regard sur le parc, les risques visibles, l'organisation et les priorites.", unit: "forfait", price: 120, details: "Donne une base claire avant une remise en ordre ou une evolution." }
+    ];
+
+    const FILTERS = [
+      ["all", "Tous"],
+      ["support", "Support"],
+      ["reseau", "Reseau"],
+      ["securite", "Securite"],
+      ["documentation", "Documentation"]
+    ];
+
+    const STORE_KEYS = {
+      drafts: "njr_quote_drafts_v3",
+      counter: "njr_quote_counter_v3",
+      autosave: "njr_quote_inf_autosave_v1"
+    };
+
+    const refs = {
+      catalog: document.getElementById("catalog-grid"),
+      filters: document.getElementById("catalog-filters"),
+      lines: document.getElementById("quote-lines"),
+      template: document.getElementById("quote-line-template"),
+      drafts: document.getElementById("saved-drafts"),
+      requestNumber: document.getElementById("request-number"),
+      quoteDate: document.getElementById("quote-date"),
+      validityDays: document.getElementById("validity-days"),
+      validityDate: document.getElementById("validity-date"),
+      quoteSubject: document.getElementById("quote-subject"),
+      quoteReference: document.getElementById("quote-reference"),
+      clientType: document.getElementById("client-type"),
+      clientCompany: document.getElementById("client-company"),
+      clientFirstname: document.getElementById("client-firstname"),
+      clientLastname: document.getElementById("client-lastname"),
+      clientEmail: document.getElementById("client-email"),
+      clientPhone: document.getElementById("client-phone"),
+      requestUrgency: document.getElementById("request-urgency"),
+      interventionMode: document.getElementById("intervention-mode"),
+      clientAddress: document.getElementById("client-address"),
+      clientContext: document.getElementById("client-context"),
+      discountPercent: document.getElementById("discount-percent"),
+      travelFees: document.getElementById("travel-fees"),
+      taxRate: document.getElementById("tax-rate"),
+      depositPercent: document.getElementById("deposit-percent"),
+      paymentMethod: document.getElementById("payment-method"),
+      paymentDeadline: document.getElementById("payment-deadline"),
+      specialTerms: document.getElementById("special-terms"),
+      previewMeta: document.getElementById("preview-meta"),
+      previewCompany: document.getElementById("preview-company"),
+      previewClient: document.getElementById("preview-client"),
+      previewSubject: document.getElementById("preview-subject"),
+      previewLines: document.getElementById("preview-lines"),
+      previewTotals: document.getElementById("preview-totals"),
+      previewTerms: document.getElementById("preview-terms"),
+      cartCount: document.getElementById("cart-count"),
+      cartItems: document.getElementById("cart-items"),
+      cartTotal: document.getElementById("cart-total"),
+      cartHint: document.getElementById("cart-hint"),
+      cartBreakdown: document.getElementById("cart-breakdown"),
+      cartJump: document.getElementById("cart-jump"),
+      cartCopy: document.getElementById("cart-copy"),
+      cartClear: document.getElementById("cart-clear"),
+      cartSend: document.getElementById("cart-send"),
+      cartPanel: document.getElementById("cart-panel"),
+      completionRate: document.getElementById("completion-rate"),
+      completionBar: document.getElementById("completion-bar"),
+      missingItems: document.getElementById("missing-items"),
+      smartRecommendations: document.getElementById("smart-recommendations"),
+      requestStatus: document.getElementById("request-status"),
+      autosaveStatus: document.getElementById("autosave-status")
+    };
+
+    let activeFilter = "all";
+
+    const euro = (value) => new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" }).format(Number(value || 0));
+    const num = (value) => Number.parseFloat(value || 0) || 0;
+    const safe = (text) => String(text || "").replace(/[<>&]/g, (char) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" }[char]));
+
+    function today() {
+      const date = new Date();
+      return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+    }
+
+    function frDate(input) {
+      if (!input) return "";
+      const [year, month, day] = input.split("-");
+      return `${day}/${month}/${year}`;
+    }
+
+    function nextRequestNumber(increment = false) {
+      const year = new Date().getFullYear();
+      const current = Number(localStorage.getItem(STORE_KEYS.counter) || 1);
+      const value = increment ? current + 1 : current;
+      localStorage.setItem(STORE_KEYS.counter, String(value));
+      return `INF-${year}-${String(value).padStart(4, "0")}`;
+    }
+
+    function computeValidity() {
+      const base = refs.quoteDate.value;
+      const days = num(refs.validityDays.value);
+      if (!base || !days) return;
+      const target = new Date(`${base}T00:00:00`);
+      target.setDate(target.getDate() + days);
+      refs.validityDate.value = `${target.getFullYear()}-${String(target.getMonth() + 1).padStart(2, "0")}-${String(target.getDate()).padStart(2, "0")}`;
+    }
+
+    function renderFilters() {
+      refs.filters.innerHTML = FILTERS.map(([id, label]) => `
+        <button type="button" class="filter-chip ${activeFilter === id ? "is-active" : ""}" data-filter="${id}">${label}</button>
+      `).join("");
+    }
+
+    function renderCatalog() {
+      refs.catalog.innerHTML = CATALOG
+        .filter((item) => activeFilter === "all" || item.category === activeFilter)
+        .map((item) => `
+          <article class="catalog-card">
+            <div class="catalog-card__head">
+              <div>
+                <h3 style="margin:0">${item.title}</h3>
+                <p style="margin:6px 0 0">${item.pitch}</p>
+              </div>
+              <span class="pill">${item.category}</span>
+            </div>
+            <div class="catalog-card__price">A partir de ${euro(item.price)}</div>
+            <p class="quote-note">${item.details}</p>
+            <button type="button" class="btn btn--primary" data-add-service="${item.id}">Ajouter au panier</button>
+          </article>
+        `).join("");
+    }
+
+    function createLine(data = {}) {
+      const node = refs.template.content.firstElementChild.cloneNode(true);
+      node.querySelector(".line-title").textContent = data.title || "Prestation";
+      node.querySelector(".line-description").value = data.description || "";
+      node.querySelector(".line-qty").value = data.qty ?? 1;
+      node.querySelector(".line-unit").value = data.unit || "forfait";
+      node.querySelector(".line-price").value = data.unitPrice ?? 0;
+      node.querySelector(".line-details").value = data.details || "";
+      refs.lines.appendChild(node);
+    }
+
+    function getLineNodes() {
+      return [...refs.lines.querySelectorAll(".quote-line")];
+    }
+
+    function removeLineAt(index) {
+      const node = getLineNodes()[index];
+      if (!node) return;
+      node.remove();
+      renderPreview();
+      autosaveCurrentState();
+    }
+
+    let lineFocusTimer;
+
+    function focusLine(index) {
+      const node = getLineNodes()[index];
+      if (!node) return;
+      node.scrollIntoView({ behavior: "smooth", block: "center" });
+      node.classList.add("is-focused");
+      node.querySelector(".line-description")?.focus();
+      clearTimeout(lineFocusTimer);
+      lineFocusTimer = window.setTimeout(() => {
+        node.classList.remove("is-focused");
+      }, 1400);
+    }
+
+    function getLines() {
+      return [...refs.lines.querySelectorAll(".quote-line")].map((node) => {
+        const description = node.querySelector(".line-description").value.trim();
+        const qty = num(node.querySelector(".line-qty").value);
+        const unit = node.querySelector(".line-unit").value.trim();
+        const unitPrice = num(node.querySelector(".line-price").value);
+        const details = node.querySelector(".line-details").value.trim();
+        return { description, qty, unit, unitPrice, details, total: qty * unitPrice };
+      }).filter((line) => line.description || line.unitPrice || line.details);
+    }
+
+    function getData() {
+      return {
+        requestNumber: refs.requestNumber.value.trim(),
+        quoteDate: refs.quoteDate.value,
+        validityDays: refs.validityDays.value,
+        validityDate: refs.validityDate.value,
+        quoteSubject: refs.quoteSubject.value.trim(),
+        quoteReference: refs.quoteReference.value.trim(),
+        clientType: refs.clientType.value,
+        clientCompany: refs.clientCompany.value.trim(),
+        clientFirstname: refs.clientFirstname.value.trim(),
+        clientLastname: refs.clientLastname.value.trim(),
+        clientEmail: refs.clientEmail.value.trim(),
+        clientPhone: refs.clientPhone.value.trim(),
+        requestUrgency: refs.requestUrgency.value,
+        interventionMode: refs.interventionMode.value,
+        clientAddress: refs.clientAddress.value.trim(),
+        clientContext: refs.clientContext.value.trim(),
+        discountPercent: refs.discountPercent.value,
+        travelFees: refs.travelFees.value,
+        taxRate: refs.taxRate.value,
+        depositPercent: refs.depositPercent.value,
+        paymentMethod: refs.paymentMethod.value,
+        paymentDeadline: refs.paymentDeadline.value.trim(),
+        specialTerms: refs.specialTerms.value.trim()
+      };
+    }
+
+    function setData(data = {}) {
+      Object.entries(data).forEach(([key, value]) => {
+        const target = {
+          requestNumber: refs.requestNumber,
+          quoteDate: refs.quoteDate,
+          validityDays: refs.validityDays,
+          validityDate: refs.validityDate,
+          quoteSubject: refs.quoteSubject,
+          quoteReference: refs.quoteReference,
+          clientType: refs.clientType,
+          clientCompany: refs.clientCompany,
+          clientFirstname: refs.clientFirstname,
+          clientLastname: refs.clientLastname,
+          clientEmail: refs.clientEmail,
+          clientPhone: refs.clientPhone,
+          requestUrgency: refs.requestUrgency,
+          interventionMode: refs.interventionMode,
+          clientAddress: refs.clientAddress,
+          clientContext: refs.clientContext,
+          discountPercent: refs.discountPercent,
+          travelFees: refs.travelFees,
+          taxRate: refs.taxRate,
+          depositPercent: refs.depositPercent,
+          paymentMethod: refs.paymentMethod,
+          paymentDeadline: refs.paymentDeadline,
+          specialTerms: refs.specialTerms
+        }[key];
+        if (target) target.value = value;
+      });
+    }
+
+    function sums(lines) {
+      const subtotal = lines.reduce((sum, line) => sum + line.total, 0);
+      const discount = subtotal * num(refs.discountPercent.value) / 100;
+      const travel = num(refs.travelFees.value);
+      const totalHt = subtotal - discount + travel;
+      const vat = totalHt * num(refs.taxRate.value) / 100;
+      const totalTtc = totalHt + vat;
+      const deposit = totalTtc * num(refs.depositPercent.value) / 100;
+      const remaining = totalTtc - deposit;
+      return { subtotal, discount, travel, totalHt, vat, totalTtc, deposit, remaining };
+    }
+
+    function inferredSubject(lines) {
+      const explicit = refs.quoteSubject.value.trim();
+      if (explicit) return explicit;
+      if (!lines.length) return "Demande de devis NJR Solutions Informatique";
+      return lines.slice(0, 2).map((line) => line.description).join(" + ");
+    }
+
+    function renderCartOverview(lines, totals) {
+      refs.cartCount.textContent = String(lines.length);
+      refs.cartTotal.textContent = euro(totals.totalTtc);
+
+      refs.cartItems.innerHTML = lines.length
+        ? lines.map((line, index) => `
+            <article class="cart-line">
+              <div class="cart-line__main">
+                <strong>${safe(line.description || "Prestation")}</strong>
+                <span class="cart-line__meta">${safe(line.qty)} ${safe(line.unit)} · ${euro(line.total)}${line.details ? ` · ${safe(line.details)}` : ""}</span>
+              </div>
+              <div class="cart-line__actions">
+                <button class="btn btn--secondary btn--small" type="button" data-cart-focus="${index}">Modifier</button>
+                <button class="btn btn--secondary btn--small" type="button" data-cart-remove="${index}">Retirer</button>
+              </div>
+            </article>
+          `).join("")
+        : `<div class="cart-empty">Aucune prestation pour le moment. Choisis un service dans le catalogue pour remplir le panier.</div>`;
+
+      refs.cartHint.textContent = lines.length
+        ? `Sous-total HT ${euro(totals.subtotal)}${totals.travel ? ` · Deplacement ${euro(totals.travel)}` : ""}`
+        : "Ajoute une prestation pour demarrer une estimation.";
+
+      refs.cartBreakdown.innerHTML = lines.length
+        ? [
+            `<span class="cart-summary-pill">Sous-total ${euro(totals.subtotal)}</span>`,
+            totals.travel ? `<span class="cart-summary-pill">Deplacement ${euro(totals.travel)}</span>` : "",
+            `<span class="cart-summary-pill">Total TTC ${euro(totals.totalTtc)}</span>`
+          ].filter(Boolean).join("")
+        : "";
+    }
+
+    let cartFlashTimer;
+
+    function flashCartPanel() {
+      refs.cartPanel.classList.add("is-highlighted");
+      clearTimeout(cartFlashTimer);
+      cartFlashTimer = window.setTimeout(() => {
+        refs.cartPanel.classList.remove("is-highlighted");
+      }, 850);
+    }
+
+    function renderPreview() {
+      const lines = getLines();
+      const totals = sums(lines);
+      const data = getData();
+      const clientName = [data.clientFirstname, data.clientLastname].filter(Boolean).join(" ").trim() || "Client a preciser";
+      const clientBlock = [
+        data.clientCompany,
+        clientName,
+        data.clientAddress,
+        data.clientPhone ? `Tel: ${data.clientPhone}` : "",
+        data.clientEmail ? `Email: ${data.clientEmail}` : ""
+      ].filter(Boolean).join("\n");
+
+      refs.previewMeta.innerHTML = `
+        <strong>Simulation ${safe(data.requestNumber || "-")}</strong><br>
+        Date: ${safe(frDate(data.quoteDate) || "-")}<br>
+        Validite: ${safe(frDate(data.validityDate) || "-")}<br>
+        ${data.quoteReference ? `Reference: ${safe(data.quoteReference)}` : ""}
+      `;
+
+      refs.previewCompany.innerHTML = `
+        <strong>Emetteur</strong>
+        ${safe(COMPANY.name)}
+        ${safe(COMPANY.address).replace(/\n/g, "<br>")}
+        <br>Tel: ${safe(COMPANY.phone)}
+        <br>Email: ${safe(COMPANY.email)}
+        <br>SIRET: ${safe(COMPANY.siret)}
+      `;
+
+      refs.previewClient.innerHTML = `
+        <strong>Demandeur</strong>
+        ${safe(clientBlock || "Coordonnees a preciser").replace(/\n/g, "<br>")}
+      `;
+
+      refs.previewSubject.innerHTML = `<strong>Objet</strong>${safe(inferredSubject(lines))}`;
+
+      refs.previewLines.innerHTML = lines.length
+        ? lines.map((line, index) => `
+            <tr>
+              <td>${index + 1}</td>
+              <td><strong>${safe(line.description || "-")}</strong>${line.details ? `<div class="notice">${safe(line.details)}</div>` : ""}</td>
+              <td class="r">${safe(line.qty)}</td>
+              <td>${safe(line.unit)}</td>
+              <td class="r">${euro(line.unitPrice)}</td>
+              <td class="r">${euro(line.total)}</td>
+            </tr>
+          `).join("")
+        : `<tr><td colspan="6">Aucune prestation selectionnee pour le moment.</td></tr>`;
+
+      refs.previewTotals.innerHTML = `
+        <strong>Estimation</strong>
+        <div class="summary-line"><span>Sous-total HT</span><strong>${euro(totals.subtotal)}</strong></div>
+        <div class="summary-line"><span>Remise</span><strong>- ${euro(totals.discount)}</strong></div>
+        <div class="summary-line"><span>Frais deplacement</span><strong>${euro(totals.travel)}</strong></div>
+        <div class="summary-line"><span>Total HT</span><strong>${euro(totals.totalHt)}</strong></div>
+        <div class="summary-line"><span>TVA (${safe(data.taxRate)}%)</span><strong>${euro(totals.vat)}</strong></div>
+        <div class="summary-line"><span class="quote-total">Total TTC</span><strong class="quote-total">${euro(totals.totalTtc)}</strong></div>
+        <div class="summary-line"><span>Acompte</span><strong>${euro(totals.deposit)}</strong></div>
+        <div class="summary-line"><span>Reste a payer</span><strong>${euro(totals.remaining)}</strong></div>
+      `;
+
+      refs.previewTerms.innerHTML = `
+        <strong>Conditions et contexte</strong>
+        Simulation informative, sous reserve de validation finale par ${safe(COMPANY.name)}.
+
+        Paiement: ${safe(data.paymentMethod || "-")} - ${safe(data.paymentDeadline || "-")}
+        \nUrgence: ${safe(data.requestUrgency || "-")} · Mode: ${safe(data.interventionMode || "-")}
+        ${data.clientContext ? `\nContexte: ${safe(data.clientContext)}` : ""}
+        ${data.specialTerms ? `\nConditions particulieres: ${safe(data.specialTerms)}` : ""}
+      `;
+
+      renderCartOverview(lines, totals);
+      renderAssistant(lines, data, totals);
+    }
+
+    function buildSummaryText() {
+      const data = getData();
+      const lines = getLines();
+      const totals = sums(lines);
+      return [
+        `Simulation ${data.requestNumber || "-"}`,
+        `Date: ${frDate(data.quoteDate) || "-"}`,
+        `Client: ${[data.clientFirstname, data.clientLastname].filter(Boolean).join(" ") || "-"}`,
+        data.clientCompany ? `Entreprise: ${data.clientCompany}` : "",
+        data.clientEmail ? `Email: ${data.clientEmail}` : "",
+        data.clientPhone ? `Telephone: ${data.clientPhone}` : "",
+        data.requestUrgency ? `Urgence: ${data.requestUrgency}` : "",
+        data.interventionMode ? `Mode: ${data.interventionMode}` : "",
+        data.clientAddress ? `Adresse: ${data.clientAddress}` : "",
+        `Objet: ${inferredSubject(lines)}`,
+        "",
+        "Prestations:",
+        ...(lines.length
+          ? lines.map((line, index) => `${index + 1}. ${line.description} - ${line.qty} ${line.unit} x ${euro(line.unitPrice)} = ${euro(line.total)}${line.details ? ` (${line.details})` : ""}`)
+          : ["Aucune prestation selectionnee."]),
+        "",
+        `Total TTC estime: ${euro(totals.totalTtc)}`,
+        data.clientContext ? `Contexte: ${data.clientContext}` : "",
+        data.specialTerms ? `Conditions particulieres: ${data.specialTerms}` : "",
+        "",
+        "Demande preparee depuis le simulateur NJR Solutions Informatique."
+      ].filter(Boolean).join("\n");
+    }
+
+    async function copyCartSummary() {
+      const lines = getLines();
+      if (!lines.length) {
+        alert("Ajoute au moins une prestation avant de copier le panier.");
+        return;
+      }
+
+      const totals = sums(lines);
+      await copyText([
+        "Panier devis NJR Solutions Informatique",
+        "",
+        ...lines.map((line, index) => `${index + 1}. ${line.description} · ${line.qty} ${line.unit} · ${euro(line.total)}`),
+        "",
+        `Sous-total HT: ${euro(totals.subtotal)}`,
+        `Deplacement: ${euro(totals.travel)}`,
+        `Total TTC estime: ${euro(totals.totalTtc)}`
+      ].join("\n"), "Panier copie.");
+    }
+
+    function clearCart() {
+      refs.lines.innerHTML = "";
+      renderPreview();
+      autosaveCurrentState();
+      showToast("Panier vide.", "success");
+    }
+
+    function renderAssistant(lines, data, totals) {
+      const missing = [];
+      if (!data.clientFirstname) missing.push("Ajouter le prenom du contact.");
+      if (!data.clientLastname) missing.push("Ajouter le nom du contact.");
+      if (!data.clientEmail) missing.push("Ajouter une adresse email.");
+      if (!data.clientPhone) missing.push("Ajouter un numero de telephone.");
+      if (!data.clientContext) missing.push("Preciser le contexte ou le probleme.");
+      if (!lines.length) missing.push("Ajouter au moins une prestation.");
+
+      const totalChecks = 6;
+      const completed = totalChecks - missing.length;
+      const percent = Math.max(0, Math.round((completed / totalChecks) * 100));
+      refs.completionRate.textContent = `${percent}%`;
+      refs.completionBar.style.width = `${percent}%`;
+      refs.requestStatus.textContent = percent < 45 ? "A structurer" : percent < 85 ? "Presque pret" : "Pret a envoyer";
+
+      refs.missingItems.innerHTML = missing.length
+        ? missing.map((item) => `<div class="bullet-item">${item}</div>`).join("")
+        : `<div class="bullet-item">La demande est suffisamment complete pour etre envoyee.</div>`;
+
+      const recommendations = [];
+      if (data.interventionMode === "Sur site" && !data.clientAddress) recommendations.push("Ajoute la ville ou l'adresse pour faciliter l'organisation du deplacement.");
+      if (lines.some((line) => /reseau|wi-fi|wifi|box/i.test(line.description))) recommendations.push("Pense a indiquer le materiel concerne: box, switch, imprimante, borne Wi-Fi ou nombre de postes.");
+      if (lines.some((line) => /sauvegarde|migration/i.test(line.description))) recommendations.push("Precise le volume de donnees ou les supports concernes pour affiner l'estimation.");
+      if (lines.some((line) => /diagnostic|depannage/i.test(line.description))) recommendations.push("Decris les symptomes: lenteurs, erreurs, demarrage, connexion ou logiciel bloque.");
+      if (data.requestUrgency === "Critique") recommendations.push("Pour une urgence critique, ajoute le delai attendu ou l'heure souhaitee pour prioriser la reponse.");
+      if (totals.totalTtc > 180) recommendations.push("Le montant commence a devenir significatif: une sauvegarde ou une note de contexte detaillee aidera a confirmer le perimetre.");
+      if (!recommendations.length) recommendations.push("La demande est bien partie. Tu peux encore gagner en precision en ajoutant le contexte et le materiel concerne.");
+
+      refs.smartRecommendations.innerHTML = recommendations.map((item) => `<div class="recommend-item">${item}</div>`).join("");
+    }
+
+    function autosaveCurrentState() {
+      localStorage.setItem(STORE_KEYS.autosave, JSON.stringify({
+        savedAt: new Date().toISOString(),
+        data: getData(),
+        lines: getLines()
+      }));
+      refs.autosaveStatus.textContent = "Auto-sauvegarde locale active";
+    }
+
+    function restoreAutosave() {
+      const raw = localStorage.getItem(STORE_KEYS.autosave);
+      if (!raw) return;
+      try {
+        const state = JSON.parse(raw);
+        if (!state?.data) return;
+        setData(state.data);
+        refs.lines.innerHTML = "";
+        (state.lines || []).forEach((line) => createLine({
+          title: line.description || "Prestation",
+          description: line.description,
+          qty: line.qty,
+          unit: line.unit,
+          unitPrice: line.unitPrice,
+          details: line.details
+        }));
+        refs.autosaveStatus.textContent = `Auto-sauvegarde restauree (${state.savedAt.slice(0, 16).replace("T", " ")})`;
+      } catch {
+        refs.autosaveStatus.textContent = "Auto-sauvegarde indisponible";
+      }
+    }
+
+    async function copySummary() {
+      try {
+        await navigator.clipboard.writeText(buildSummaryText());
+        alert("Recapitulatif copie.");
+      } catch {
+        alert("Impossible de copier pour le moment.");
+      }
+    }
+
+    function validateRequest() {
+      const data = getData();
+      const lines = getLines();
+      const missing = [];
+      if (!data.clientFirstname) missing.push("Prenom");
+      if (!data.clientLastname) missing.push("Nom");
+      if (!data.clientEmail) missing.push("Email");
+      if (!data.clientPhone) missing.push("Telephone");
+      if (!lines.length) missing.push("Au moins une prestation");
+      return missing;
+    }
+
+    function sendRequest() {
+      const missing = validateRequest();
+      if (missing.length) {
+        alert(`Merci de completer:\n- ${missing.join("\n- ")}`);
+        return;
+      }
+      const data = getData();
+      const subject = `Demande de devis ${data.requestNumber || ""} - ${[data.clientFirstname, data.clientLastname].filter(Boolean).join(" ")}`.trim();
+      window.location.href = `mailto:${COMPANY.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(buildSummaryText())}`;
+    }
+
+    function draftStore() {
+      return JSON.parse(localStorage.getItem(STORE_KEYS.drafts) || "[]");
+    }
+
+    function writeDraftStore(items) {
+      localStorage.setItem(STORE_KEYS.drafts, JSON.stringify(items));
+    }
+
+    function refreshDrafts() {
+      const drafts = draftStore().sort((a, b) => b.savedAt.localeCompare(a.savedAt));
+      refs.drafts.innerHTML = "";
+      if (!drafts.length) {
+        refs.drafts.innerHTML = `<option value="">Aucun brouillon sauvegarde</option>`;
+        return;
+      }
+      drafts.forEach((draft) => {
+        const option = document.createElement("option");
+        option.value = draft.requestNumber;
+        option.textContent = `${draft.requestNumber} - ${draft.clientName || "Sans nom"} (${draft.savedAt.slice(0, 10)})`;
+        refs.drafts.appendChild(option);
+      });
+    }
+
+    function saveDraft() {
+      const data = getData();
+      const lines = getLines();
+      if (!data.requestNumber) {
+        alert("Numero de simulation requis.");
+        return;
+      }
+      const drafts = draftStore();
+      const payload = {
+        requestNumber: data.requestNumber,
+        clientName: [data.clientFirstname, data.clientLastname].filter(Boolean).join(" ").trim(),
+        savedAt: new Date().toISOString(),
+        data,
+        lines
+      };
+      const index = drafts.findIndex((draft) => draft.requestNumber === data.requestNumber);
+      if (index >= 0) drafts[index] = payload;
+      else drafts.push(payload);
+      writeDraftStore(drafts);
+      refreshDrafts();
+      refs.drafts.value = data.requestNumber;
+      alert("Brouillon sauvegarde.");
+    }
+
+    function loadDraft() {
+      const value = refs.drafts.value;
+      if (!value) return;
+      const draft = draftStore().find((entry) => entry.requestNumber === value);
+      if (!draft) return;
+      setData(draft.data);
+      refs.lines.innerHTML = "";
+      (draft.lines || []).forEach((line) => createLine({
+        title: line.description || "Prestation",
+        description: line.description,
+        qty: line.qty,
+        unit: line.unit,
+        unitPrice: line.unitPrice,
+        details: line.details
+      }));
+      computeValidity();
+      renderPreview();
+    }
+
+    function deleteDraft() {
+      const value = refs.drafts.value;
+      if (!value) return;
+      writeDraftStore(draftStore().filter((entry) => entry.requestNumber !== value));
+      refreshDrafts();
+      alert("Brouillon supprime.");
+    }
+
+    function exportPdf() {
+      const missing = validateRequest();
+      if (missing.length) {
+        alert(`Merci de completer:\n- ${missing.join("\n- ")}`);
+        return;
+      }
+
+      const jsp = window.jspdf;
+      if (!jsp || !jsp.jsPDF) {
+        alert("Bibliotheque PDF non chargee.");
+        return;
+      }
+
+      const { jsPDF } = jsp;
+      const doc = new jsPDF({ unit: "mm", format: "a4" });
+      const data = getData();
+      const lines = getLines();
+      const totals = sums(lines);
+      const subject = inferredSubject(lines);
+      const clientName = [data.clientFirstname, data.clientLastname].filter(Boolean).join(" ");
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(16);
+      doc.text(COMPANY.name, 12, 16);
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9);
+      doc.text(`SIRET: ${COMPANY.siret}`, 12, 22);
+      doc.text(`TVA: ${COMPANY.tva}`, 12, 26);
+      doc.text(`Email: ${COMPANY.email}`, 12, 30);
+      doc.text(`Telephone: ${COMPANY.phone}`, 12, 34);
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(13);
+      doc.text(`SIMULATION ${data.requestNumber || ""}`, 198, 16, { align: "right" });
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9);
+      doc.text(`Date: ${frDate(data.quoteDate) || "-"}`, 198, 22, { align: "right" });
+      doc.text(`Validite: ${frDate(data.validityDate) || "-"}`, 198, 26, { align: "right" });
+      if (data.quoteReference) doc.text(`Reference: ${data.quoteReference}`, 198, 30, { align: "right" });
+
+      doc.setFont("helvetica", "bold");
+      doc.text("Demandeur", 12, 45);
+      doc.text("Objet", 110, 45);
+      doc.setFont("helvetica", "normal");
+      doc.text([
+        data.clientCompany || "",
+        clientName || "",
+        data.clientAddress || "",
+        data.clientPhone ? `Tel: ${data.clientPhone}` : "",
+        data.clientEmail ? `Email: ${data.clientEmail}` : ""
+      ].filter(Boolean).join("\n"), 12, 50);
+      doc.text(subject, 110, 50, { maxWidth: 88 });
+
+      doc.autoTable({
+        startY: 74,
+        head: [["#", "Prestations", "Qte", "Unite", "PU HT", "Total HT"]],
+        body: lines.map((line, index) => [
+          String(index + 1),
+          `${line.description}${line.details ? `\n${line.details}` : ""}`,
+          String(line.qty),
+          line.unit,
+          euro(line.unitPrice),
+          euro(line.total)
+        ]),
+        styles: { fontSize: 8, cellPadding: 2 },
+        headStyles: { fillColor: [15, 118, 110] },
+        columnStyles: { 2: { halign: "right" }, 4: { halign: "right" }, 5: { halign: "right" } }
+      });
+
+      doc.autoTable({
+        startY: doc.lastAutoTable.finalY + 6,
+        body: [
+          ["Sous-total HT", euro(totals.subtotal)],
+          ["Remise", `- ${euro(totals.discount)}`],
+          ["Frais deplacement", euro(totals.travel)],
+          ["Total HT", euro(totals.totalHt)],
+          [`TVA (${data.taxRate || 0}%)`, euro(totals.vat)],
+          ["Total TTC", euro(totals.totalTtc)],
+          ["Acompte", euro(totals.deposit)],
+          ["Reste a payer", euro(totals.remaining)]
+        ],
+        theme: "grid",
+        styles: { fontSize: 9 },
+        columnStyles: { 1: { halign: "right" } },
+        margin: { left: 118 }
+      });
+
+      const footerY = doc.lastAutoTable.finalY + 8;
+      doc.setFontSize(8.5);
+      doc.text(`Paiement: ${data.paymentMethod || "-"} - ${data.paymentDeadline || "-"}`, 12, footerY);
+      doc.text(`Contexte: ${data.clientContext || "-"}`, 12, footerY + 5, { maxWidth: 186 });
+      if (data.specialTerms) doc.text(`Conditions: ${data.specialTerms}`, 12, footerY + 14, { maxWidth: 186 });
+      doc.text(`Simulation informative, a valider par ${COMPANY.name}.`, 12, footerY + 24);
+      doc.save(`${data.requestNumber || "simulation-njr"}.pdf`);
+    }
+
+    function addFromCatalog(id) {
+      const service = CATALOG.find((entry) => entry.id === id);
+      if (!service) return;
+      createLine({
+        title: service.title,
+        description: service.title,
+        qty: 1,
+        unit: service.unit,
+        unitPrice: service.price,
+        details: service.details
+      });
+      if (!refs.quoteSubject.value.trim()) refs.quoteSubject.value = service.title;
+      renderPreview();
+      flashCartPanel();
+    }
+
+    refs.filters.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-filter]");
+      if (!button) return;
+      activeFilter = button.dataset.filter;
+      renderFilters();
+      renderCatalog();
+    });
+
+    refs.catalog.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-add-service]");
+      if (!button) return;
+      addFromCatalog(button.dataset.addService);
+    });
+
+    refs.lines.addEventListener("click", (event) => {
+      const button = event.target.closest(".line-remove");
+      if (!button) return;
+      button.closest(".quote-line")?.remove();
+      renderPreview();
+      autosaveCurrentState();
+    });
+
+    refs.cartItems.addEventListener("click", (event) => {
+      const focusButton = event.target.closest("[data-cart-focus]");
+      if (focusButton) {
+        focusLine(Number(focusButton.dataset.cartFocus));
+        return;
+      }
+
+      const removeButton = event.target.closest("[data-cart-remove]");
+      if (removeButton) {
+        removeLineAt(Number(removeButton.dataset.cartRemove));
+      }
+    });
+
+    refs.lines.addEventListener("input", () => {
+      renderPreview();
+      autosaveCurrentState();
+    });
+
+    document.getElementById("add-custom-line").addEventListener("click", () => {
+      createLine({ title: "Prestation libre", description: "", qty: 1, unit: "forfait", unitPrice: 0, details: "" });
+      renderPreview();
+      autosaveCurrentState();
+    });
+
+    [
+      refs.requestNumber,
+      refs.quoteDate,
+      refs.validityDays,
+      refs.validityDate,
+      refs.quoteSubject,
+      refs.quoteReference,
+      refs.clientType,
+      refs.clientCompany,
+      refs.clientFirstname,
+      refs.clientLastname,
+      refs.clientEmail,
+      refs.clientPhone,
+      refs.requestUrgency,
+      refs.interventionMode,
+      refs.clientAddress,
+      refs.clientContext,
+      refs.discountPercent,
+      refs.travelFees,
+      refs.taxRate,
+      refs.depositPercent,
+      refs.paymentMethod,
+      refs.paymentDeadline,
+      refs.specialTerms
+    ].forEach((field) => {
+      field.addEventListener("input", () => {
+        if (field === refs.quoteDate || field === refs.validityDays) computeValidity();
+        renderPreview();
+        autosaveCurrentState();
+      });
+      field.addEventListener("change", () => {
+        if (field === refs.quoteDate || field === refs.validityDays) computeValidity();
+        renderPreview();
+        autosaveCurrentState();
+      });
+    });
+
+    document.getElementById("copy-summary").addEventListener("click", copySummary);
+    document.getElementById("send-request").addEventListener("click", sendRequest);
+    refs.cartSend.addEventListener("click", sendRequest);
+    refs.cartJump.addEventListener("click", () => {
+      refs.lines.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+    refs.cartCopy.addEventListener("click", copyCartSummary);
+    refs.cartClear.addEventListener("click", clearCart);
+    document.getElementById("save-draft").addEventListener("click", saveDraft);
+    document.getElementById("load-draft").addEventListener("click", loadDraft);
+    document.getElementById("delete-draft").addEventListener("click", deleteDraft);
+    document.getElementById("new-request").addEventListener("click", () => {
+      refs.requestNumber.value = nextRequestNumber(true);
+      renderPreview();
+      autosaveCurrentState();
+    });
+
+    const pdfButton = document.createElement("button");
+    pdfButton.type = "button";
+    pdfButton.className = "btn btn--secondary";
+    pdfButton.textContent = "Exporter PDF";
+    pdfButton.addEventListener("click", exportPdf);
+    document.querySelector(".hero-main .actions").appendChild(pdfButton);
+
+    refs.quoteDate.value = today();
+    refs.requestNumber.value = nextRequestNumber(false);
+    computeValidity();
+    renderFilters();
+    renderCatalog();
+    refreshDrafts();
+    restoreAutosave();
+    if (!refs.lines.children.length) {
+      createLine({
+        title: "Diagnostic et depannage poste",
+        description: "Diagnostic et depannage poste",
+        qty: 1,
+        unit: "forfait",
+        unitPrice: 69,
+        details: "Base de simulation informatique initiale, modifiable selon le besoin reel."
+      });
+    }
+    renderPreview();
+    autosaveCurrentState();
+  </script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Naim Ragot · Veille</title>
+  <meta name="description" content="Page de veille technologique et cybersecurite de Naim Ragot." />
+  <link rel="stylesheet" href="assets/css/site.css" />
+</head>
+<body>
+  <div id="app-header"></div>
+  <main class="site-shell page">
+    <section class="section reveal is-visible">
+      <div class="section__head">
+        <div>
+          <h2>Veille technologique et cyber</h2>
+          <p>Cette page te permet de garder une watchlist claire, de relier ta veille a ton dossier BTS et de suivre des flux RSS officiels mis a jour automatiquement.</p>
+        </div>
+      </div>
+      <div class="cards-grid cards-grid--wide">
+        <article class="card">
+          <h3>Flux officiels branches</h3>
+          <p>Ces flux sont appuyes sur des sources officielles et utilises comme base de veille automatique sur le site.</p>
+          <div class="actions">
+            <a class="btn btn--secondary" href="https://www.cisa.gov/cybersecurity-advisories/all.xml" target="_blank" rel="noopener">CISA Advisories</a>
+            <a class="btn btn--secondary" href="https://www.cert.ssi.gouv.fr/feed/" target="_blank" rel="noopener">CERT-FR</a>
+            <a class="btn btn--secondary" href="https://cert.europa.eu/publications/security-advisories-rss" target="_blank" rel="noopener">CERT-EU Advisories</a>
+            <a class="btn btn--secondary" href="https://cert.europa.eu/publications/threat-intelligence-rss" target="_blank" rel="noopener">CERT-EU Intel</a>
+          </div>
+          <p class="notice" style="margin-top:14px">Le flux NIST Cyber RSS officiel a bien ete verifie, mais il ne renvoie actuellement aucun element au 26 mars 2026, donc je ne l'ai pas retenu pour le tableau live.</p>
+        </article>
+        <article class="card">
+          <h3>Base locale</h3>
+          <p>Ta note de veille deja presente dans le depot est accessible directement ici.</p>
+          <div style="margin-top:14px;"><a href="VEILLE/2025/veille_2025-12-13.md">Ouvrir la veille locale</a></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
+          <h2>Tableau live RSS</h2>
+          <p>Le site recharge ces flux automatiquement, permet de filtrer les resultats utiles et de sauvegarder localement les alertes a reutiliser pour ton BTS.</p>
+        </div>
+        <div class="actions">
+          <button class="btn btn--secondary" id="live-feeds-refresh">Actualiser maintenant</button>
+          <button class="btn btn--secondary" id="live-feeds-reset">Reinitialiser les filtres</button>
+          <button class="btn btn--accent" id="save-feed-summary">Copier une synthese</button>
+        </div>
+      </div>
+      <div class="split-grid" style="margin-bottom:18px">
+        <article class="tool">
+          <h3>Filtrer les flux</h3>
+          <div style="display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin-top:14px">
+            <label>Mot-cle
+              <input id="veille-search" class="field" placeholder="CVE, Windows, phishing, ransomware..." />
+            </label>
+            <label>Source
+              <select id="veille-source" class="select">
+                <option value="all">Toutes les sources</option>
+                <option value="cert-fr">CERT-FR</option>
+                <option value="cisa">CISA Advisories</option>
+                <option value="cert-eu-advisories">CERT-EU Advisories</option>
+                <option value="cert-eu-intel">CERT-EU Intel</option>
+              </select>
+            </label>
+          </div>
+          <p class="notice" style="margin-top:12px">Les tags sous chaque article te montrent quand une alerte recoupe directement ta watchlist locale.</p>
+        </article>
+        <article class="tool">
+          <h3>Bibliotheque locale</h3>
+          <p>Quand un article est utile pour l'oral, pour ta veille ou pour une fiche de situation, sauvegarde-le ici pour le retrouver vite.</p>
+          <div class="actions" style="margin-top:14px">
+            <button class="btn btn--secondary" id="clear-saved-feed-items">Vider la bibliotheque</button>
+          </div>
+          <p class="notice" id="saved-feed-status" style="margin-top:12px">Bibliotheque locale vide.</p>
+        </article>
+      </div>
+      <div class="feed-toolbar">
+        <span class="notice" id="live-feeds-status">Chargement des flux officiels...</span>
+        <span class="notice" id="live-feeds-meta">Mise a jour en attente.</span>
+      </div>
+      <div class="feed-board" id="live-feeds-board"></div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
+          <h2>Watchlist personnelle</h2>
+          <p>Ajoute les sujets que tu veux surveiller. La liste reste en local.</p>
+        </div>
+      </div>
+      <div class="split-grid">
+        <article class="tool">
+          <input id="watch-input" class="field" placeholder="Ajouter un theme de veille..." />
+          <div class="actions">
+            <button class="btn btn--primary" id="watch-add">Ajouter a la watchlist</button>
+            <button class="btn btn--secondary" id="watch-reset">Reinitialiser</button>
+            <button class="btn btn--secondary" id="watch-copy-all">Copier la watchlist</button>
+          </div>
+          <p class="notice" id="watch-status">Watchlist sauvegardee localement.</p>
+        </article>
+        <article class="tool">
+          <div class="watch-list" id="watch-list"></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
+          <h2>Articles sauvegardes</h2>
+          <p>Cette zone garde les articles de veille que tu veux reutiliser pour ton BTS, ta synthese ou ta base locale.</p>
+        </div>
+      </div>
+      <div class="feed-board" id="saved-feed-items"></div>
+    </section>
+  </main>
+  <div id="app-footer"></div>
+  <script src="assets/js/site.js"></script>
+  <script>
+    initSite("veille.html");
+    initWatchTool();
+    initVeilleWorkbench({
+      containerId: "live-feeds-board",
+      statusId: "live-feeds-status",
+      metaId: "live-feeds-meta",
+      refreshButtonId: "live-feeds-refresh",
+      searchId: "veille-search",
+      sourceId: "veille-source",
+      summaryButtonId: "save-feed-summary",
+      savedContainerId: "saved-feed-items",
+      savedStatusId: "saved-feed-status",
+      clearSavedButtonId: "clear-saved-feed-items",
+      resetFiltersButtonId: "live-feeds-reset",
+      feedIds: ["cert-fr","cisa","cert-eu-advisories","cert-eu-intel"],
+      limit: 6
+    });
+  </script>
+</body>
+</html>

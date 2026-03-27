@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Naim Ragot · Contact</title>
+  <meta name="description" content="Page de contact BTS SIO SISR et NJR Solutions de Naim Ragot." />
+  <link rel="stylesheet" href="assets/css/site.css" />
+</head>
+<body>
+  <div id="app-header"></div>
+  <main class="site-shell page">
+    <section class="hero reveal is-visible">
+      <article class="hero-main">
+        <div class="eyebrow">Contact · BTS + NJR Solutions</div>
+        <h1>Une page de contact claire pour le BTS, le recrutement ou un client.</h1>
+        <p>Cette page sert de point d'entree unique: coordonnees, message prepare, presentation rapide et acces direct au bon parcours si besoin.</p>
+        <div class="actions">
+          <button class="btn btn--secondary" id="copy-email">Copier l'email</button>
+          <button class="btn btn--secondary" id="copy-phone">Copier le telephone</button>
+          <a class="btn btn--primary" href="mailto:ragotnaimpro@gmail.com">Envoyer un email direct</a>
+          <a class="btn btn--accent" href="devis_njr.html">Demarrer une simulation</a>
+        </div>
+      </article>
+      <aside class="hero-side">
+        <div class="mini-panel">
+          <img class="hero-logo" src="assets/img/logo-njr.png" alt="Logo NJR Solutions" />
+          <h3>Coordonnees</h3>
+          <div class="contact-list">
+            <div class="contact-line"><span>Email</span><strong id="email-target">ragotnaimpro@gmail.com</strong></div>
+            <div class="contact-line"><span>Telephone</span><strong id="phone-target">07 82 30 75 36</strong></div>
+            <div class="contact-line"><span>Zone</span><strong>Villeneuve-sur-Lot · Lot-et-Garonne</strong></div>
+          </div>
+        </div>
+        <div class="mini-panel">
+          <h3>Disponibilite</h3>
+          <div class="metric-list" style="margin-top:12px">
+            <div class="metric"><span>BTS</span><strong>Oral · E4 · E5</strong></div>
+            <div class="metric"><span>Pro</span><strong>Alternance · Stage</strong></div>
+            <div class="metric"><span>Entreprise</span><strong>Depannage · Reseau · Conseil</strong></div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section reveal">
+      <div class="tools-grid">
+        <article class="tool">
+          <h3>Presentation express</h3>
+          <p>Choisir le contexte pour recuperer une presentation courte, claire et reutilisable rapidement.</p>
+          <select id="pitch-audience" class="select">
+            <option value="jury">Version jury BTS</option>
+            <option value="recruiter">Version recruteur</option>
+            <option value="client">Version client</option>
+          </select>
+          <div class="pitch-output" id="pitch-output" style="margin-top:14px"></div>
+          <div class="actions">
+            <button class="btn btn--secondary" id="copy-pitch">Copier la presentation</button>
+          </div>
+        </article>
+        <article class="tool">
+          <h3>Presentation rapide</h3>
+          <div class="identity-list">
+            <div class="identity-item">
+              <strong>Profil</strong>
+              Systeme, reseau, support, securite de base et automatisation.
+            </div>
+            <div class="identity-item">
+              <strong>Entreprise</strong>
+              NJR Solutions propose des services de proximite en informatique et en nettoyage avec une approche claire et serieuse.
+            </div>
+            <div class="identity-item">
+              <strong>Style de travail</strong>
+              Approche simple, serieuse, documentee et orientee resultat.
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
+          <h2>Demande rapide</h2>
+          <p>Le formulaire prepare un brouillon d'email propre pour gagner du temps pendant un contact ou un rendez-vous.</p>
+        </div>
+      </div>
+      <div class="contact-grid">
+        <article class="tool">
+          <div style="display:grid;gap:10px">
+            <input id="contact-name" class="field" placeholder="Nom" />
+            <input id="contact-email" class="field" placeholder="Email" />
+            <input id="contact-phone" class="field" placeholder="Telephone" />
+            <select id="contact-service" class="select">
+              <option value="">Choisir un sujet</option>
+              <option>Alternance / stage</option>
+              <option>Question BTS / portfolio</option>
+              <option>Depannage informatique</option>
+              <option>Reseau / Wi-Fi</option>
+              <option>Securite / sauvegarde</option>
+              <option>Documentation / simulation</option>
+            </select>
+            <input id="contact-subject" class="field" placeholder="Objet personnalise (optionnel)" />
+            <textarea id="contact-message" class="field-area" rows="6" placeholder="Explique ici le besoin, le contexte ou le type d'echange souhaite."></textarea>
+          </div>
+          <div class="actions">
+            <button class="btn btn--primary" id="send-draft">Preparer le mail</button>
+            <a class="btn btn--secondary" href="outils.html">Ouvrir le suivi local</a>
+          </div>
+        </article>
+        <article class="tool">
+          <h3>Apercu du message</h3>
+          <p>Le brouillon se met a jour en direct et reste sauvegarde localement pendant la saisie.</p>
+          <div class="brief-output" id="contact-preview">Le brouillon apparaitra ici.</div>
+          <div class="actions">
+            <button class="btn btn--secondary" id="copy-contact-preview">Copier le brouillon</button>
+            <button class="btn btn--secondary" id="clear-contact-form">Effacer le formulaire</button>
+          </div>
+          <p class="notice" id="contact-status">Brouillon sauvegarde localement.</p>
+          <h3>Quand utiliser cette page</h3>
+          <div class="cards-grid">
+            <article class="card">
+              <h3>Pour le BTS</h3>
+              <p>Donner un point d'entree propre a un jury, un professeur ou un maitre de stage.</p>
+            </article>
+            <article class="card">
+              <h3>Pour un client</h3>
+              <p>Recueillir un besoin, cadrer une demande et basculer rapidement vers une simulation ou un brief.</p>
+            </article>
+            <article class="card">
+              <h3>Pour un recruteur</h3>
+              <p>Montrer le profil, les domaines de competence et faciliter la prise de contact.</p>
+            </article>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
+          <h2>Avant de contacter</h2>
+          <p>Quelques reperes aident a envoyer une demande plus claire et donc plus rapide a traiter.</p>
+        </div>
+      </div>
+      <div class="cards-grid" id="trust-points"></div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
+          <h2>Informations utiles a joindre</h2>
+          <p>Des reperes simples pour enrichir un premier contact et rendre l'echange plus concret.</p>
+        </div>
+      </div>
+      <div class="cards-grid cards-grid--wide">
+        <article class="card">
+          <h3>Cote BTS</h3>
+          <p>CV, tableau de synthese, situations E5, captures de projets, scripts et veille.</p>
+        </article>
+        <article class="card">
+          <h3>Cote entreprise</h3>
+          <p>Besoin precise, urgence, parc concerne, symptomes, contraintes et eventuelles photos / captures.</p>
+        </article>
+        <article class="card">
+          <h3>Cote recrutement</h3>
+          <p>Type de poste, dates, rythme, localisation, outils utilises et attentes principales.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+  <div id="app-footer"></div>
+  <script src="assets/js/site.js"></script>
+  <script>
+    initSite("contact.html");
+    initCopyEmail("copy-email","email-target");
+    initCopyPhone("copy-phone","phone-target");
+    initContactTool();
+    initMailDraft("send-draft");
+    initPitchTool("pitch-audience","pitch-output","copy-pitch");
+    renderTrustPoints("trust-points");
+  </script>
+</body>
+</html>

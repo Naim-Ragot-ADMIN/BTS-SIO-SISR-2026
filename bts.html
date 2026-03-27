@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Naim Ragot · Espace BTS</title>
+  <meta name="description" content="Espace BTS SIO SISR de Naim Ragot avec preparation orale, checklist, projets et ressources utiles." />
+  <link rel="stylesheet" href="assets/css/site.css" />
+</head>
+<body>
+  <div id="app-header"></div>
+  <main class="site-shell page">
+    <section class="hero reveal is-visible">
+      <article class="hero-main">
+        <div class="eyebrow">Espace BTS SIO SISR</div>
+        <h1>Un espace pense pour l'oral, les preuves et ta progression.</h1>
+        <p>Ici, tout est tourne vers la reussite du BTS: suivi de preparation, ressources, situations a montrer, competences mises en avant et trame d'oral plus claire.</p>
+        <div class="actions">
+          <a class="btn btn--primary" href="projets.html">Voir les situations techniques</a>
+          <a class="btn btn--secondary" href="scripts.html">Bibliotheque scripts</a>
+          <a class="btn btn--secondary" href="contact.html">Acces jury / recruteur</a>
+        </div>
+        <div class="stats-grid stats-grid--4">
+          <div class="mini-panel"><div class="label">Progression BTS</div><div class="kpi" id="progress-text">0%</div><div class="progress-shell"><span id="progress-bar"></span></div></div>
+          <div class="mini-panel"><div class="label">Priorite</div><div class="kpi" id="priority-label">Structurer</div></div>
+          <div class="mini-panel"><div class="label">Dossier</div><div class="kpi">E4 · E5</div></div>
+          <div class="mini-panel"><div class="label">Approche</div><div class="kpi">Preuves</div></div>
+        </div>
+      </article>
+      <aside class="hero-side">
+        <div class="mini-panel">
+          <h3>Ce que cette page doit t'apporter</h3>
+          <div class="metric-list" style="margin-top:12px">
+            <div class="metric"><span>Avant l'oral</span><strong>Structurer les preuves</strong></div>
+            <div class="metric"><span>Pendant l'oral</span><strong>Parler avec clarte</strong></div>
+            <div class="metric"><span>Apres</span><strong>Garder un support propre</strong></div>
+          </div>
+        </div>
+        <div class="mini-panel">
+          <h3>Raccourcis</h3>
+          <p>Tu peux utiliser cette page comme tableau de bord de preparation, puis basculer sur les projets ou les ressources selon ce qu'il te manque.</p>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section reveal">
+      <div class="tools-grid">
+        <article class="tool">
+          <h3>Checklist BTS</h3>
+          <p>Coche ce qui est pret. La progression reste sauvegardee localement dans ton navigateur.</p>
+          <div class="checklist" id="checklist"></div>
+          <div class="actions"><button class="btn btn--secondary" id="reset-checklist">Reinitialiser</button></div>
+        </article>
+        <article class="tool">
+          <h3>Notes de preparation</h3>
+          <p>Un bloc pour noter ce qui manque avant jury, demo, dossier ou candidature.</p>
+          <textarea id="focus-note" class="field-area" placeholder="Exemple : finir la situation E5, ajouter une capture, revoir la conclusion sur le pare-feu..."></textarea>
+          <div class="actions">
+            <button class="btn btn--secondary" id="copy-note">Copier</button>
+            <button class="btn btn--secondary" id="clear-note">Effacer</button>
+          </div>
+          <p class="notice" id="note-status">Sauvegarde locale active.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
+          <h2>Competences que tu montres</h2>
+          <p>Ce bloc rend ton positionnement plus lisible pour un jury ou un recruteur.</p>
+        </div>
+      </div>
+      <div class="cards-grid cards-grid--wide" id="bts-skills"></div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
+          <h2>Trame d'oral rapide</h2>
+          <p>Une structure simple pour rester clair quand tu presentes une situation professionnelle.</p>
+        </div>
+      </div>
+      <div class="cards-grid" id="oral-blocks"></div>
+    </section>
+
+    <section class="section reveal">
+      <div class="tools-grid">
+        <article class="tool">
+          <h3>Minuteur d'entrainement oral</h3>
+          <p>Lance une simulation de passage pour t'habituer a parler dans un temps limite et garder un rythme propre.</p>
+          <div class="quote-fields-grid" style="margin-top:14px">
+            <label>Duree
+              <select id="oral-timer-duration" class="select">
+                <option value="180">3 minutes</option>
+                <option value="300" selected>5 minutes</option>
+                <option value="480">8 minutes</option>
+                <option value="600">10 minutes</option>
+              </select>
+            </label>
+          </div>
+          <div class="timer-display" id="oral-timer-display" style="margin-top:14px">05:00</div>
+          <div class="actions">
+            <button class="btn btn--primary" id="start-oral-timer">Demarrer</button>
+            <button class="btn btn--secondary" id="pause-oral-timer">Pause</button>
+            <button class="btn btn--secondary" id="reset-oral-timer">Reinitialiser</button>
+          </div>
+          <p class="notice" id="oral-timer-status">Minuteur pret.</p>
+        </article>
+
+        <article class="tool">
+          <h3>Questions probables du jury</h3>
+          <p>Entraine-toi a repondre a des questions typiques de jury BTS en variant les angles: technique, analyse et posture orale.</p>
+          <div class="quote-fields-grid" style="margin-top:14px">
+            <label>Theme
+              <select id="jury-question-category" class="select">
+                <option value="all">Toutes les questions</option>
+                <option value="technique">Technique</option>
+                <option value="analyse">Analyse</option>
+                <option value="oral">Posture orale</option>
+              </select>
+            </label>
+          </div>
+          <div class="brief-output jury-question" id="jury-question-output" style="margin-top:14px">La question apparaitra ici.</div>
+          <div class="actions">
+            <button class="btn btn--primary" id="next-jury-question">Question suivante</button>
+            <button class="btn btn--secondary" id="random-jury-question">Aleatoire</button>
+            <button class="btn btn--secondary" id="copy-jury-question">Copier</button>
+          </div>
+          <textarea id="jury-answer-note" class="field-area" rows="4" placeholder="Note ici ta reponse courte, ton angle ou ton plan de reponse."></textarea>
+          <p class="notice" id="jury-question-status">Question 1 sur 1</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="tools-grid">
+        <article class="tool">
+          <h3>Constructeur de synthese E5</h3>
+          <p>Prepare une version courte et presentable d'une situation pour t'entrainer a l'oral sans repartir de zero a chaque fois.</p>
+          <div style="display:grid;gap:10px">
+            <input id="oral-context" class="field" placeholder="Situation / contexte / besoin de depart" />
+            <textarea id="oral-actions" class="field-area" rows="4" placeholder="Actions menees, outils utilises, etapes importantes..."></textarea>
+            <textarea id="oral-results" class="field-area" rows="4" placeholder="Resultats, impact, correction apportee, limites..."></textarea>
+            <input id="oral-skills" class="field" placeholder="Competences mobilisees : systeme, reseau, securite, documentation..." />
+          </div>
+          <div class="actions">
+            <button class="btn btn--secondary" id="copy-oral-builder">Copier la synthese</button>
+            <button class="btn btn--secondary" id="clear-oral-builder">Reinitialiser</button>
+          </div>
+          <p class="notice" id="oral-builder-status">Synthese BTS sauvegardee localement.</p>
+        </article>
+        <article class="tool">
+          <h3>Synthese generee</h3>
+          <p>Ce bloc te donne une base claire pour une presentation orale, une fiche de revision ou un support jury.</p>
+          <div class="brief-output" id="oral-builder-output">La synthese E5 apparaitra ici.</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="tools-grid">
+        <article class="tool">
+          <h3>Pack de preuves E5</h3>
+          <p>Choisis les preuves a preparer pour une situation. Le bloc te genere un recap simple a suivre avant l'oral.</p>
+          <div style="display:grid;gap:10px">
+            <input id="evidence-title" class="field" placeholder="Nom de la situation ou du projet" />
+            <textarea id="evidence-context" class="field-area" rows="3" placeholder="Contexte, objectif, environnement et perimetre..."></textarea>
+          </div>
+          <div class="checklist" style="margin-top:16px">
+            <label class="check-item" for="evidence-diagram">
+              <input id="evidence-diagram" type="checkbox" data-evidence-item />
+              <div><strong>Schema / architecture</strong><div class="notice">Plan reseau, schema logique, topologie ou vue d'ensemble.</div></div>
+            </label>
+            <label class="check-item" for="evidence-capture">
+              <input id="evidence-capture" type="checkbox" data-evidence-item />
+              <div><strong>Captures d'ecran</strong><div class="notice">Console, interface d'admin, resultat visible ou supervision.</div></div>
+            </label>
+            <label class="check-item" for="evidence-script">
+              <input id="evidence-script" type="checkbox" data-evidence-item />
+              <div><strong>Script / commande</strong><div class="notice">Automatisation, commandes PowerShell, bash ou procedure technique.</div></div>
+            </label>
+            <label class="check-item" for="evidence-tests">
+              <input id="evidence-tests" type="checkbox" data-evidence-item />
+              <div><strong>Tests et verifications</strong><div class="notice">Ping, journaux, supervision, etapes de validation ou checks finaux.</div></div>
+            </label>
+            <label class="check-item" for="evidence-results">
+              <input id="evidence-results" type="checkbox" data-evidence-item />
+              <div><strong>Resultat concret</strong><div class="notice">Amelioration, correction, securisation ou service rendu.</div></div>
+            </label>
+            <label class="check-item" for="evidence-doc">
+              <input id="evidence-doc" type="checkbox" data-evidence-item />
+              <div><strong>Documentation / compte-rendu</strong><div class="notice">Procedure, fiche technique, note de synthese ou retour d'experience.</div></div>
+            </label>
+          </div>
+          <div class="actions">
+            <button class="btn btn--secondary" id="copy-evidence-pack">Copier le recap</button>
+            <button class="btn btn--secondary" id="reset-evidence-pack">Reinitialiser</button>
+          </div>
+          <p class="notice" id="evidence-pack-status">0 preuve selectionnee.</p>
+        </article>
+        <article class="tool">
+          <h3>Recap preuves</h3>
+          <p>Utilise ce recap pour verifier rapidement que ta situation est bien defendable devant un jury.</p>
+          <div class="brief-output" id="evidence-pack-output">Le pack de preuves apparaitra ici.</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
+          <h2>Veille cyber utile pour le BTS</h2>
+          <p>Les derniers sujets importants remontent ici automatiquement depuis des flux officiels pour nourrir ta veille et tes exemples a l'oral.</p>
+        </div>
+        <div class="actions" style="margin-top:0">
+          <button class="btn btn--secondary" id="bts-feeds-refresh">Actualiser</button>
+          <a class="btn btn--secondary" href="veille.html">Ouvrir la veille complete</a>
+        </div>
+      </div>
+      <div class="feed-toolbar">
+        <span class="notice" id="bts-feeds-status">Chargement des flux officiels...</span>
+        <span class="notice" id="bts-feeds-meta">Mise a jour en attente.</span>
+      </div>
+      <div class="feed-board" id="bts-feed-board"></div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
+          <h2>Situations a montrer</h2>
+          <p>Les projets lies au BTS et a la documentation technique que tu peux mobiliser pendant l'oral.</p>
+        </div>
+      </div>
+      <div class="cards-grid cards-grid--wide" id="bts-projects"></div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
+          <h2>Ressources et fichiers utiles</h2>
+          <p>Recherche rapide parmi les ressources deja presentes dans ton depot.</p>
+        </div>
+        <input id="resource-search" class="search" placeholder="Rechercher une ressource, un dossier, un support..." />
+      </div>
+      <div class="cards-grid" id="resource-results"></div>
+    </section>
+  </main>
+  <div id="app-footer"></div>
+  <script src="assets/js/site.js"></script>
+  <script>
+    const siteState = initSite("bts.html");
+    if (!siteState.allowPage) {
+    } else {
+    renderChecklist("checklist","progress-text","progress-bar","priority-label");
+    initChecklistReset("reset-checklist",["checklist","progress-text","progress-bar","priority-label"]);
+    initNoteTool("focus-note","note-status","copy-note","clear-note");
+    renderBtsSkills("bts-skills");
+    renderOralBlocks("oral-blocks");
+    initBtsTimerTool();
+    initBtsJuryTool();
+    initBtsOralTool();
+    initEvidencePlanner();
+    initLiveFeedBoard({
+      containerId: "bts-feed-board",
+      statusId: "bts-feeds-status",
+      metaId: "bts-feeds-meta",
+      refreshButtonId: "bts-feeds-refresh",
+      feedIds: ["cert-fr","cisa","cert-eu-intel"],
+      limit: 2,
+      compact: true
+    });
+    renderProjectCards("bts-projects","bts");
+    initResourceSearch("resource-search","resource-results");
+    }
+  </script>
+</body>
+</html>
