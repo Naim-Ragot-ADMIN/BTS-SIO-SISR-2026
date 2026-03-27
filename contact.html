@@ -140,6 +140,30 @@
     </section>
 
     <section class="section reveal">
+      <div class="tools-grid">
+        <article class="tool route-card">
+          <h3>Parcours recommande</h3>
+          <p>Selon le sujet choisi, le site peut deja orienter vers la page la plus utile sans passer par tout le centre des demandes.</p>
+          <div class="route-card__target" id="contact-route-output">
+            <strong>Centre des demandes</strong>
+            <span>Choisir un sujet ou un service pour afficher une recommandation plus precise.</span>
+          </div>
+          <div class="actions">
+            <a class="btn btn--accent" id="contact-route-link" href="devis_njr.html">Ouvrir la page recommandee</a>
+          </div>
+        </article>
+        <article class="tool">
+          <h3>Quand passer par le contact direct</h3>
+          <div class="compare-list">
+            <div class="compare-item"><span>Besoin flou</span><strong>Mieux vaut commencer par un message simple</strong></div>
+            <div class="compare-item"><span>Besoin deja cadré</span><strong>Le simulateur fait gagner du temps</strong></div>
+            <div class="compare-item"><span>Recrutement / BTS</span><strong>Le contact direct reste le plus adapté</strong></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal">
       <div class="section__head">
         <div>
           <h2>Choisir le bon parcours</h2>
@@ -206,6 +230,43 @@
     initPitchTool("pitch-audience","pitch-output","copy-pitch");
     renderServiceLanes("service-lanes");
     renderTrustPoints("trust-points");
+
+    const contactService = document.getElementById("contact-service");
+    const routeOutput = document.getElementById("contact-route-output");
+    const routeLink = document.getElementById("contact-route-link");
+
+    function updateContactRoute() {
+      const value = contactService.value || "";
+      let target = {
+        title: "Centre des demandes",
+        text: "Le centre des demandes permet de choisir entre l'informatique et le nettoyage avant l'envoi.",
+        href: "devis_njr.html",
+        cta: "Ouvrir le centre des demandes"
+      };
+
+      if (/Depannage|Reseau|Securite/i.test(value)) {
+        target = {
+          title: "Demande informatique",
+          text: "Le parcours informatique est le plus adapte pour un PC, un reseau, une box, une sauvegarde ou une maintenance.",
+          href: "demande-informatique.html",
+          cta: "Ouvrir la demande informatique"
+        };
+      } else if (/Nettoyage maison|Nettoyage auto|Nettoyage terrasse/i.test(value)) {
+        target = {
+          title: "Demande nettoyage",
+          text: "Le parcours nettoyage est le plus adapte pour maison, vitres, auto, terrasse, exterieur ou utilitaire.",
+          href: "demande-nettoyage.html",
+          cta: "Ouvrir la demande nettoyage"
+        };
+      }
+
+      routeOutput.innerHTML = `<strong>${target.title}</strong><span>${target.text}</span>`;
+      routeLink.href = target.href;
+      routeLink.textContent = target.cta;
+    }
+
+    contactService?.addEventListener("change", updateContactRoute);
+    updateContactRoute();
   </script>
 </body>
 </html>

@@ -309,6 +309,7 @@
     initSite("demande-nettoyage.html");
 
     const COMPANY_EMAIL = "ragotnaimpro@gmail.com";
+    const DRAFT_KEY = "njr_public_clean_request_draft_v1";
     const TRAVEL_ZONES = { free: 0, near: 8, mid: 15, far: 25 };
     const CATALOG = [
       { id: "entretien-ponctuel", category: "Maison", title: "Entretien ponctuel maison ou bureau", price: 23, details: "Base simple pour entretien ponctuel, rangement leger et remise au propre reguliere." },
@@ -342,6 +343,38 @@
     const qualityFill = document.getElementById("request-quality-fill");
     const qualityStatus = document.getElementById("request-quality-status");
     const qualityList = document.getElementById("request-quality-list");
+
+    function saveDraft() {
+      localStorage.setItem(DRAFT_KEY, JSON.stringify({
+        selected: Array.from(selected),
+        name: clientNameField.value,
+        city: clientCityField.value,
+        email: clientEmailField.value,
+        phone: clientPhoneField.value,
+        frequency: serviceFrequencyField.value,
+        zone: travelZoneField.value,
+        context: clientContextField.value
+      }));
+    }
+
+    function restoreDraft() {
+      try {
+        const raw = localStorage.getItem(DRAFT_KEY);
+        if (!raw) return false;
+        const draft = JSON.parse(raw);
+        (draft.selected || []).forEach((id) => selected.add(id));
+        clientNameField.value = draft.name || "";
+        clientCityField.value = draft.city || "";
+        clientEmailField.value = draft.email || "";
+        clientPhoneField.value = draft.phone || "";
+        serviceFrequencyField.value = draft.frequency || serviceFrequencyField.value;
+        travelZoneField.value = draft.zone || travelZoneField.value;
+        clientContextField.value = draft.context || "";
+        return Boolean((draft.selected || []).length || draft.name || draft.email || draft.phone || draft.context);
+      } catch {
+        return false;
+      }
+    }
 
     function selectedItems() {
       return CATALOG.filter((item) => selected.has(item.id));
@@ -508,6 +541,7 @@
           : percent >= 60
             ? "La base est bonne. Ajoute encore un peu de contexte pour aller plus vite."
             : "Ajoute une prestation et un contact pour preparer une demande claire.";
+      saveDraft();
     }
 
     function openGmailCompose() {
@@ -608,6 +642,7 @@
       });
       serviceFrequencyField.selectedIndex = 0;
       travelZoneField.selectedIndex = 0;
+      localStorage.removeItem(DRAFT_KEY);
       status.textContent = "Nom + email ou telephone + au moins une prestation suffisent pour preparer le message.";
       renderCatalog();
       renderCart();
@@ -627,10 +662,14 @@
       });
     });
 
+    const restored = restoreDraft();
     renderCatalog();
     renderCart();
     updatePreview();
     updateRequestQuality();
+    if (restored) {
+      status.textContent = "Brouillon local restaure sur cet appareil.";
+    }
   </script>
 </body>
 </html>

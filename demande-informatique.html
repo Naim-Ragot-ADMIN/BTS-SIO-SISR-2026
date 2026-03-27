@@ -307,6 +307,7 @@
     initSite("demande-informatique.html");
 
     const COMPANY_EMAIL = "ragotnaimpro@gmail.com";
+    const DRAFT_KEY = "njr_public_info_request_draft_v1";
     const CATALOG = [
       { id: "diag-poste", category: "Support poste", title: "Diagnostic et depannage poste", price: 69, details: "Pour PC lent, messages d'erreur, blocages ou remise en route rapide." },
       { id: "optimisation-poste", category: "Support poste", title: "Optimisation complete Windows", price: 89, details: "Nettoyage, optimisation, mises a jour, verification generale et gain de fluidite." },
@@ -341,6 +342,38 @@
     const qualityFill = document.getElementById("request-quality-fill");
     const qualityStatus = document.getElementById("request-quality-status");
     const qualityList = document.getElementById("request-quality-list");
+
+    function saveDraft() {
+      localStorage.setItem(DRAFT_KEY, JSON.stringify({
+        selected: Array.from(selected),
+        name: clientNameField.value,
+        city: clientCityField.value,
+        email: clientEmailField.value,
+        phone: clientPhoneField.value,
+        mode: interventionModeField.value,
+        urgency: requestUrgencyField.value,
+        context: clientContextField.value
+      }));
+    }
+
+    function restoreDraft() {
+      try {
+        const raw = localStorage.getItem(DRAFT_KEY);
+        if (!raw) return false;
+        const draft = JSON.parse(raw);
+        (draft.selected || []).forEach((id) => selected.add(id));
+        clientNameField.value = draft.name || "";
+        clientCityField.value = draft.city || "";
+        clientEmailField.value = draft.email || "";
+        clientPhoneField.value = draft.phone || "";
+        interventionModeField.value = draft.mode || interventionModeField.value;
+        requestUrgencyField.value = draft.urgency || requestUrgencyField.value;
+        clientContextField.value = draft.context || "";
+        return Boolean((draft.selected || []).length || draft.name || draft.email || draft.phone || draft.context);
+      } catch {
+        return false;
+      }
+    }
 
     function selectedItems() {
       return CATALOG.filter((item) => selected.has(item.id));
@@ -499,6 +532,7 @@
           : percent >= 60
             ? "La base est bonne. Ajoute encore un peu de contexte pour aller plus vite."
             : "Ajoute une prestation et un contact pour preparer une demande claire.";
+      saveDraft();
     }
 
     function openGmailCompose() {
@@ -593,6 +627,7 @@
       });
       interventionModeField.selectedIndex = 0;
       requestUrgencyField.selectedIndex = 0;
+      localStorage.removeItem(DRAFT_KEY);
       status.textContent = "Nom + email ou telephone + au moins une prestation suffisent pour preparer le message.";
       renderCatalog();
       renderCart();
@@ -612,10 +647,14 @@
       });
     });
 
+    const restored = restoreDraft();
     renderCatalog();
     renderCart();
     updatePreview();
     updateRequestQuality();
+    if (restored) {
+      status.textContent = "Brouillon local restaure sur cet appareil.";
+    }
   </script>
 </body>
 </html>

@@ -1195,6 +1195,55 @@ button, input, textarea, select { font: inherit; }
   font-weight: 700;
 }
 
+.route-card {
+  display: grid;
+  gap: 14px;
+}
+
+.route-card__target {
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(15, 23, 42, 0.04);
+}
+
+.route-card__target strong {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.compare-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.compare-card {
+  padding: 18px;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: linear-gradient(180deg, rgba(255,255,255,0.97), rgba(247,250,252,0.93));
+  box-shadow: var(--shadow);
+}
+
+.compare-card h3 {
+  margin-top: 0;
+}
+
+.compare-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.compare-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(15, 23, 42, 0.04);
+}
+
 .hidden-file-input {
   display: none;
 }
@@ -1233,6 +1282,10 @@ button, input, textarea, select { font: inherit; }
 
   .cta-band__actions {
     justify-content: flex-start;
+  }
+
+  .compare-grid {
+    grid-template-columns: 1fr;
   }
 }
 
