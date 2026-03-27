@@ -84,6 +84,56 @@ const PORTFOLIO_DATA = {
     { title: "Pack preuves", text: "Une checklist de pieces a montrer pour eviter les oublis de derniere minute." },
     { title: "Veille utile", text: "Des sujets recents et credibles a reinjecter dans tes exemples BTS." }
   ],
+  e5Showcase: [
+    { title: "Infrastructure lisible", text: "Schema, topologie, roles machines, services relies et logique globale du contexte." },
+    { title: "Technique justifiee", text: "Commandes, scripts, tests, supervision ou parametrages relies a une vraie decision technique." },
+    { title: "Preuves exploitables", text: "Captures, journaux, scripts, comptes-rendus et resultats visibles a montrer sans hesiter." },
+    { title: "Analyse mature", text: "Limites, risques, pistes d'amelioration et recul sur ce qui serait fait autrement." }
+  ],
+  e5Matrix: [
+    {
+      title: "Cadrer la situation",
+      focus: "Besoin, contexte, risque, objectif, perimetre",
+      proofs: ["Contexte client ou utilisateur", "Objectif clair", "Enjeu explique"],
+      jury: "Permet au jury de comprendre rapidement pourquoi la situation merite d'etre presentee."
+    },
+    {
+      title: "Mettre en oeuvre",
+      focus: "Configuration, scripts, commandes, intervention, correction",
+      proofs: ["Procedure", "Script ou commandes", "Captures techniques"],
+      jury: "Montre que tu sais faire et pas seulement decrire en theorie."
+    },
+    {
+      title: "Verifier et mesurer",
+      focus: "Tests, validation, supervision, controles, comparaison avant / apres",
+      proofs: ["Tests reussis", "Capture de resultat", "Preuve de service retabli"],
+      jury: "Rassure sur la rigueur et la logique de verification."
+    },
+    {
+      title: "Documenter",
+      focus: "Compte-rendu, fiche intervention, synthese, procedure",
+      proofs: ["Documentation", "Restitution", "Trace exploitable"],
+      jury: "Renforce la posture professionnelle et l'exploitabilite du travail."
+    },
+    {
+      title: "Securiser et analyser",
+      focus: "Risques, hygiene, limites, ameliorations, retour critique",
+      proofs: ["Mesures de securite", "Risques identifies", "Pistes d'amelioration"],
+      jury: "Donne de la hauteur et evite l'effet simple execution."
+    },
+    {
+      title: "Presenter clairement",
+      focus: "Langage simple, fil logique, conclusion, posture orale",
+      proofs: ["Structure orale", "Vocabulaire adapte", "Conclusion avec impact"],
+      jury: "Fait souvent la difference entre une bonne situation et une situation memorable."
+    }
+  ],
+  e5Angles: [
+    { title: "Montrer ce qui t'appartient", text: "Le jury doit voir ce que tu as vraiment prepare, configure, verifie ou documente toi-meme." },
+    { title: "Parler resultat avant detail", text: "Annonce rapidement l'effet concret obtenu, puis reviens sur la methode et les choix techniques." },
+    { title: "Garder une preuve forte en reserve", text: "Une capture, un test ou un script bien choisi peut sauver une explication trop abstraite." },
+    { title: "Conclure avec recul", text: "Une limite identifiee et une amelioration credible renforcent beaucoup la posture professionnelle." }
+  ],
   projects: [
     { title: "Plan d'upgrade d'un pare-feu sature", angle: "bts entreprise reseau securite", type: "Reseau / securite", impact: "Audit, choix materiel, budget et continuite de service.", result: "Situation E5 forte et cas realiste de prestation d'infrastructure.", level: "Fort", link: "COURS/08-E5/README.md" },
     { title: "Masterisation et normalisation du parc", angle: "bts entreprise documentation", type: "Postes / deploiement", impact: "Procedure, nomenclature, preparation et documentation.", result: "Montre une logique reproductible et un vrai sens de l'organisation.", level: "Fort", link: "README.md" },
@@ -238,7 +288,8 @@ const STORAGE_KEYS = {
   feedClips: "naim_portfolio_feed_clips_v1",
   juryPrep: "naim_portfolio_jury_prep_v1",
   evidencePrep: "naim_portfolio_evidence_prep_v1",
-  authConfig: "naim_portfolio_auth_v1"
+  authConfig: "naim_portfolio_auth_v1",
+  e5Pitch: "naim_portfolio_e5_pitch_v1"
 };
 
 const SESSION_KEYS = {
@@ -247,6 +298,7 @@ const SESSION_KEYS = {
 
 const PRIVATE_PAGES = new Set([
   "bts.html",
+  "preuves-e5.html",
   "projets.html",
   "scripts.html",
   "outils.html",
@@ -787,6 +839,7 @@ function getQuickLinks() {
   return [
     { label: "Accueil", href: "index.html", type: "Page", keywords: "home portfolio presentation" },
     { label: "Espace BTS", href: "bts.html", type: "Page", keywords: "bts e4 e5 oral preuves", private: true },
+    { label: "Preuves E5", href: "preuves-e5.html", type: "Page", keywords: "preuves e5 oral jury competences annexe", private: true },
     { label: "Projets", href: "projets.html", type: "Page", keywords: "projets situations techniques", private: true },
     { label: "Scripts", href: "scripts.html", type: "Page", keywords: "scripts automation powershell bash ad zabbix grafana", private: true },
     { label: "Entreprise", href: "entreprise.html", type: "Page", keywords: "entreprise services clients brief" },
@@ -1325,6 +1378,49 @@ function renderBtsDeliverables(containerId) {
   if (!container) return;
   container.innerHTML = PORTFOLIO_DATA.btsDeliverables.map((item) => `
     <article class="card">
+      <h3>${item.title}</h3>
+      <p>${item.text}</p>
+    </article>
+  `).join("");
+}
+
+function renderE5Showcase(containerId) {
+  const container = $("#" + containerId);
+  if (!container) return;
+  container.innerHTML = PORTFOLIO_DATA.e5Showcase.map((item) => `
+    <article class="card">
+      <h3>${item.title}</h3>
+      <p>${item.text}</p>
+    </article>
+  `).join("");
+}
+
+function renderE5Matrix(containerId) {
+  const container = $("#" + containerId);
+  if (!container) return;
+  container.innerHTML = PORTFOLIO_DATA.e5Matrix.map((item, index) => `
+    <article class="card">
+      <div class="card__top">
+        <div>
+          <h3>${item.title}</h3>
+          <p>${item.focus}</p>
+        </div>
+        <span class="step-badge">${String(index + 1).padStart(2, "0")}</span>
+      </div>
+      <div class="feature-list">
+        ${item.proofs.map((proof, proofIndex) => `<span class="tag tag--${tagClass(proofIndex)}">${proof}</span>`).join("")}
+      </div>
+      <p><strong>Ce que le jury voit :</strong> ${item.jury}</p>
+    </article>
+  `).join("");
+}
+
+function renderE5Angles(containerId) {
+  const container = $("#" + containerId);
+  if (!container) return;
+  container.innerHTML = PORTFOLIO_DATA.e5Angles.map((item, index) => `
+    <article class="card card--compact">
+      <span class="step-badge">${String(index + 1).padStart(2, "0")}</span>
       <h3>${item.title}</h3>
       <p>${item.text}</p>
     </article>
@@ -2031,6 +2127,79 @@ function initEvidencePlanner() {
   });
 
   render();
+}
+
+function initE5PitchTool() {
+  const output = $("#e5-pitch-output");
+  if (!output) return;
+  const status = $("#e5-pitch-status");
+  const fields = {
+    situation: $("#e5-pitch-situation"),
+    issue: $("#e5-pitch-issue"),
+    action: $("#e5-pitch-action"),
+    result: $("#e5-pitch-result"),
+    proof: $("#e5-pitch-proof")
+  };
+  const saved = readStore(STORAGE_KEYS.e5Pitch, null);
+
+  if (saved) {
+    Object.entries(fields).forEach(([key, field]) => {
+      if (field) field.value = saved[key] || "";
+    });
+  }
+
+  const collect = () => Object.fromEntries(
+    Object.entries(fields).map(([key, field]) => [key, field?.value.trim() || ""])
+  );
+
+  const render = (persist = true) => {
+    const data = collect();
+    const situation = data.situation || "cette situation";
+    const issue = data.issue || "un besoin a preciser";
+    const action = data.action || "une action a preciser";
+    const result = data.result || "un resultat a preciser";
+    const proof = data.proof || "une preuve a preciser";
+
+    output.textContent = [
+      "Ouverture orale",
+      "",
+      `Je presente ${situation}. Le besoin de depart concernait ${issue}. Pour y repondre, j'ai pris en charge ${action}.`,
+      "",
+      "Conclusion orale",
+      "",
+      `Le resultat obtenu est ${result}. La preuve la plus forte que je peux montrer est ${proof}. Avec plus de temps, j'ameliorerais encore la partie analyse critique et industrialisation.`,
+      "",
+      "Question probable a anticiper",
+      "",
+      `Pourquoi avoir retenu cette methode pour ${situation}, et comment verifier objectivement que le resultat est fiable ?`
+    ].join("\n");
+
+    if (persist) {
+      writeStore(STORAGE_KEYS.e5Pitch, data);
+      if (status) status.textContent = "Trame orale E5 sauvegardee localement.";
+    }
+  };
+
+  Object.values(fields).forEach((field) => {
+    field?.addEventListener("input", () => render());
+    field?.addEventListener("change", () => render());
+  });
+
+  $("#copy-e5-pitch")?.addEventListener("click", async () => {
+    await copyText(output.textContent, "Trame orale E5 copiee.");
+  });
+
+  $("#clear-e5-pitch")?.addEventListener("click", () => {
+    Object.values(fields).forEach((field) => {
+      if (field) field.value = "";
+    });
+    localStorage.removeItem(STORAGE_KEYS.e5Pitch);
+    render(false);
+    if (status) status.textContent = "Trame orale E5 reinitialisee.";
+    showToast("Trame orale E5 reinitialisee.", "success");
+  });
+
+  render(Boolean(saved));
 }
 
 async function initLiveFeedBoard({

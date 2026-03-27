@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Naim Ragot · Preuves E5</title>
+  <meta name="description" content="Espace prive de preparation E5 avec preuves, logique jury et fiche situation pour le BTS SIO SISR." />
+  <link rel="stylesheet" href="assets/css/site.css" />
+</head>
+<body>
+  <div id="app-header"></div>
+  <main class="site-shell page">
+    <section class="hero reveal is-visible">
+      <article class="hero-main">
+        <div class="eyebrow">Preuves E5 · Espace BTS</div>
+        <h1>Transformer une bonne situation en situation qui marque le jury.</h1>
+        <p>Cette page se concentre sur la valeur orale d'une situation E5: preuves, lisibilite, logique, competences, analyse critique et support de presentation.</p>
+        <div class="actions">
+          <a class="btn btn--primary" href="#fiche-e5">Construire une fiche E5</a>
+          <a class="btn btn--secondary" href="bts.html">Retour BTS</a>
+          <a class="btn btn--secondary" href="projets.html">Voir les situations</a>
+        </div>
+      </article>
+      <aside class="hero-side">
+        <div class="mini-panel">
+          <h3>Ce que le jury doit ressentir</h3>
+          <div class="metric-list" style="margin-top:12px">
+            <div class="metric"><span>Technique</span><strong>Tu sais faire et verifier</strong></div>
+            <div class="metric"><span>Pro</span><strong>Tu sais documenter et expliquer</strong></div>
+            <div class="metric"><span>Analyse</span><strong>Tu sais prendre du recul</strong></div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
+          <h2>Ce qui fait la difference</h2>
+          <p>Le but n'est pas d'empiler des captures, mais de montrer une situation utile, compréhensible et defendable.</p>
+        </div>
+      </div>
+      <div class="cards-grid cards-grid--wide" id="e5-showcase"></div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
+          <h2>Matrice de lecture jury</h2>
+          <p>Chaque ligne rappelle ce qu'il faut apporter pour donner de la force a la situation et aider le jury a suivre sans effort.</p>
+        </div>
+      </div>
+      <div class="cards-grid cards-grid--wide" id="e5-matrix"></div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
+          <h2>Angles qui font monter la valeur percue</h2>
+          <p>Ces rappels servent a transformer une simple demonstration technique en situation vraiment professionnelle et defendable.</p>
+        </div>
+      </div>
+      <div class="cards-grid cards-grid--wide" id="e5-angles"></div>
+    </section>
+
+    <section class="section reveal" id="fiche-e5">
+      <div class="tools-grid">
+        <article class="tool">
+          <h3>Fiche E5 orientee jury</h3>
+          <p>Prepare une fiche courte, structuree et exportable, pensee pour la revision et la presentation de la situation.</p>
+          <div style="display:grid;gap:10px">
+            <input id="situation-card-title" class="field" placeholder="Nom de la situation" />
+            <textarea id="situation-card-context" class="field-area" rows="3" placeholder="Contexte, besoin, risque, objectif de depart..."></textarea>
+            <textarea id="situation-card-actions" class="field-area" rows="4" placeholder="Actions, outils, commandes, choix techniques, etapes majeures..."></textarea>
+            <textarea id="situation-card-result" class="field-area" rows="3" placeholder="Resultat, impact, amelioration, limites, retour d'experience..."></textarea>
+            <textarea id="situation-card-proof" class="field-area" rows="3" placeholder="Preuves a montrer: captures, scripts, schema, compte-rendu, tests..."></textarea>
+            <input id="situation-card-skills" class="field" placeholder="Competences mobilisees: systeme, reseau, securite, documentation..." />
+          </div>
+          <div class="quality-card">
+            <div class="quality-card__head">
+              <h3>Solidite de la fiche</h3>
+              <strong class="quality-card__score" id="situation-card-score">0%</strong>
+            </div>
+            <div class="quality-meter">
+              <div class="quality-meter__fill" id="situation-card-fill"></div>
+            </div>
+            <div class="quality-list" id="situation-card-list"></div>
+          </div>
+          <div class="actions">
+            <button class="btn btn--secondary" id="copy-situation-card">Copier</button>
+            <button class="btn btn--secondary" id="download-situation-card">Telecharger</button>
+            <button class="btn btn--secondary" id="clear-situation-card">Reinitialiser</button>
+          </div>
+          <p class="notice" id="situation-card-status">Complete la situation pour obtenir une fiche exploitable devant le jury.</p>
+        </article>
+        <article class="tool">
+          <h3>Fiche generee</h3>
+          <p>Cette sortie peut servir de support de revision, de trame orale ou de base d'annexe a presenter proprement.</p>
+          <div class="brief-output" id="situation-card-output">La fiche E5 apparaitra ici.</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="tools-grid">
+        <article class="tool">
+          <h3>Pack de preuves E5</h3>
+          <p>Choisis rapidement les annexes et preuves a preparer pour que la situation soit lisible, complete et rassurante.</p>
+          <div style="display:grid;gap:10px">
+            <input id="evidence-title" class="field" placeholder="Nom de la situation ou du projet" />
+            <textarea id="evidence-context" class="field-area" rows="3" placeholder="Contexte, objectif, environnement et perimetre..."></textarea>
+          </div>
+          <div class="checklist" style="margin-top:16px">
+            <label class="check-item" for="evidence-diagram">
+              <input id="evidence-diagram" type="checkbox" data-evidence-item />
+              <div><strong>Schema / architecture</strong><div class="notice">Plan reseau, topologie, vue logique ou roles machines.</div></div>
+            </label>
+            <label class="check-item" for="evidence-capture">
+              <input id="evidence-capture" type="checkbox" data-evidence-item />
+              <div><strong>Captures d'ecran</strong><div class="notice">Console, interface admin, supervision ou resultat visible.</div></div>
+            </label>
+            <label class="check-item" for="evidence-script">
+              <input id="evidence-script" type="checkbox" data-evidence-item />
+              <div><strong>Script / commande</strong><div class="notice">Automatisation, procedure ou commandes techniques pertinentes.</div></div>
+            </label>
+            <label class="check-item" for="evidence-tests">
+              <input id="evidence-tests" type="checkbox" data-evidence-item />
+              <div><strong>Tests et verifications</strong><div class="notice">Checks, validation, supervision, avant / apres ou controle final.</div></div>
+            </label>
+            <label class="check-item" for="evidence-results">
+              <input id="evidence-results" type="checkbox" data-evidence-item />
+              <div><strong>Resultat concret</strong><div class="notice">Service retabli, gain, correction, securisation ou amelioration visible.</div></div>
+            </label>
+            <label class="check-item" for="evidence-doc">
+              <input id="evidence-doc" type="checkbox" data-evidence-item />
+              <div><strong>Documentation / compte-rendu</strong><div class="notice">Procedure, fiche technique, note de synthese ou retour d'experience.</div></div>
+            </label>
+          </div>
+          <div class="actions">
+            <button class="btn btn--secondary" id="copy-evidence-pack">Copier le recap</button>
+            <button class="btn btn--secondary" id="reset-evidence-pack">Reinitialiser</button>
+          </div>
+          <p class="notice" id="evidence-pack-status">0 preuve selectionnee.</p>
+        </article>
+        <article class="tool">
+          <h3>Recap preuves</h3>
+          <p>Ce recap sert de pense-bete avant l'oral pour verifier vite qu'il y a bien une preuve de contexte, d'action et de resultat.</p>
+          <div class="brief-output" id="evidence-pack-output">Le pack de preuves apparaitra ici.</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="tools-grid">
+        <article class="tool">
+          <h3>Ouverture et conclusion E5</h3>
+          <p>Ce bloc te prepare une ouverture orale courte et une conclusion propre pour gagner en impact des les premieres secondes.</p>
+          <div style="display:grid;gap:10px">
+            <input id="e5-pitch-situation" class="field" placeholder="Nom de la situation" />
+            <input id="e5-pitch-issue" class="field" placeholder="Besoin ou probleme de depart" />
+            <textarea id="e5-pitch-action" class="field-area" rows="3" placeholder="Action prise en charge, methode, axe technique principal..."></textarea>
+            <textarea id="e5-pitch-result" class="field-area" rows="3" placeholder="Resultat concret obtenu, impact, correction ou gain..."></textarea>
+            <input id="e5-pitch-proof" class="field" placeholder="Preuve la plus forte a montrer" />
+          </div>
+          <div class="actions">
+            <button class="btn btn--secondary" id="copy-e5-pitch">Copier</button>
+            <button class="btn btn--secondary" id="clear-e5-pitch">Reinitialiser</button>
+          </div>
+          <p class="notice" id="e5-pitch-status">Trame orale E5 prete a etre remplie.</p>
+        </article>
+        <article class="tool">
+          <h3>Trame generee</h3>
+          <p>Tu peux reutiliser cette version pour t'entrainer, te chronometrer ou reformuler plus vite avant passage.</p>
+          <div class="brief-output" id="e5-pitch-output">La trame orale E5 apparaitra ici.</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="tools-grid">
+        <article class="tool">
+          <h3>Rappel rapide avant passage</h3>
+          <div class="compare-list">
+            <div class="compare-item"><span>Ouverture</span><strong>Contexte, besoin, enjeu</strong></div>
+            <div class="compare-item"><span>Milieu</span><strong>Actions, outils, choix, verifications</strong></div>
+            <div class="compare-item"><span>Fermeture</span><strong>Resultat, preuves, limites, ameliorations</strong></div>
+          </div>
+        </article>
+        <article class="tool">
+          <h3>Liens utiles</h3>
+          <div class="actions">
+            <a class="btn btn--secondary" href="bts.html">Retour au tableau BTS</a>
+            <a class="btn btn--secondary" href="projets.html">Voir les situations</a>
+            <a class="btn btn--secondary" href="scripts.html">Voir les scripts</a>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+  <div id="app-footer"></div>
+  <script src="assets/js/site.js"></script>
+  <script>
+    const siteState = initSite("preuves-e5.html");
+    if (!siteState.allowPage) {
+    } else {
+      renderE5Showcase("e5-showcase");
+      renderE5Matrix("e5-matrix");
+      renderE5Angles("e5-angles");
+      initSituationCardBuilder();
+      initEvidencePlanner();
+      initE5PitchTool();
+    }
+  </script>
+</body>
+</html>
