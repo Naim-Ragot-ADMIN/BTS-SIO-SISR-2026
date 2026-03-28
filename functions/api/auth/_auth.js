@@ -7,6 +7,7 @@ const DEFAULT_BOOTSTRAP = {
   username: "admin",
   password: "admin"
 };
+const AUTH_READY_ENVS = new WeakSet();
 const AUTH_SETUP_QUERIES = [
   `CREATE TABLE IF NOT EXISTS auth_users (
     id TEXT PRIMARY KEY,
@@ -103,11 +104,11 @@ export function clearSessionCookie() {
 
 export async function ensureAuthStorage(env) {
   if (!env.DB) return false;
-  if (env.__authStorageReady === true) return true;
+  if (AUTH_READY_ENVS.has(env)) return true;
   for (const query of AUTH_SETUP_QUERIES) {
     await env.DB.prepare(query).run();
   }
-  env.__authStorageReady = true;
+  AUTH_READY_ENVS.add(env);
   return true;
 }
 
