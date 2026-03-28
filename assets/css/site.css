@@ -87,12 +87,9 @@ summary:focus-visible {
   width: 58px;
   height: 58px;
   border-radius: 18px;
-  display: block;
+  display: grid;
+  place-items: center;
   background: #050505;
-  background-image: url("../img/logo-njr-web.png?v=20260328g");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
   box-shadow: var(--shadow);
   overflow: hidden;
   border: 1px solid rgba(198, 122, 18, 0.25);
@@ -102,7 +99,7 @@ summary:focus-visible {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  padding: 4px;
+  padding: 3px;
 }
 
 .brand__copy strong {

@@ -1,5 +1,5 @@
-const SITE_LOGO = "assets/img/logo-njr-web.png?v=20260328g";
-const SITE_LOGO_FALLBACK = "assets/img/logo-njr.png?v=20260328g";
+const SITE_LOGO = "assets/img/logo-njr-web.png?v=20260328h";
+const SITE_LOGO_FALLBACK = "assets/img/logo-njr.png?v=20260328h";
 
 const PORTFOLIO_DATA = {
   identity: {
@@ -976,7 +976,9 @@ function renderHeader(page) {
     <header class="site-topbar">
       <div class="site-topbar__inner">
         <div class="brand">
-          <div class="brand__mark" aria-hidden="true"></div>
+          <div class="brand__mark">
+            <img src="${SITE_LOGO}" alt="Logo NJR Solutions" class="brand__logo" />
+          </div>
           <div class="brand__copy">
             <strong>${brandTitle}</strong>
             <span>${brandSubtitle}</span>
