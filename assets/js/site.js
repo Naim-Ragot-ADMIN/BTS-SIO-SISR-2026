@@ -461,8 +461,15 @@ async function fetchAuthSession(force = false) {
       checkedAt: new Date().toISOString()
     });
   }).catch(() => {
-    const current = getAuthState();
-    return current;
+    return storeAuthState({
+      available: false,
+      configured: false,
+      setupRequired: false,
+      authenticated: false,
+      username: "",
+      expiresAt: "",
+      checkedAt: new Date().toISOString()
+    });
   }).finally(() => {
     AUTH_RUNTIME.promise = null;
   });

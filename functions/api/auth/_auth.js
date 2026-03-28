@@ -3,6 +3,7 @@ import { getClientMeta, json, sanitizeText } from "../_utils.js";
 export const SESSION_COOKIE = "njr_private_session";
 const SESSION_TTL_SECONDS = 60 * 60 * 24 * 14;
 const PASSWORD_ITERATIONS = 120000;
+const AUTH_READY = new WeakSet();
 
 const AUTH_SCHEMA = `
 CREATE TABLE IF NOT EXISTS auth_users (
@@ -102,9 +103,9 @@ export function clearSessionCookie() {
 
 export async function ensureAuthStorage(env) {
   if (!env.DB) return false;
-  if (env.__authStorageReady) return true;
+  if (AUTH_READY.has(env.DB)) return true;
   await env.DB.exec(AUTH_SCHEMA);
-  env.__authStorageReady = true;
+  AUTH_READY.add(env.DB);
   return true;
 }
 
