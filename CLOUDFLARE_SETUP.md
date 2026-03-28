@@ -8,6 +8,11 @@ Ce site peut maintenant utiliser Cloudflare Pages Functions pour traiter les dem
 - `POST /api/contact`
 - `POST /api/quote`
 - `GET /api/admin/submissions` avec header `x-admin-key`
+- `GET /api/auth/session`
+- `POST /api/auth/setup`
+- `POST /api/auth/login`
+- `POST /api/auth/logout`
+- `POST /api/auth/credentials`
 
 ## Cockpit prive
 
@@ -29,6 +34,7 @@ Binding conseille :
 Schema :
 
 - appliquer `cloudflare/d1-schema.sql`
+- ou laisser les routes auth creer automatiquement leurs tables au premier appel
 
 ### KV optionnel
 
@@ -63,7 +69,17 @@ Les soumissions seront stockees dans D1 et peuvent aussi declencher une notifica
 
 ## Acces prive
 
-Pour proteger un futur espace BTS/admin en ligne, la meilleure option reste Cloudflare Access.
+Le site peut maintenant utiliser une authentification en ligne simple :
+
+- la page `connexion.html` cree le premier compte si aucun acces prive n'existe encore
+- le mot de passe est stocke cote serveur dans D1
+- les sessions privees sont gerees par cookie serveur
+- `functions/_middleware.js` redirige les pages BTS/scripts/outils vers `connexion.html` si la session n'est pas valide
+
+Si tu veux aller encore plus loin ensuite :
+
+- Cloudflare Access pour un vrai SSO / mail autorise
+- D1 + R2 pour des pieces jointes et preuves plus lourdes
 
 ## Build public
 

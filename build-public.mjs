@@ -1,4 +1,4 @@
-import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, rmSync } from "node:fs";
 import { join } from "node:path";
 
 const rootDir = process.cwd();
@@ -61,16 +61,6 @@ for (const directory of publicDirectories) {
   if (existsSync(sourcePath)) {
     cpSync(sourcePath, join(distPath, directory), { recursive: true, force: true });
   }
-}
-
-for (const file of publicFiles.filter((name) => name.endsWith(".html"))) {
-  const filePath = join(distPath, file);
-  if (!existsSync(filePath)) continue;
-  let content = readFileSync(filePath, "utf8");
-  if (!content.includes('data-access-mode="public"')) {
-    content = content.replace(/<html([^>]*)>/i, '<html$1 data-access-mode="public">');
-  }
-  writeFileSync(filePath, content, "utf8");
 }
 
 cpSync(join(distPath, "index.html"), join(distPath, "404.html"), { force: true });

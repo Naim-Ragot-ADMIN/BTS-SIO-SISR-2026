@@ -205,6 +205,7 @@ export function baseCapabilities(env) {
     storage: Boolean(env.DB || env.SUBMISSIONS_KV),
     d1: Boolean(env.DB),
     kv: Boolean(env.SUBMISSIONS_KV),
+    auth: Boolean(env.DB),
     turnstile: Boolean(env.TURNSTILE_SECRET_KEY && env.TURNSTILE_SITE_KEY),
     turnstileSiteKey: env.TURNSTILE_SITE_KEY || "",
     contactWebhook: Boolean(env.CONTACT_WEBHOOK_URL),

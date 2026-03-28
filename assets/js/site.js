@@ -294,12 +294,8 @@ const STORAGE_KEYS = {
   feedClips: "naim_portfolio_feed_clips_v1",
   juryPrep: "naim_portfolio_jury_prep_v1",
   evidencePrep: "naim_portfolio_evidence_prep_v1",
-  authConfig: "naim_portfolio_auth_v1",
+  authState: "naim_portfolio_auth_state_v2",
   e5Pitch: "naim_portfolio_e5_pitch_v1"
-};
-
-const SESSION_KEYS = {
-  authSession: "naim_portfolio_auth_session_v1"
 };
 
 const PRIVATE_PAGES = new Set([
@@ -313,11 +309,6 @@ const PRIVATE_PAGES = new Set([
   "njr-solutions-informatique.html",
   "njr-solutions-nettoyage.html"
 ]);
-
-const DEFAULT_AUTH = {
-  username: "njr-owner",
-  passwordHash: "f1c99c8ea2861502"
-};
 
 const LIVE_FEEDS = [
   {
@@ -392,100 +383,167 @@ function slugify(value) {
     || "element";
 }
 
-function hashString(input) {
-  let h1 = 0x811c9dc5;
-  let h2 = 0x9e3779b9;
-  const text = String(input || "");
-  for (let index = 0; index < text.length; index += 1) {
-    const code = text.charCodeAt(index);
-    h1 ^= code;
-    h1 = Math.imul(h1, 0x01000193);
-    h2 ^= code + index;
-    h2 = Math.imul(h2, 0x85ebca6b);
-  }
-  return `${(h1 >>> 0).toString(16).padStart(8, "0")}${(h2 >>> 0).toString(16).padStart(8, "0")}`;
-}
+const AUTH_RUNTIME = {
+  state: null,
+  promise: null
+};
 
-function hashCredentials(username, password) {
-  return hashString(`${String(username || "").trim().toLowerCase()}::${password || ""}::njr-private-area`);
-}
-
-function getDefaultAuthConfig() {
+function normalizeAuthState(input = {}) {
+  const expiresAt = String(input.expiresAt || "");
+  const expiresMs = expiresAt ? Date.parse(expiresAt) : 0;
+  const notExpired = !expiresMs || expiresMs > Date.now();
   return {
-    username: DEFAULT_AUTH.username,
-    passwordHash: DEFAULT_AUTH.passwordHash,
-    updatedAt: new Date().toISOString()
+    available: Boolean(input.available),
+    configured: Boolean(input.configured),
+    setupRequired: Boolean(input.setupRequired),
+    authenticated: Boolean(input.authenticated) && notExpired,
+    username: String(input.username || "").trim(),
+    expiresAt,
+    checkedAt: String(input.checkedAt || new Date().toISOString())
   };
 }
 
-function readAuthConfigRecord() {
-  const stored = readStore(STORAGE_KEYS.authConfig, null);
-  return stored?.username && stored?.passwordHash ? stored : null;
+function readAuthStateRecord() {
+  const stored = readStore(STORAGE_KEYS.authState, null);
+  return stored ? normalizeAuthState(stored) : null;
 }
 
-function getAuthConfig() {
-  return readAuthConfigRecord() || getDefaultAuthConfig();
+function getAuthState() {
+  if (!AUTH_RUNTIME.state) {
+    AUTH_RUNTIME.state = readAuthStateRecord() || normalizeAuthState({
+      available: false,
+      configured: false,
+      setupRequired: false,
+      authenticated: false,
+      username: ""
+    });
+  }
+  return AUTH_RUNTIME.state;
 }
 
-function hasStoredAuthConfig() {
-  return Boolean(readAuthConfigRecord());
+function storeAuthState(nextState) {
+  const normalized = normalizeAuthState(nextState);
+  AUTH_RUNTIME.state = normalized;
+  writeStore(STORAGE_KEYS.authState, normalized);
+  return normalized;
 }
 
-function isDefaultAuthConfig(config = getAuthConfig()) {
-  const defaults = getDefaultAuthConfig();
-  return String(config?.username || "").trim().toLowerCase() === String(defaults.username || "").trim().toLowerCase()
-    && String(config?.passwordHash || "") === String(defaults.passwordHash || "");
+function clearAuthState() {
+  localStorage.removeItem(STORAGE_KEYS.authState);
+  AUTH_RUNTIME.state = normalizeAuthState({
+    available: true,
+    configured: true,
+    authenticated: false,
+    username: ""
+  });
+  return AUTH_RUNTIME.state;
 }
 
-function getAuthSession() {
-  return safeJsonParse(sessionStorage.getItem(SESSION_KEYS.authSession), null);
+async function fetchAuthSession(force = false) {
+  if (!force && AUTH_RUNTIME.promise) return AUTH_RUNTIME.promise;
+  AUTH_RUNTIME.promise = fetch("/api/auth/session", {
+    method: "GET",
+    headers: { accept: "application/json" },
+    cache: "no-store",
+    credentials: "same-origin"
+  }).then(async (response) => {
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok || payload?.ok === false) {
+      throw new Error(payload?.message || "auth_session_failed");
+    }
+    return storeAuthState({
+      available: payload.available,
+      configured: payload.configured,
+      setupRequired: payload.setupRequired,
+      authenticated: payload.authenticated,
+      username: payload.username,
+      expiresAt: payload.expiresAt,
+      checkedAt: new Date().toISOString()
+    });
+  }).catch(() => {
+    const current = getAuthState();
+    return current;
+  }).finally(() => {
+    AUTH_RUNTIME.promise = null;
+  });
+  return AUTH_RUNTIME.promise;
 }
 
-function isAuthenticated() {
-  const session = getAuthSession();
-  const config = getAuthConfig();
-  return Boolean(session?.username && session?.token && session.username === config.username && session.token === config.passwordHash);
-}
-
-function loginPrivateArea(username, password) {
-  const config = getAuthConfig();
-  const valid = String(username || "").trim().toLowerCase() === String(config.username || "").trim().toLowerCase()
-    && hashCredentials(username, password) === config.passwordHash;
-  if (!valid) return false;
-  sessionStorage.setItem(SESSION_KEYS.authSession, JSON.stringify({
-    username: config.username,
-    token: config.passwordHash,
-    loggedAt: new Date().toISOString()
-  }));
-  return true;
-}
-
-function logoutPrivateArea() {
-  sessionStorage.removeItem(SESSION_KEYS.authSession);
-}
-
-function updatePrivateCredentials(username, password) {
-  const nextConfig = {
-    username: String(username || "").trim() || DEFAULT_AUTH.username,
-    passwordHash: hashCredentials(username, password),
-    updatedAt: new Date().toISOString()
+async function postAuthJson(endpoint, payload = {}) {
+  const response = await fetch(endpoint, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json; charset=utf-8",
+      accept: "application/json"
+    },
+    credentials: "same-origin",
+    body: JSON.stringify(payload)
+  });
+  const data = await response.json().catch(() => ({}));
+  return {
+    ok: response.ok && data?.ok !== false,
+    status: response.status,
+    data
   };
-  writeStore(STORAGE_KEYS.authConfig, nextConfig);
-  sessionStorage.setItem(SESSION_KEYS.authSession, JSON.stringify({
-    username: nextConfig.username,
-    token: nextConfig.passwordHash,
-    loggedAt: nextConfig.updatedAt
-  }));
 }
 
-function resetPrivateCredentials() {
-  const defaults = getDefaultAuthConfig();
-  writeStore(STORAGE_KEYS.authConfig, defaults);
-  sessionStorage.setItem(SESSION_KEYS.authSession, JSON.stringify({
-    username: defaults.username,
-    token: defaults.passwordHash,
-    loggedAt: defaults.updatedAt
-  }));
+async function loginPrivateArea(username, password) {
+  const result = await postAuthJson("/api/auth/login", {
+    username: String(username || "").trim(),
+    password: String(password || "")
+  });
+  if (!result.ok) return result;
+  storeAuthState({
+    available: true,
+    configured: true,
+    authenticated: true,
+    username: result.data.username,
+    expiresAt: result.data.expiresAt,
+    checkedAt: new Date().toISOString()
+  });
+  return result;
+}
+
+async function logoutPrivateArea() {
+  await postAuthJson("/api/auth/logout");
+  clearAuthState();
+  return { ok: true };
+}
+
+async function setupPrivateArea(username, password, confirmPassword) {
+  const result = await postAuthJson("/api/auth/setup", {
+    username: String(username || "").trim(),
+    password: String(password || ""),
+    confirmPassword: String(confirmPassword || "")
+  });
+  if (!result.ok) return result;
+  storeAuthState({
+    available: true,
+    configured: true,
+    authenticated: true,
+    username: result.data.username,
+    expiresAt: result.data.expiresAt,
+    checkedAt: new Date().toISOString()
+  });
+  return result;
+}
+
+async function updatePrivateCredentials(username, password, confirmPassword) {
+  const result = await postAuthJson("/api/auth/credentials", {
+    username: String(username || "").trim(),
+    password: String(password || ""),
+    confirmPassword: String(confirmPassword || "")
+  });
+  if (!result.ok) return result;
+  storeAuthState({
+    available: true,
+    configured: true,
+    authenticated: true,
+    username: result.data.username,
+    expiresAt: result.data.expiresAt,
+    checkedAt: new Date().toISOString()
+  });
+  return result;
 }
 
 function isPrivatePage(pageName) {
@@ -493,7 +551,7 @@ function isPrivatePage(pageName) {
 }
 
 function canAccessPrivateContent() {
-  return isAuthenticated();
+  return Boolean(getAuthState().authenticated);
 }
 
 function filterPrivateItems(items = []) {
@@ -1129,81 +1187,82 @@ function renderAuthModal() {
 function renderAuthModalBody() {
   const body = $("#auth-modal-body");
   if (!body) return;
+  const authState = getAuthState();
   const authenticated = canAccessPrivateContent();
-  const config = getAuthConfig();
-  const hasStoredConfig = hasStoredAuthConfig();
-  const usesDefaultCredentials = isDefaultAuthConfig(config);
-  const publicStatusText = hasStoredConfig && !usesDefaultCredentials
-    ? "Les identifiants locaux ont deja ete modifies sur ce navigateur. Utilise les identifiants actuels ou reinitialise l'acces local si besoin."
-    : "Cet appareil utilise encore l'acces local par defaut. Une fois connecte, l'identifiant et le mot de passe peuvent etre modifies.";
+  const publicStatusText = !authState.available
+    ? "Le backend d'authentification n'est pas encore joignable ou D1 n'est pas configure sur Cloudflare."
+    : authState.setupRequired
+      ? "Aucun compte prive n'est encore initialise en ligne. Cree le premier acces une seule fois, puis reutilise-le sur tous tes appareils."
+      : "Connecte-toi avec les identifiants prives centralises. Le mot de passe est stocke cote serveur, pas dans le navigateur.";
 
   body.innerHTML = authenticated
     ? `
       <div class="auth-panel-grid">
         <article class="tool">
           <h3>Session active</h3>
-          <p>Tu es connecte en mode prive avec l'identifiant <strong>${config.username}</strong>.</p>
+          <p>Tu es connecte en mode prive avec l'identifiant <strong>${authState.username}</strong>.</p>
           <div class="actions">
             <button class="btn btn--secondary" type="button" id="logout-private-area">Se deconnecter</button>
-            <button class="btn btn--secondary" type="button" id="reset-private-area">Reinitialiser l'acces</button>
+            <a class="btn btn--secondary" href="connexion.html">Gerer l'acces</a>
           </div>
-          <p class="notice">Le mode prive debloque BTS, projets, scripts et outils.</p>
+          <p class="notice">Le mode prive debloque BTS, projets, scripts et outils sur cet appareil tant que la session en ligne reste active.</p>
         </article>
         <article class="tool">
-          <h3>Changer les identifiants</h3>
+          <h3>Mettre a jour les identifiants</h3>
           <div style="display:grid;gap:12px;margin-top:14px">
             <label>Nouvel identifiant
-              <input id="private-username" class="field" value="${config.username}" />
+              <input id="private-username" class="field" value="${authState.username}" />
             </label>
             <label>Nouveau mot de passe
-              <input id="private-password" class="field" type="password" placeholder="Nouveau mot de passe" />
+              <input id="private-password" class="field" type="password" placeholder="Nouveau mot de passe (8 caracteres min)" />
             </label>
             <label>Confirmation
               <input id="private-password-confirm" class="field" type="password" placeholder="Confirmer le mot de passe" />
             </label>
             <button class="btn btn--primary" type="button" id="save-private-credentials">Enregistrer</button>
           </div>
-          <p class="notice" id="auth-modal-status">Tu peux changer l'identifiant et le mot de passe a tout moment sur cet appareil.</p>
+          <p class="notice" id="auth-modal-status">Ces identifiants seront mis a jour en ligne et reutilisables sur tous tes appareils.</p>
         </article>
       </div>
     `
     : `
       <div class="auth-panel-grid">
         <article class="tool">
-          <h3>Connexion</h3>
+          <h3>${authState.setupRequired ? "Initialiser l'acces prive" : "Connexion"}</h3>
           <div style="display:grid;gap:12px;margin-top:14px">
             <label>Identifiant
               <input id="login-username" class="field" autocomplete="username" placeholder="Identifiant" />
             </label>
             <label>Mot de passe
-              <input id="login-password" class="field" type="password" autocomplete="current-password" placeholder="Mot de passe" />
+              <input id="login-password" class="field" type="password" autocomplete="${authState.setupRequired ? "new-password" : "current-password"}" placeholder="Mot de passe" />
             </label>
-            <button class="btn btn--primary" type="button" id="login-private-area">Se connecter</button>
+            ${authState.setupRequired ? `
+            <label>Confirmation
+              <input id="login-password-confirm" class="field" type="password" autocomplete="new-password" placeholder="Confirmer le mot de passe" />
+            </label>` : ``}
+            <button class="btn btn--primary" type="button" id="login-private-area">${authState.setupRequired ? "Creer le premier acces" : "Se connecter"}</button>
           </div>
           <p class="notice" id="auth-modal-status">${publicStatusText}</p>
         </article>
         <article class="tool">
           <h3>Acces public</h3>
           <p>Les clients peuvent continuer a consulter les pages entreprise, devis, veille et contact sans se connecter.</p>
-          <div class="actions">
-            <button class="btn btn--secondary" type="button" id="reset-public-credentials">Reinitialiser l'acces local</button>
-          </div>
-          <p class="notice">Cette protection reste locale au navigateur. La reinitialisation remet l'acces local par defaut sur cet appareil. Pour un vrai verrou serveur, il faudra un backend ou un hebergement avec authentification.</p>
+          <p class="notice">Le mode prive sert uniquement a debloquer le BTS, les scripts, les projets et les outils internes. Le visiteur public garde une navigation simple et orientee client.</p>
         </article>
       </div>
     `;
 
   const status = $("#auth-modal-status");
 
-  $("#login-private-area")?.addEventListener("click", () => {
+  $("#login-private-area")?.addEventListener("click", async () => {
     const username = $("#login-username")?.value.trim() || "";
     const password = $("#login-password")?.value || "";
-    if (!loginPrivateArea(username, password)) {
-      if (status) {
-        status.textContent = hasStoredConfig && !usesDefaultCredentials
-          ? "Connexion refusee : les identifiants locaux ont deja ete modifies sur ce navigateur. Utilise le mot de passe actuel ou reinitialise l'acces local."
-          : "Connexion refusee : l'identifiant ou le mot de passe ne correspond pas.";
-      }
+    const confirmPassword = $("#login-password-confirm")?.value || "";
+    const result = authState.setupRequired
+      ? await setupPrivateArea(username, password, confirmPassword)
+      : await loginPrivateArea(username, password);
+    if (!result.ok) {
+      if (status) status.textContent = result.data?.message || "Connexion refusee.";
       showToast("Connexion refusee.", "warning");
       return;
     }
@@ -1213,15 +1272,15 @@ function renderAuthModalBody() {
     window.setTimeout(() => window.location.reload(), 180);
   });
 
-  $("#logout-private-area")?.addEventListener("click", () => {
-    logoutPrivateArea();
+  $("#logout-private-area")?.addEventListener("click", async () => {
+    await logoutPrivateArea();
     showToast("Mode public reactive.", "success");
     refreshSiteChrome();
     renderAuthModalBody();
     window.setTimeout(() => window.location.reload(), 180);
   });
 
-  $("#save-private-credentials")?.addEventListener("click", () => {
+  $("#save-private-credentials")?.addEventListener("click", async () => {
     const username = $("#private-username")?.value.trim() || "";
     const password = $("#private-password")?.value || "";
     const confirm = $("#private-password-confirm")?.value || "";
@@ -1235,30 +1294,16 @@ function renderAuthModalBody() {
       showToast("Confirmation invalide.", "warning");
       return;
     }
-    updatePrivateCredentials(username, password);
-    if (status) status.textContent = "Identifiants mis a jour sur cet appareil.";
+    const result = await updatePrivateCredentials(username, password, confirm);
+    if (!result.ok) {
+      if (status) status.textContent = result.data?.message || "Mise a jour refusee.";
+      showToast("Mise a jour refusee.", "warning");
+      return;
+    }
+    if (status) status.textContent = "Identifiants mis a jour en ligne.";
     showToast("Identifiants mis a jour.", "success");
     refreshSiteChrome();
     renderAuthModalBody();
-  });
-
-  $("#reset-private-area")?.addEventListener("click", () => {
-    resetPrivateCredentials();
-    if (status) status.textContent = "Acces local reinitialise.";
-    showToast("Acces reinitialise.", "success");
-    refreshSiteChrome();
-    renderAuthModalBody();
-    window.setTimeout(() => window.location.reload(), 180);
-  });
-
-  $("#reset-public-credentials")?.addEventListener("click", () => {
-    const defaults = getDefaultAuthConfig();
-    writeStore(STORAGE_KEYS.authConfig, defaults);
-    logoutPrivateArea();
-    if (status) status.textContent = "Reinitialisation effectuee sur les identifiants locaux par defaut.";
-    showToast("Acces local reinitialise.", "success");
-    renderAuthModalBody();
-    window.setTimeout(() => window.location.reload(), 180);
   });
 }
 
@@ -1268,7 +1313,8 @@ function initAuthControls() {
   const modal = $("#auth-modal");
   if (!modal) return;
 
-  const open = () => {
+  const open = async () => {
+    await syncAuthUi(true);
     renderAuthModalBody();
     modal.classList.add("is-open");
   };
@@ -1313,7 +1359,7 @@ function renderPrivateGate(pageName) {
           <a class="btn btn--secondary" href="devis_njr.html">Devis</a>
           <a class="btn btn--secondary" href="contact.html">Contact</a>
         </div>
-        <p class="notice">Utilise les identifiants locaux de cet appareil pour ouvrir cette partie privee.</p>
+        <p class="notice">Connecte-toi avec l'acces prive centralise pour debloquer cette partie reservee.</p>
       </div>
     </section>
   `;
@@ -1326,6 +1372,32 @@ function refreshSiteChrome() {
   initCommandPalette();
   applyAccessMode();
 }
+
+function notifyAuthChange() {
+  window.dispatchEvent(new CustomEvent("njr-auth-change", {
+    detail: getAuthState()
+  }));
+}
+
+function syncAuthUi(force = false) {
+  return fetchAuthSession(force).then((state) => {
+    refreshSiteChrome();
+    notifyAuthChange();
+    return state;
+  });
+}
+
+window.addEventListener("storage", (event) => {
+  if (event.key !== STORAGE_KEYS.authState) return;
+  AUTH_RUNTIME.state = readAuthStateRecord() || normalizeAuthState({
+    available: true,
+    configured: true,
+    authenticated: false,
+    username: ""
+  });
+  refreshSiteChrome();
+  notifyAuthChange();
+});
 
 function applyAccessMode() {
   const authenticated = canAccessPrivateContent();
@@ -3159,7 +3231,8 @@ function initSite(pageName) {
   initBackToTop();
   applyReveal();
   initLogoFallbacks();
-  if (isPrivatePage(pageName) && !canAccessPrivateContent()) {
+  syncAuthUi();
+  if (window.location.protocol === "file:" && isPrivatePage(pageName) && !canAccessPrivateContent()) {
     renderPrivateGate(pageName);
     return { allowPage: false, authenticated: false };
   }

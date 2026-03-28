@@ -32,7 +32,7 @@
     <section class="section reveal">
       <div class="tools-grid">
         <article class="tool" id="login-card">
-          <h2>Se connecter</h2>
+          <h2 id="login-card-title">Se connecter</h2>
           <div style="display:grid;gap:12px;margin-top:14px">
             <label>Identifiant
               <input id="login-username-page" class="field" autocomplete="username" placeholder="Identifiant" />
@@ -40,13 +40,16 @@
             <label>Mot de passe
               <input id="login-password-page" class="field" type="password" autocomplete="current-password" placeholder="Mot de passe" />
             </label>
+            <label id="login-confirm-wrap" hidden>Confirmation
+              <input id="login-password-confirm-page" class="field" type="password" autocomplete="new-password" placeholder="Confirmer le mot de passe" />
+            </label>
             <button class="btn btn--primary" type="button" id="login-submit-page">Ouvrir l'espace prive</button>
           </div>
-          <p class="notice" id="login-page-status">L'acces prive reste local au navigateur tant qu'une vraie protection serveur n'est pas activee. Le mot de passe change ici n'est donc pas encore synchronise en ligne entre plusieurs appareils.</p>
+          <p class="notice" id="login-page-status">L'acces prive est centralise en ligne. Le mot de passe n'est plus stocke localement dans le navigateur.</p>
         </article>
         <article class="tool" id="private-panel" hidden>
           <h2>Session active</h2>
-          <p>La session privee est ouverte sur cet appareil. Tu peux rejoindre directement les pages reservees ou mettre a jour les identifiants locaux.</p>
+          <p>La session privee est ouverte. Tu peux rejoindre directement les pages reservees ou mettre a jour les identifiants en ligne.</p>
           <div class="actions">
             <a class="btn btn--primary" href="bts.html">Ouvrir l'espace BTS</a>
             <a class="btn btn--secondary" href="scripts.html">Scripts</a>
@@ -58,47 +61,72 @@
               <input id="private-username-page" class="field" placeholder="Nouvel identifiant" />
             </label>
             <label>Nouveau mot de passe
-              <input id="private-password-page" class="field" type="password" placeholder="Nouveau mot de passe" />
+              <input id="private-password-page" class="field" type="password" placeholder="Nouveau mot de passe (8 caracteres min)" />
             </label>
             <label>Confirmation
               <input id="private-password-confirm-page" class="field" type="password" placeholder="Confirmer le mot de passe" />
             </label>
             <div class="actions">
               <button class="btn btn--primary" type="button" id="save-private-page">Enregistrer</button>
-              <button class="btn btn--secondary" type="button" id="reset-private-page">Reinitialiser l'acces local</button>
             </div>
           </div>
-          <p class="notice" id="private-page-status">Les identifiants locaux peuvent etre modifies sur cet appareil. Une vraie synchronisation entre appareils demandera une authentification serveur.</p>
+          <p class="notice" id="private-page-status">Les identifiants sont stockes cote serveur. Toute mise a jour sera donc valable sur tes autres appareils aussi.</p>
         </article>
       </div>
     </section>
   </main>
   <div id="app-footer"></div>
-  <script src="assets/js/site.js?v=20260328h"></script>
+  <script src="assets/js/site.js?v=20260328i"></script>
   <script>
     initSite("connexion.html");
 
     const redirectTarget = new URLSearchParams(window.location.search).get("redirect") || "bts.html";
+    const forceSetup = new URLSearchParams(window.location.search).get("setup") === "1";
     const loginCard = document.getElementById("login-card");
     const privatePanel = document.getElementById("private-panel");
+    const loginTitle = document.getElementById("login-card-title");
+    const loginButton = document.getElementById("login-submit-page");
+    const loginConfirmWrap = document.getElementById("login-confirm-wrap");
     const loginStatus = document.getElementById("login-page-status");
     const privateStatus = document.getElementById("private-page-status");
+    let authStateSnapshot = getAuthState();
 
-    function refreshPrivateView() {
-      const connected = canAccessPrivateContent();
+    function applyAuthStateToView(state) {
+      authStateSnapshot = state || getAuthState();
+      const connected = Boolean(authStateSnapshot.authenticated);
       loginCard.hidden = connected;
       privatePanel.hidden = !connected;
       if (connected) {
-        const config = getAuthConfig();
-        document.getElementById("private-username-page").value = config.username || "";
+        document.getElementById("private-username-page").value = authStateSnapshot.username || "";
+        privateStatus.textContent = "La session privee est active sur cet appareil.";
+        return;
       }
+      const setupMode = forceSetup || authStateSnapshot.setupRequired;
+      loginTitle.textContent = setupMode ? "Initialiser l'acces prive" : "Se connecter";
+      loginButton.textContent = setupMode ? "Creer le premier acces" : "Ouvrir l'espace prive";
+      loginConfirmWrap.hidden = !setupMode;
+      loginStatus.textContent = !authStateSnapshot.available
+        ? "Le backend d'authentification n'est pas encore pret. Active le binding D1 sur Cloudflare pour stocker les identifiants cote serveur."
+        : setupMode
+          ? "Aucun compte prive n'est encore configure en ligne. Cree ici le premier acces, puis reutilise-le sur tous tes appareils."
+          : "Connecte-toi avec les identifiants prives centralises. Le mot de passe n'est plus stocke localement.";
     }
 
-    document.getElementById("login-submit-page").addEventListener("click", () => {
+    async function refreshPrivateView(force = false) {
+      const state = await syncAuthUi(force);
+      applyAuthStateToView(state);
+    }
+
+    document.getElementById("login-submit-page").addEventListener("click", async () => {
       const username = document.getElementById("login-username-page").value.trim();
       const password = document.getElementById("login-password-page").value;
-      if (!loginPrivateArea(username, password)) {
-        loginStatus.textContent = "Connexion refusee. Verifie l'identifiant et le mot de passe actuels sur cet appareil.";
+      const confirm = document.getElementById("login-password-confirm-page").value;
+      const setupMode = forceSetup || authStateSnapshot.setupRequired;
+      const result = setupMode
+        ? await setupPrivateArea(username, password, confirm)
+        : await loginPrivateArea(username, password);
+      if (!result.ok) {
+        loginStatus.textContent = result.data?.message || "Connexion refusee.";
         showToast("Connexion refusee.", "warning");
         return;
       }
@@ -106,14 +134,14 @@
       window.location.href = redirectTarget;
     });
 
-    document.getElementById("logout-private-page").addEventListener("click", () => {
-      logoutPrivateArea();
-      refreshPrivateView();
-      privateStatus.textContent = "Session fermee sur cet appareil.";
+    document.getElementById("logout-private-page").addEventListener("click", async () => {
+      await logoutPrivateArea();
+      await refreshPrivateView(true);
+      privateStatus.textContent = "Session fermee.";
       showToast("Mode public reactive.", "success");
     });
 
-    document.getElementById("save-private-page").addEventListener("click", () => {
+    document.getElementById("save-private-page").addEventListener("click", async () => {
       const username = document.getElementById("private-username-page").value.trim();
       const password = document.getElementById("private-password-page").value;
       const confirm = document.getElementById("private-password-confirm-page").value;
@@ -127,22 +155,24 @@
         showToast("Confirmation invalide.", "warning");
         return;
       }
-      updatePrivateCredentials(username, password);
-      privateStatus.textContent = "Identifiants mis a jour sur cet appareil.";
+      const result = await updatePrivateCredentials(username, password, confirm);
+      if (!result.ok) {
+        privateStatus.textContent = result.data?.message || "Mise a jour refusee.";
+        showToast("Mise a jour refusee.", "warning");
+        return;
+      }
+      privateStatus.textContent = "Identifiants mis a jour en ligne.";
       document.getElementById("private-password-page").value = "";
       document.getElementById("private-password-confirm-page").value = "";
       showToast("Identifiants mis a jour.", "success");
-      refreshPrivateView();
+      await refreshPrivateView(true);
     });
 
-    document.getElementById("reset-private-page").addEventListener("click", () => {
-      resetPrivateCredentials();
-      refreshPrivateView();
-      privateStatus.textContent = "Acces local reinitialise sur cet appareil.";
-      showToast("Acces local reinitialise.", "success");
+    window.addEventListener("njr-auth-change", (event) => {
+      applyAuthStateToView(event.detail);
     });
 
-    refreshPrivateView();
+    refreshPrivateView(true);
   </script>
 </body>
 </html>

@@ -125,7 +125,7 @@
     </section>
   </main>
   <div id="app-footer"></div>
-  <script src="assets/js/site.js?v=20260328f"></script>
+  <script src="assets/js/site.js?v=20260328i"></script>
   <script>
     const state = initSite("pilotage.html");
 
@@ -148,6 +148,7 @@
         storage: "Stockage demandes",
         d1: "Base D1",
         kv: "Fallback KV",
+        auth: "Authentification en ligne",
         turnstile: "Protection Turnstile",
         contactWebhook: "Webhook contact",
         quoteWebhook: "Webhook devis",
@@ -218,6 +219,11 @@
             note: features.turnstile ? "Les formulaires peuvent afficher Turnstile." : "Ajouter TURNSTILE_SECRET_KEY et TURNSTILE_SITE_KEY."
           },
           {
+            label: "Acces prive",
+            value: features.auth ? "En ligne" : "D1 requis",
+            note: features.auth ? "Le mot de passe prive peut etre gere cote serveur et partage sur plusieurs appareils." : "Ajouter le binding D1 DB pour activer l'authentification centralisee."
+          },
+          {
             label: "Webhooks",
             value: (features.contactWebhook || features.quoteWebhook) ? "Branches" : "Optionnels",
             note: (features.contactWebhook || features.quoteWebhook) ? "Les demandes peuvent declencher une notification." : "Brancher Discord, n8n ou mail si besoin."
@@ -257,8 +263,13 @@
             ok: Boolean(features.turnstile)
           },
           {
-            title: "Zone privee serieuse",
-            text: "Pour BTS, scripts et outils, la prochaine vraie etape est Cloudflare Access ou une auth serveur.",
+            title: "Authentification centralisee",
+            text: "Le mot de passe prive vit cote serveur et peut maintenant etre partage proprement entre plusieurs appareils.",
+            ok: Boolean(features.auth)
+          },
+          {
+            title: "Zone privee encore plus forte",
+            text: "Cloudflare Access reste la meilleure suite logique si tu veux ajouter un SSO ou des regles d'acces encore plus strictes.",
             ok: false
           }
         ];
