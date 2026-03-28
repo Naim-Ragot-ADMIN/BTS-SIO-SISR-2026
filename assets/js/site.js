@@ -1,4 +1,5 @@
-const SITE_LOGO = "assets/img/logo-njr-site.png?v=20260328d";
+const SITE_LOGO = "assets/img/logo-njr-site.png?v=20260328e";
+const SITE_LOGO_FALLBACK = "assets/img/logo-njr.png?v=20260328e";
 
 const PORTFOLIO_DATA = {
   identity: {
@@ -209,7 +210,7 @@ const PORTFOLIO_DATA = {
     {
       title: "Pack Essentiel Informatique",
       audience: "Particulier",
-      priceNote: "A partir de 69 EUR",
+      priceNote: "A partir de 79 EUR",
       text: "Pour depannage poste, optimisation, imprimante ou remise en service rapide.",
       features: ["Diagnostic rapide", "Poste ou peripherique", "Demande simple"],
       link: "demande-informatique.html"
@@ -217,7 +218,7 @@ const PORTFOLIO_DATA = {
     {
       title: "Pack Connectivite",
       audience: "Maison / bureau",
-      priceNote: "A partir de 79 EUR",
+      priceNote: "A partir de 89 EUR",
       text: "Pour box, Wi-Fi, imprimante reseau, petit partage et connectivite du quotidien.",
       features: ["Wi-Fi", "Box", "Petit reseau"],
       link: "demande-informatique.html"
@@ -225,7 +226,7 @@ const PORTFOLIO_DATA = {
     {
       title: "Pack Entretien Maison",
       audience: "Logement / location",
-      priceNote: "A partir de 20 EUR",
+      priceNote: "A partir de 23 EUR",
       text: "Pour entretien regulier, vitres, remise au propre et petites remises en etat.",
       features: ["Maison", "Vitres", "Regularite"],
       link: "demande-nettoyage.html"
@@ -233,7 +234,7 @@ const PORTFOLIO_DATA = {
     {
       title: "Pack Auto & Utilitaire",
       audience: "Particulier / pro",
-      priceNote: "A partir de 39 EUR",
+      priceNote: "A partir de 69 EUR",
       text: "Pour nettoyage interieur, complet ou vehicule professionnel avec formule lisible.",
       features: ["Interieur", "Complet", "Vehicule pro"],
       link: "demande-nettoyage.html"
@@ -248,9 +249,10 @@ const PORTFOLIO_DATA = {
   ],
   businessFaq: [
     { question: "Les montants affiches sur les simulateurs sont-ils definitifs ?", answer: "Non. Le site donne une estimation structurée pour cadrer le besoin. La validation finale reste faite par NJR Solutions selon le contexte reel, les contraintes et le perimetre exact." },
-    { question: "Pourquoi separer informatique et nettoyage sur deux pages ?", answer: "Parce que les besoins, les prestations, les unites de prix et les informations utiles a collecter ne sont pas les memes. Cette separation rend la demande plus claire et plus professionnelle." },
+    { question: "Pourquoi separer informatique et nettoyage sur deux pages ?", answer: "Parce que les besoins, les prestations, les unites de prix et les informations utiles a collecter ne sont pas les memes. Cette separation renforce la lisibilite, la credibilite et la qualite de la demande." },
+    { question: "Pourquoi proposer deux activites aussi differentes ?", answer: "Parce que NJR Solutions fonctionne comme une structure de services de proximite. Les deux activites sont assumees, separees et presentees clairement, avec une meme exigence de rigueur, de ponctualite et de qualite d'execution." },
     { question: "Que gagne le client avec ce systeme ?", answer: "Un parcours plus simple, moins d'aller-retour, une estimation plus lisible et une demande deja exploitable pour preparer un devis ou une intervention." },
-    { question: "Le site sert-il aussi au BTS ?", answer: "Oui. Il sert a montrer une demarche de structuration, de documentation, d'automatisation et de presentation professionnelle sur un projet concret." }
+    { question: "Pourquoi ce fonctionnement est plus pro ?", answer: "Parce que chaque page va droit au but, evite les formulaires inutiles et permet de traiter plus vite une demande deja propre et bien orientee." }
   ],
   quoteSteps: [
     { title: "Choisir l'activite", text: "Le visiteur entre dans le bon univers des le depart: informatique ou nettoyage." },
@@ -313,8 +315,8 @@ const PRIVATE_PAGES = new Set([
 ]);
 
 const DEFAULT_AUTH = {
-  username: "admin",
-  password: "admin"
+  username: "njr-owner",
+  passwordHash: "f1c99c8ea2861502"
 };
 
 const LIVE_FEEDS = [
@@ -411,7 +413,7 @@ function hashCredentials(username, password) {
 function getDefaultAuthConfig() {
   return {
     username: DEFAULT_AUTH.username,
-    passwordHash: hashCredentials(DEFAULT_AUTH.username, DEFAULT_AUTH.password),
+    passwordHash: DEFAULT_AUTH.passwordHash,
     updatedAt: new Date().toISOString()
   };
 }
@@ -974,9 +976,7 @@ function renderHeader(page) {
     <header class="site-topbar">
       <div class="site-topbar__inner">
         <div class="brand">
-          <div class="brand__mark">
-            <img src="${SITE_LOGO}" alt="Logo NJR Solutions" class="brand__logo" />
-          </div>
+          <div class="brand__mark" aria-hidden="true"></div>
           <div class="brand__copy">
             <strong>${brandTitle}</strong>
             <span>${brandSubtitle}</span>
@@ -1330,6 +1330,18 @@ function applyAccessMode() {
   document.body.setAttribute("data-auth", authenticated ? "true" : "false");
   $$("[data-private-only]").forEach((node) => {
     node.hidden = !authenticated;
+  });
+}
+
+function initLogoFallbacks() {
+  $$("img.hero-logo, img.brand__logo").forEach((image) => {
+    if (image.dataset.logoFallbackReady === "true") return;
+    image.dataset.logoFallbackReady = "true";
+    image.addEventListener("error", () => {
+      if (image.dataset.logoFallbackApplied === "true") return;
+      image.dataset.logoFallbackApplied = "true";
+      image.src = SITE_LOGO_FALLBACK;
+    });
   });
 }
 
@@ -3144,6 +3156,7 @@ function initSite(pageName) {
   initCommandPalette();
   initBackToTop();
   applyReveal();
+  initLogoFallbacks();
   if (isPrivatePage(pageName) && !canAccessPrivateContent()) {
     renderPrivateGate(pageName);
     return { allowPage: false, authenticated: false };

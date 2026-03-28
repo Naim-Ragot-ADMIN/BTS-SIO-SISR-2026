@@ -175,6 +175,24 @@
         position: static;
       }
     }
+
+    @media (max-width: 640px) {
+      .catalog-group__head,
+      .catalog-card__head,
+      .simple-cart-line,
+      .send-point {
+        grid-template-columns: 1fr;
+        display: grid;
+      }
+
+      .simple-cart-total {
+        font-size: 1.7rem;
+      }
+
+      .actions .btn {
+        width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
@@ -316,16 +334,16 @@
     const DRAFT_KEY = "njr_public_clean_request_draft_v1";
     const TRAVEL_ZONES = { free: 0, near: 8, mid: 15, far: 25 };
     const CATALOG = [
-      { id: "entretien-ponctuel", category: "Maison", title: "Entretien ponctuel maison ou bureau", price: 23, details: "Base simple pour entretien ponctuel, rangement leger et remise au propre reguliere." },
-      { id: "entretien-regulier", category: "Maison", title: "Entretien regulier", price: 20, details: "Tarif plus doux pense pour besoin recurrent sur logement, bureau ou location." },
-      { id: "vitrerie", category: "Maison", title: "Vitres et surfaces vitrees", price: 4.8, details: "Base moyenne pour vitres accessibles, baies et surfaces vitrees courantes." },
-      { id: "remise-logement", category: "Maison", title: "Remise en etat logement", price: 149, details: "Ideal apres depart locatif, vente, fin de chantier leger ou logement vide." },
-      { id: "voiture-interieur", category: "Auto", title: "Nettoyage interieur voiture", price: 39, details: "Aspiration, remise au propre habitacle et finitions rapides." },
-      { id: "voiture-complete", category: "Auto", title: "Nettoyage complet voiture", price: 69, details: "Interieur + exterieur avec remise au propre plus complete." },
-      { id: "utilitaire", category: "Auto", title: "Nettoyage utilitaire ou vehicule pro", price: 79, details: "Pour artisan, livreur ou vehicule de service avec besoin d'image propre." },
-      { id: "terrasse", category: "Exterieur", title: "Nettoyage terrasse", price: 5, details: "Base competitive pour terrasse, dalles ou zone exterieure." },
-      { id: "cour-balcon", category: "Exterieur", title: "Nettoyage balcon, cour ou entree", price: 45, details: "Remise au propre de petites surfaces exterieures a l'unite." },
-      { id: "mobilier-ext", category: "Exterieur", title: "Mobilier exterieur et abords", price: 35, details: "Salon de jardin, garde-corps, rebords et finitions exterieures simples." }
+      { id: "entretien-ponctuel", category: "Maison", title: "Entretien ponctuel maison ou bureau", price: 26, details: "Base plus coherente pour un passage ponctuel avec produits de qualite et temps de finition reel." },
+      { id: "entretien-regulier", category: "Maison", title: "Entretien regulier", price: 23, details: "Tarif plus doux pense pour besoin recurrent sur logement, bureau ou location." },
+      { id: "vitrerie", category: "Maison", title: "Vitres et surfaces vitrees", price: 6.5, details: "Base plus credible pour vitres accessibles, baies et surfaces vitrees courantes." },
+      { id: "remise-logement", category: "Maison", title: "Remise en etat logement", price: 189, details: "Ideal apres depart locatif, vente, fin de chantier leger ou logement vide." },
+      { id: "voiture-interieur", category: "Auto", title: "Nettoyage interieur voiture", price: 69, details: "Aspiration, remise au propre habitacle, plastiques et finitions serieuses." },
+      { id: "voiture-complete", category: "Auto", title: "Nettoyage complet voiture", price: 119, details: "Interieur + exterieur avec une prestation plus rentable et coherente avec des produits de qualite." },
+      { id: "utilitaire", category: "Auto", title: "Nettoyage utilitaire ou vehicule pro", price: 139, details: "Pour artisan, livreur ou vehicule de service avec besoin d'image propre." },
+      { id: "terrasse", category: "Exterieur", title: "Nettoyage terrasse", price: 7.5, details: "Base plus solide pour terrasse, dalles ou zone exterieure hors traitement specifique." },
+      { id: "cour-balcon", category: "Exterieur", title: "Nettoyage balcon, cour ou entree", price: 59, details: "Remise au propre de petites surfaces exterieures a l'unite." },
+      { id: "mobilier-ext", category: "Exterieur", title: "Mobilier exterieur et abords", price: 49, details: "Salon de jardin, garde-corps, rebords et finitions exterieures simples." }
     ];
 
     const selected = new Set();

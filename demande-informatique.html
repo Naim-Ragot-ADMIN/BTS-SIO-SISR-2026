@@ -175,6 +175,24 @@
         position: static;
       }
     }
+
+    @media (max-width: 640px) {
+      .catalog-group__head,
+      .catalog-card__head,
+      .simple-cart-line,
+      .send-point {
+        grid-template-columns: 1fr;
+        display: grid;
+      }
+
+      .simple-cart-total {
+        font-size: 1.7rem;
+      }
+
+      .actions .btn {
+        width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
@@ -313,18 +331,18 @@
     const COMPANY_EMAIL = "ragotnaimpro@gmail.com";
     const DRAFT_KEY = "njr_public_info_request_draft_v1";
     const CATALOG = [
-      { id: "diag-poste", category: "Support poste", title: "Diagnostic et depannage poste", price: 69, details: "Pour PC lent, messages d'erreur, blocages ou remise en route rapide." },
-      { id: "optimisation-poste", category: "Support poste", title: "Optimisation complete Windows", price: 89, details: "Nettoyage, optimisation, mises a jour, verification generale et gain de fluidite." },
-      { id: "installation-neuf", category: "Support poste", title: "Installation poste neuf ou reinstallation", price: 99, details: "Mise en service d'un nouveau PC ou remise a zero propre avec configuration de base." },
-      { id: "imprimante-periph", category: "Support poste", title: "Imprimante et peripheriques", price: 59, details: "Connexion, parametrage, pilotes et remise en service d'imprimante ou accessoire." },
-      { id: "reseau-wifi", category: "Reseau & connectivite", title: "Wi-Fi, box et connexion internet", price: 79, details: "Diagnostic Wi-Fi, box, lenteurs reseau et couverture de base." },
-      { id: "reseau-bureau", category: "Reseau & connectivite", title: "Petit reseau maison ou bureau", price: 119, details: "Organisation simple de postes, imprimantes reseau, partage et acces local." },
-      { id: "sauvegarde-transfert", category: "Protection & sauvegarde", title: "Sauvegarde et transfert de donnees", price: 79, details: "Sauvegarde avant intervention, migration vers un autre PC ou disque externe." },
-      { id: "hygiene-numerique", category: "Protection & sauvegarde", title: "Securite de base et hygiene numerique", price: 65, details: "Mots de passe, MFA, mises a jour, antivirus et bonnes pratiques utiles." },
-      { id: "nas-cloud", category: "Protection & sauvegarde", title: "Sauvegarde cloud ou NAS de base", price: 119, details: "Mise en place d'une logique simple de sauvegarde pour particulier ou independant." },
-      { id: "audit-pme", category: "Prestations pro", title: "Audit informatique de base", price: 120, details: "Premier regard sur postes, reseau, sauvegarde et points faibles visibles." },
-      { id: "maintenance-pro", category: "Prestations pro", title: "Maintenance ponctuelle TPE / independant", price: 139, details: "Intervention ciblee pour petit parc, poste de caisse, bureau ou atelier." },
-      { id: "documentation", category: "Prestations pro", title: "Documentation et fiche d'intervention", price: 49, details: "Compte-rendu propre, recommandations et base claire pour la suite." }
+      { id: "diag-poste", category: "Support poste", title: "Diagnostic et depannage poste", price: 79, details: "Pour PC lent, messages d'erreur, blocages ou remise en route rapide." },
+      { id: "optimisation-poste", category: "Support poste", title: "Optimisation complete Windows", price: 99, details: "Nettoyage, optimisation, mises a jour, verification generale et gain de fluidite." },
+      { id: "installation-neuf", category: "Support poste", title: "Installation poste neuf ou reinstallation", price: 119, details: "Mise en service d'un nouveau PC ou remise a zero propre avec configuration de base." },
+      { id: "imprimante-periph", category: "Support poste", title: "Imprimante et peripheriques", price: 69, details: "Connexion, parametrage, pilotes et remise en service d'imprimante ou accessoire." },
+      { id: "reseau-wifi", category: "Reseau & connectivite", title: "Wi-Fi, box et connexion internet", price: 89, details: "Diagnostic Wi-Fi, box, lenteurs reseau et couverture de base." },
+      { id: "reseau-bureau", category: "Reseau & connectivite", title: "Petit reseau maison ou bureau", price: 149, details: "Organisation simple de postes, imprimantes reseau, partage et acces local." },
+      { id: "sauvegarde-transfert", category: "Protection & sauvegarde", title: "Sauvegarde et transfert de donnees", price: 89, details: "Sauvegarde avant intervention, migration vers un autre PC ou disque externe." },
+      { id: "hygiene-numerique", category: "Protection & sauvegarde", title: "Securite de base et hygiene numerique", price: 79, details: "Mots de passe, MFA, mises a jour, antivirus et bonnes pratiques utiles." },
+      { id: "nas-cloud", category: "Protection & sauvegarde", title: "Sauvegarde cloud ou NAS de base", price: 149, details: "Mise en place d'une logique simple de sauvegarde pour particulier ou independant." },
+      { id: "audit-pme", category: "Prestations pro", title: "Audit informatique de base", price: 149, details: "Premier regard sur postes, reseau, sauvegarde et points faibles visibles." },
+      { id: "maintenance-pro", category: "Prestations pro", title: "Maintenance ponctuelle TPE / independant", price: 169, details: "Intervention ciblee pour petit parc, poste de caisse, bureau ou atelier." },
+      { id: "documentation", category: "Prestations pro", title: "Documentation et fiche d'intervention", price: 69, details: "Compte-rendu propre, recommandations et base claire pour la suite." }
     ];
 
     const selected = new Set();
