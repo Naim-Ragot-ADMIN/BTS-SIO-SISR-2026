@@ -7,3 +7,12 @@
 
 /assets/*
   Cache-Control: public, max-age=86400
+
+/assets/js/*
+  Cache-Control: public, max-age=300
+
+/assets/css/*
+  Cache-Control: public, max-age=300
+
+/assets/img/*
+  Cache-Control: public, max-age=3600
