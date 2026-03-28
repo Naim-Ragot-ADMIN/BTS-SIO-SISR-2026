@@ -1,5 +1,5 @@
-const SITE_LOGO = "assets/img/logo-njr-site.png?v=20260328e";
-const SITE_LOGO_FALLBACK = "assets/img/logo-njr.png?v=20260328e";
+const SITE_LOGO = "assets/img/logo-njr-web.png?v=20260328g";
+const SITE_LOGO_FALLBACK = "assets/img/logo-njr.png?v=20260328g";
 
 const PORTFOLIO_DATA = {
   identity: {
