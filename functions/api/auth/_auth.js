@@ -2,7 +2,7 @@ import { getClientMeta, json, sanitizeText } from "../_utils.js";
 
 export const SESSION_COOKIE = "njr_private_session";
 const SESSION_TTL_SECONDS = 60 * 60 * 24 * 14;
-const PASSWORD_ITERATIONS = 120000;
+const PASSWORD_ITERATIONS = 100000;
 const DEFAULT_BOOTSTRAP = {
   username: "admin",
   password: "admin"
@@ -14,7 +14,7 @@ const AUTH_SETUP_QUERIES = [
     username TEXT NOT NULL UNIQUE,
     password_hash TEXT NOT NULL,
     password_salt TEXT NOT NULL,
-    password_iterations INTEGER NOT NULL DEFAULT 120000,
+    password_iterations INTEGER NOT NULL DEFAULT 100000,
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL
   )`,

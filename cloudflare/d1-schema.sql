@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS auth_users (
   username TEXT NOT NULL UNIQUE,
   password_hash TEXT NOT NULL,
   password_salt TEXT NOT NULL,
-  password_iterations INTEGER NOT NULL DEFAULT 120000,
+  password_iterations INTEGER NOT NULL DEFAULT 100000,
   created_at TEXT NOT NULL,
   updated_at TEXT NOT NULL
 );
