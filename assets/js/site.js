@@ -1200,7 +1200,7 @@ function renderAuthModalBody() {
     ? "Le backend d'authentification n'est pas encore joignable ou D1 n'est pas configure sur Cloudflare."
     : authState.setupRequired
       ? "Aucun compte prive n'est encore initialise en ligne. Cree le premier acces une seule fois, puis reutilise-le sur tous tes appareils."
-      : "Connecte-toi avec les identifiants prives centralises. Le mot de passe est stocke cote serveur, pas dans le navigateur.";
+      : "Connecte-toi avec les identifiants prives centralises. Le mot de passe est stocke cote serveur, pas dans le navigateur. Tant qu'aucun acces perso n'a encore ete defini, l'acces par defaut reste admin / admin.";
 
   body.innerHTML = authenticated
     ? `

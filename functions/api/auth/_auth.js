@@ -3,7 +3,10 @@ import { getClientMeta, json, sanitizeText } from "../_utils.js";
 export const SESSION_COOKIE = "njr_private_session";
 const SESSION_TTL_SECONDS = 60 * 60 * 24 * 14;
 const PASSWORD_ITERATIONS = 120000;
-const AUTH_READY = new WeakSet();
+const DEFAULT_BOOTSTRAP = {
+  username: "admin",
+  password: "admin"
+};
 
 const AUTH_SCHEMA = `
 CREATE TABLE IF NOT EXISTS auth_users (
@@ -103,10 +106,38 @@ export function clearSessionCookie() {
 
 export async function ensureAuthStorage(env) {
   if (!env.DB) return false;
-  if (AUTH_READY.has(env.DB)) return true;
   await env.DB.exec(AUTH_SCHEMA);
-  AUTH_READY.add(env.DB);
   return true;
+}
+
+async function ensureBootstrapUser(env) {
+  await ensureAuthStorage(env);
+  const existing = await env.DB.prepare("SELECT COUNT(*) AS total FROM auth_users").first();
+  if (Number(existing?.total || 0) > 0) return;
+
+  const now = new Date().toISOString();
+  const salt = randomSecret(16);
+  const hash = await derivePasswordHash(DEFAULT_BOOTSTRAP.password, salt);
+
+  await env.DB.prepare(`
+    INSERT INTO auth_users (
+      id,
+      username,
+      password_hash,
+      password_salt,
+      password_iterations,
+      created_at,
+      updated_at
+    ) VALUES (?, ?, ?, ?, ?, ?, ?)
+  `).bind(
+    crypto.randomUUID(),
+    DEFAULT_BOOTSTRAP.username,
+    hash,
+    salt,
+    PASSWORD_ITERATIONS,
+    now,
+    now
+  ).run();
 }
 
 export async function readAuthSummary(env, request, options = {}) {
@@ -123,6 +154,7 @@ export async function readAuthSummary(env, request, options = {}) {
     };
   }
 
+  await ensureBootstrapUser(env);
   const countRow = await env.DB.prepare("SELECT COUNT(*) AS total FROM auth_users").first();
   const totalUsers = Number(countRow?.total || 0);
   const configured = totalUsers > 0;
