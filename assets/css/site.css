@@ -35,6 +35,10 @@ body {
     linear-gradient(180deg, #f9f5ef 0%, #f0e7da 100%);
 }
 
+body:not([data-auth="true"]) [data-private-only] {
+  display: none !important;
+}
+
 a { color: inherit; }
 button, input, textarea, select { font: inherit; }
 
@@ -336,6 +340,11 @@ summary:focus-visible {
   object-fit: contain;
   margin: 0 auto 8px;
   display: block;
+  height: auto;
+  padding: 16px;
+  border-radius: 28px;
+  background: #050505;
+  border: 1px solid rgba(198, 122, 18, 0.25);
   filter: drop-shadow(0 18px 42px rgba(0, 0, 0, 0.18));
 }
 

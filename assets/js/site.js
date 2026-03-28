@@ -1,3 +1,5 @@
+const SITE_LOGO = "assets/img/logo-njr-site.png?v=20260328d";
+
 const PORTFOLIO_DATA = {
   identity: {
     name: "Naim Ragot",
@@ -272,7 +274,8 @@ const PORTFOLIO_DATA = {
   pitches: {
     jury: "Je suis Naim Ragot, etudiant en BTS SIO option SISR. Mon objectif est de presenter un profil oriente systemes, reseaux, securite et documentation a travers des situations concretes.",
     recruiter: "Je suis Naim Ragot. J'interviens sur le support, l'infrastructure, l'automatisation et l'accompagnement utilisateur avec une approche claire, technique et exploitable rapidement.",
-    client: "Je suis Naim Ragot, fondateur de NJR Solutions. Je propose des services de proximite en informatique et en nettoyage avec une approche simple, serieuse et accessible."
+    client: "Je suis Naim Ragot, fondateur de NJR Solutions. Je propose des services de proximite en informatique et en nettoyage avec une approche simple, serieuse et accessible.",
+    partner: "NJR Solutions intervient avec une approche locale, simple et exploitable rapidement pour des besoins en informatique, en support de proximite et en prestations de nettoyage."
   }
 };
 
@@ -955,7 +958,7 @@ function renderHeader(page) {
     : PORTFOLIO_DATA.company.name;
   const brandSubtitle = authenticated
     ? "BTS, automatisation, scripts et outils internes"
-    : "Depannage informatique, reseau, nettoyage et demandes rapides";
+    : "Depannage informatique, nettoyage et demandes rapides";
   const links = [
     ["index.html", "Accueil", false],
     ["bts.html", "BTS", true],
@@ -972,7 +975,7 @@ function renderHeader(page) {
       <div class="site-topbar__inner">
         <div class="brand">
           <div class="brand__mark">
-            <img src="assets/img/logo-njr-site.png" alt="Logo NJR Solutions" class="brand__logo" />
+            <img src="${SITE_LOGO}" alt="Logo NJR Solutions" class="brand__logo" />
           </div>
           <div class="brand__copy">
             <strong>${brandTitle}</strong>
@@ -1025,7 +1028,7 @@ function renderFooter() {
           <a href="contact.html">Demande directe</a>
           <a href="tel:+33782307536">Appeler</a>
           <a href="connexion.html">Acces prive</a>
-          ${authenticated ? `<a href="bts.html">Espace BTS</a>` : `<span class="notice">Contenu BTS masque au public</span>`}
+          ${authenticated ? `<a href="bts.html">Espace BTS</a>` : ``}
         </article>
         <article class="footer-card">
           <strong>Informations</strong>
@@ -1324,6 +1327,7 @@ function refreshSiteChrome() {
 
 function applyAccessMode() {
   const authenticated = canAccessPrivateContent();
+  document.body.setAttribute("data-auth", authenticated ? "true" : "false");
   $$("[data-private-only]").forEach((node) => {
     node.hidden = !authenticated;
   });

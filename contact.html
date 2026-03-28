@@ -19,12 +19,12 @@
           <button class="btn btn--secondary" id="copy-email">Copier l'email</button>
           <button class="btn btn--secondary" id="copy-phone">Copier le telephone</button>
           <a class="btn btn--primary" href="mailto:ragotnaimpro@gmail.com">Envoyer un email direct</a>
-          <a class="btn btn--accent" href="devis_njr.html">Demarrer une simulation</a>
+          <a class="btn btn--accent" href="devis_njr.html">Demander un devis</a>
         </div>
       </article>
       <aside class="hero-side">
         <div class="mini-panel">
-          <img class="hero-logo" src="assets/img/logo-njr-site.png" alt="Logo NJR Solutions" />
+          <img class="hero-logo" src="assets/img/logo-njr-site.png?v=20260328d" alt="Logo NJR Solutions" />
           <h3>Coordonnees</h3>
           <div class="contact-list">
             <div class="contact-line"><span>Email</span><strong id="email-target">ragotnaimpro@gmail.com</strong></div>
@@ -37,7 +37,7 @@
           <div class="metric-list" style="margin-top:12px">
             <div class="metric"><span>Interventions</span><strong>Informatique et nettoyage</strong></div>
             <div class="metric"><span>Reponse</span><strong>Contact direct ou demande en ligne</strong></div>
-            <div class="metric"><span>Entreprise</span><strong>Depannage · Reseau · Conseil</strong></div>
+            <div class="metric"><span>Interventions</span><strong>Depannage, entretien et accompagnement</strong></div>
           </div>
         </div>
       </aside>
@@ -46,31 +46,31 @@
     <section class="section reveal">
       <div class="tools-grid">
         <article class="tool">
-          <h3>Presentation express</h3>
-          <p>Choisir le contexte pour recuperer une presentation courte, claire et reutilisable rapidement.</p>
+          <h3>Pourquoi passer par cette page</h3>
+          <p>Cette page sert a gagner du temps quand le besoin n'est pas encore totalement cadre ou quand il faut d'abord expliquer la situation.</p>
           <select id="pitch-audience" class="select">
             <option value="client">Version client</option>
-            <option value="recruiter">Version recrutement</option>
+            <option value="partner">Version partenaire</option>
           </select>
           <div class="pitch-output" id="pitch-output" style="margin-top:14px"></div>
           <div class="actions">
-            <button class="btn btn--secondary" id="copy-pitch">Copier la presentation</button>
+            <button class="btn btn--secondary" id="copy-pitch">Copier le texte</button>
           </div>
         </article>
         <article class="tool">
-          <h3>Presentation rapide</h3>
+          <h3>En bref</h3>
           <div class="identity-list">
             <div class="identity-item">
-              <strong>Profil</strong>
-              Systeme, reseau, support, securite de base et automatisation.
+              <strong>Informatique</strong>
+              Depannage, poste de travail, Wi-Fi, petit reseau, sauvegarde et hygiene numerique.
             </div>
             <div class="identity-item">
-              <strong>Entreprise</strong>
-              NJR Solutions propose des services de proximite en informatique et en nettoyage avec une approche claire et serieuse.
+              <strong>Nettoyage</strong>
+              Maison, vitres, auto et exterieur avec un cadre simple, lisible et adapte au besoin.
             </div>
             <div class="identity-item">
-              <strong>Style de travail</strong>
-              Approche simple, serieuse, documentee et orientee resultat.
+              <strong>Approche</strong>
+              Echange direct, demande claire et reponse utile sans tourner autour du sujet.
             </div>
           </div>
         </article>
@@ -99,7 +99,7 @@
               <option>Nettoyage maison / vitres</option>
               <option>Nettoyage auto / utilitaire</option>
               <option>Nettoyage terrasse / exterieur</option>
-              <option>Documentation / simulation</option>
+              <option>Autre demande</option>
             </select>
             <input id="contact-subject" class="field" placeholder="Objet personnalise (optionnel)" />
             <textarea id="contact-message" class="field-area" rows="6" placeholder="Explique ici le besoin, le contexte ou le type d'echange souhaite."></textarea>
@@ -108,7 +108,7 @@
           <div class="actions">
             <button class="btn btn--primary" id="send-draft">Envoyer la demande</button>
             <button class="btn btn--secondary" id="send-draft-mail" type="button">Ouvrir l'email</button>
-            <a class="btn btn--secondary" href="devis_njr.html">Ouvrir le centre des demandes</a>
+            <a class="btn btn--secondary" href="devis_njr.html">Voir les devis</a>
           </div>
           <p class="notice" id="contact-delivery-note">Le site peut envoyer la demande au backend Cloudflare ou basculer sur l'email si l'envoi serveur n'est pas encore configure.</p>
           <p class="notice">En utilisant ce formulaire, les brouillons restent stockes localement sur l'appareil jusqu'a envoi volontaire par email. Voir aussi <a href="confidentialite.html">la confidentialite</a> et <a href="mentions-legales.html">les mentions legales</a>.</p>
@@ -141,9 +141,9 @@
       <div class="tools-grid">
         <article class="tool route-card">
           <h3>Parcours recommande</h3>
-          <p>Selon le sujet choisi, le site peut deja orienter vers la page la plus utile sans passer par tout le centre des demandes.</p>
+          <p>Selon le sujet choisi, le site oriente directement vers la page la plus utile sans faire perdre de temps.</p>
           <div class="route-card__target" id="contact-route-output">
-            <strong>Centre des demandes</strong>
+            <strong>Choisir une page</strong>
             <span>Choisir un sujet ou un service pour afficher une recommandation plus precise.</span>
           </div>
           <div class="actions">
@@ -204,10 +204,11 @@
       <div class="cta-band">
         <div>
           <h2>Besoin d'aller plus vite ?</h2>
-          <p>Le centre des demandes et les simulateurs permettent deja de preparer un devis simple sans perdre les informations utiles.</p>
+          <p>Le devis en ligne permet deja de cadrer un besoin simple sans perdre les informations utiles.</p>
         </div>
         <div class="cta-band__actions">
-          <a class="btn btn--accent" href="devis_njr.html">Ouvrir les demandes</a>
+          <a class="btn btn--accent" href="devis_njr.html">Demander un devis</a>
+          <a class="btn btn--primary" href="tel:+33782307536">Appeler</a>
           <a class="btn btn--secondary" href="entreprise.html">Voir les activites</a>
         </div>
       </div>
@@ -231,10 +232,10 @@
     function updateContactRoute() {
       const value = contactService.value || "";
       let target = {
-        title: "Centre des demandes",
-        text: "Le centre des demandes permet de choisir entre l'informatique et le nettoyage avant l'envoi.",
+        title: "Demande de devis",
+        text: "La page devis permet de choisir entre l'informatique et le nettoyage avant l'envoi.",
         href: "devis_njr.html",
-        cta: "Ouvrir le centre des demandes"
+        cta: "Ouvrir les devis"
       };
 
       if (/Depannage|Reseau|Securite/i.test(value)) {
