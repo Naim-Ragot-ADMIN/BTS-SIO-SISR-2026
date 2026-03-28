@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Naim Ragot · Contact</title>
-  <meta name="description" content="Page de contact BTS SIO SISR et NJR Solutions de Naim Ragot." />
+  <title>NJR Solutions · Contact</title>
+  <meta name="description" content="Contact NJR Solutions pour une demande, un renseignement ou un devis en informatique et nettoyage." />
   <link rel="stylesheet" href="assets/css/site.css" />
 </head>
 <body>
@@ -12,9 +12,9 @@
   <main class="site-shell page">
     <section class="hero reveal is-visible">
       <article class="hero-main">
-        <div class="eyebrow">Contact · BTS + NJR Solutions</div>
-        <h1>Un point de contact unique pour le BTS, le recrutement ou un besoin client.</h1>
-        <p>Coordonnees, message prepare, presentation rapide et passerelle directe vers la bonne page si le besoin doit etre transforme en demande.</p>
+        <div class="eyebrow">Contact · NJR Solutions</div>
+        <h1>Un point de contact simple pour une demande, un renseignement ou un devis.</h1>
+        <p>Coordonnees, message prepare et orientation vers la bonne page si le besoin doit etre transforme en demande plus precise.</p>
         <div class="actions">
           <button class="btn btn--secondary" id="copy-email">Copier l'email</button>
           <button class="btn btn--secondary" id="copy-phone">Copier le telephone</button>
@@ -24,7 +24,7 @@
       </article>
       <aside class="hero-side">
         <div class="mini-panel">
-          <img class="hero-logo" src="assets/img/logo-njr.png" alt="Logo NJR Solutions" />
+          <img class="hero-logo" src="assets/img/logo-njr-site.png" alt="Logo NJR Solutions" />
           <h3>Coordonnees</h3>
           <div class="contact-list">
             <div class="contact-line"><span>Email</span><strong id="email-target">ragotnaimpro@gmail.com</strong></div>
@@ -35,8 +35,8 @@
         <div class="mini-panel">
           <h3>Disponibilite</h3>
           <div class="metric-list" style="margin-top:12px">
-            <div class="metric"><span>BTS</span><strong>Oral · E4 · E5</strong></div>
-            <div class="metric"><span>Pro</span><strong>Alternance · Stage</strong></div>
+            <div class="metric"><span>Interventions</span><strong>Informatique et nettoyage</strong></div>
+            <div class="metric"><span>Reponse</span><strong>Contact direct ou demande en ligne</strong></div>
             <div class="metric"><span>Entreprise</span><strong>Depannage · Reseau · Conseil</strong></div>
           </div>
         </div>
@@ -49,9 +49,8 @@
           <h3>Presentation express</h3>
           <p>Choisir le contexte pour recuperer une presentation courte, claire et reutilisable rapidement.</p>
           <select id="pitch-audience" class="select">
-            <option value="jury">Version jury BTS</option>
-            <option value="recruiter">Version recruteur</option>
             <option value="client">Version client</option>
+            <option value="recruiter">Version recrutement</option>
           </select>
           <div class="pitch-output" id="pitch-output" style="margin-top:14px"></div>
           <div class="actions">
@@ -93,8 +92,7 @@
             <input id="contact-phone" class="field" placeholder="Telephone" />
             <select id="contact-service" class="select">
               <option value="">Choisir un sujet</option>
-              <option>Alternance / stage</option>
-              <option>Question BTS / portfolio</option>
+              <option>Demande de renseignement</option>
               <option>Depannage informatique</option>
               <option>Reseau / Wi-Fi</option>
               <option>Securite / sauvegarde</option>
@@ -106,10 +104,13 @@
             <input id="contact-subject" class="field" placeholder="Objet personnalise (optionnel)" />
             <textarea id="contact-message" class="field-area" rows="6" placeholder="Explique ici le besoin, le contexte ou le type d'echange souhaite."></textarea>
           </div>
+          <div id="contact-turnstile" class="turnstile-slot" hidden></div>
           <div class="actions">
-            <button class="btn btn--primary" id="send-draft">Preparer le mail</button>
+            <button class="btn btn--primary" id="send-draft">Envoyer la demande</button>
+            <button class="btn btn--secondary" id="send-draft-mail" type="button">Ouvrir l'email</button>
             <a class="btn btn--secondary" href="devis_njr.html">Ouvrir le centre des demandes</a>
           </div>
+          <p class="notice" id="contact-delivery-note">Le site peut envoyer la demande au backend Cloudflare ou basculer sur l'email si l'envoi serveur n'est pas encore configure.</p>
           <p class="notice">En utilisant ce formulaire, les brouillons restent stockes localement sur l'appareil jusqu'a envoi volontaire par email. Voir aussi <a href="confidentialite.html">la confidentialite</a> et <a href="mentions-legales.html">les mentions legales</a>.</p>
         </article>
         <article class="tool">
@@ -124,16 +125,12 @@
           <h3>Quand utiliser cette page</h3>
           <div class="cards-grid">
             <article class="card">
-              <h3>Pour le BTS</h3>
-              <p>Donner un point d'entree propre a un jury, un professeur ou un maitre de stage.</p>
-            </article>
-            <article class="card">
               <h3>Pour un client</h3>
               <p>Recueillir un besoin, cadrer une demande et basculer rapidement vers une simulation ou un brief.</p>
             </article>
             <article class="card">
-              <h3>Pour un recruteur</h3>
-              <p>Montrer le profil, les domaines de competence et faciliter la prise de contact.</p>
+              <h3>Pour un premier contact</h3>
+              <p>Expliquer simplement la situation avant d'aller plus loin vers une estimation ou une intervention.</p>
             </article>
           </div>
         </article>
@@ -158,7 +155,7 @@
           <div class="compare-list">
             <div class="compare-item"><span>Besoin flou</span><strong>Mieux vaut commencer par un message simple</strong></div>
             <div class="compare-item"><span>Besoin deja cadré</span><strong>Le simulateur fait gagner du temps</strong></div>
-            <div class="compare-item"><span>Recrutement / BTS</span><strong>Le contact direct reste le plus adapté</strong></div>
+            <div class="compare-item"><span>Besoin encore flou</span><strong>Le contact direct reste le plus adapte</strong></div>
           </div>
         </article>
       </div>
@@ -193,15 +190,11 @@
       </div>
       <div class="cards-grid cards-grid--wide">
         <article class="card">
-          <h3>Cote BTS</h3>
-          <p>CV, tableau de synthese, situations E5, captures de projets, scripts et veille.</p>
-        </article>
-        <article class="card">
-          <h3>Cote entreprise</h3>
+          <h3>Pour l'entreprise</h3>
           <p>Besoin precise, urgence, parc concerne, symptomes, contraintes et eventuelles photos / captures.</p>
         </article>
         <article class="card">
-          <h3>Cote recrutement</h3>
+          <h3>Pour gagner du temps</h3>
           <p>Type de poste, dates, rythme, localisation, outils utilises et attentes principales.</p>
         </article>
       </div>
@@ -227,7 +220,6 @@
     initCopyEmail("copy-email","email-target");
     initCopyPhone("copy-phone","phone-target");
     initContactTool();
-    initMailDraft("send-draft");
     initPitchTool("pitch-audience","pitch-output","copy-pitch");
     renderServiceLanes("service-lanes");
     renderTrustPoints("trust-points");
@@ -268,6 +260,92 @@
 
     contactService?.addEventListener("change", updateContactRoute);
     updateContactRoute();
+
+    const contactStatus = document.getElementById("contact-status");
+    const sendDraftButton = document.getElementById("send-draft");
+    const sendDraftMailButton = document.getElementById("send-draft-mail");
+
+    function validateContactRequest() {
+      const missing = [];
+      if (!(document.getElementById("contact-name")?.value.trim() || "")) missing.push("Nom");
+      if (!((document.getElementById("contact-email")?.value.trim() || "") || (document.getElementById("contact-phone")?.value.trim() || ""))) missing.push("Email ou telephone");
+      if ((document.getElementById("contact-message")?.value.trim() || "").length < 10) missing.push("Message");
+      return missing;
+    }
+
+    async function updateContactDeliveryState() {
+      const health = await getApiHealth();
+      const note = document.getElementById("contact-delivery-note");
+      if (!note) return;
+
+      if (hasServerStorage(health)) {
+        note.textContent = "Envoi serveur actif: la demande peut etre enregistree en ligne avec reference. L'email manuel reste disponible en secours.";
+      } else {
+        note.textContent = "Le backend Cloudflare n'est pas encore completement configure. Le brouillon email reste disponible pour envoyer la demande sans perte.";
+      }
+
+      if (health?.features?.turnstile) {
+        ensureTurnstileWidget("contact-turnstile", "contact");
+      }
+    }
+
+    function openContactMailDraft() {
+      const draft = buildContactDraft();
+      writeStore(STORAGE_KEYS.contact, {
+        name: document.getElementById("contact-name")?.value.trim() || "",
+        email: draft.email,
+        phone: draft.phone,
+        service: draft.service,
+        subject: document.getElementById("contact-subject")?.value?.trim() || "",
+        message: draft.message
+      });
+      window.location.href = `mailto:${PORTFOLIO_DATA.identity.email}?subject=${encodeURIComponent(draft.subject)}&body=${encodeURIComponent(draft.body)}`;
+    }
+
+    async function sendContactRequest() {
+      const missing = validateContactRequest();
+      if (missing.length) {
+        contactStatus.textContent = `Merci de completer: ${missing.join(" · ")}.`;
+        showToast("Demande incomplete.", "warning");
+        return;
+      }
+
+      sendDraftButton.disabled = true;
+      const draft = buildContactDraft();
+      const result = await postSiteJson("/api/contact", {
+        name: draft.name,
+        email: draft.email,
+        phone: draft.phone,
+        service: draft.service,
+        subject: draft.subject,
+        message: draft.message,
+        sourcePage: "contact.html"
+      }, {
+        turnstileContainerId: "contact-turnstile",
+        turnstileAction: "contact"
+      });
+      sendDraftButton.disabled = false;
+
+      if (result.ok) {
+        contactStatus.textContent = `Demande envoyee. Reference ${result.data.reference}.`;
+        showToast("Demande envoyee au backend.", "success");
+        return;
+      }
+
+      if (result.code === "api_unavailable" || result.code === "storage_not_configured") {
+        openContactMailDraft();
+        contactStatus.textContent = "Le backend n'est pas encore completement configure. L'email a ete prepare automatiquement a la place.";
+        showToast("Bascule vers l'email.", "warning");
+        return;
+      }
+
+      contactStatus.textContent = result.message || "La demande n'a pas pu etre envoyee.";
+      showToast(result.message || "Envoi impossible pour le moment.", "warning");
+    }
+
+    sendDraftButton?.addEventListener("click", sendContactRequest);
+    sendDraftMailButton?.addEventListener("click", openContactMailDraft);
+    updateContactDeliveryState();
   </script>
 </body>
 </html>

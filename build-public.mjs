@@ -7,6 +7,16 @@ const distPath = join(rootDir, outputDir);
 
 const publicFiles = [
   "index.html",
+  "connexion.html",
+  "bts.html",
+  "preuves-e5.html",
+  "projets.html",
+  "scripts.html",
+  "outils.html",
+  "pilotage.html",
+  "atelier-devis.html",
+  "njr-solutions-informatique.html",
+  "njr-solutions-nettoyage.html",
   "entreprise.html",
   "devis_njr.html",
   "demande-informatique.html",
@@ -16,11 +26,22 @@ const publicFiles = [
   "mentions-legales.html",
   "conditions-generales.html",
   "confidentialite.html",
-  "cv_naim.pdf"
+  "cv_naim.pdf",
+  "README.md",
+  "CLOUDFLARE_SETUP.md",
+  "_headers",
+  "robots.txt",
+  "sitemap.xml"
 ];
 
 const publicDirectories = [
-  "assets"
+  "assets",
+  "functions",
+  "automation-scripts",
+  "cloudflare",
+  "02_SCRIPTS",
+  "COURS",
+  "VEILLE"
 ];
 
 if (existsSync(distPath)) {

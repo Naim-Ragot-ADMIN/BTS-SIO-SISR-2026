@@ -36,3 +36,24 @@ La version publique publiee inclut uniquement :
 - assets publics
 
 Les pages BTS, scripts, outils et ateliers prives restent hors du build public.
+
+## Backend Cloudflare
+
+Le projet contient aussi une V1 de backend via `functions/` pour :
+
+- `GET /api/health`
+- `POST /api/contact`
+- `POST /api/quote`
+- `GET /api/admin/submissions`
+
+Une page privee `pilotage.html` sert de cockpit local/admin pour verifier :
+
+- l'etat des Functions
+- le stockage D1 ou KV
+- la presence de Turnstile
+- la lecture des demandes cote admin
+
+Voir aussi :
+
+- `CLOUDFLARE_SETUP.md`
+- `cloudflare/d1-schema.sql`

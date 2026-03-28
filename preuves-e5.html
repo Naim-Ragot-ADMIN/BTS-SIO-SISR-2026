@@ -196,6 +196,49 @@
         </article>
       </div>
     </section>
+
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
+          <h2>Preuves automation fortes</h2>
+          <p>Quand tu presentes une situation liee aux scripts, il faut montrer plus qu'un simple fichier: contexte, logique d'orchestration, sortie exploitable et impact concret.</p>
+        </div>
+      </div>
+      <div class="cards-grid cards-grid--wide">
+        <article class="card">
+          <h3>Lab AD orchestre</h3>
+          <p>Le script de coeur de lab AD est une preuve tres forte si tu montres la logique globale: roles, OU, groupes, DHCP, DNS et partages en une meme chaine.</p>
+          <div class="inline-actions">
+            <a class="btn btn--secondary btn--small" href="automation-scripts/deploy-ad-lab-core.ps1" download>Telecharger</a>
+            <a class="btn btn--secondary btn--small" href="scripts.html">Bibliotheque scripts</a>
+          </div>
+        </article>
+        <article class="card">
+          <h3>Audit avec restitution</h3>
+          <p>Le rapport HTML + JSON d'audit Windows est ideal pour prouver une posture pro: collecte, restitution, lecture, priorisation et suites possibles.</p>
+          <div class="inline-actions">
+            <a class="btn btn--secondary btn--small" href="automation-scripts/invoke-windows-health-audit.ps1" download>Telecharger</a>
+            <a class="btn btn--secondary btn--small" href="automation-scripts/portable-maintenance-bundle.py" download>Bundle multi-OS</a>
+          </div>
+        </article>
+        <article class="card">
+          <h3>Lecture de domaine argumentee</h3>
+          <p>Un rapport GPO ou DHCP/DNS permet de montrer une vision plus mature de l'infrastructure: politiques, liens, services, scopes et hygiene de configuration.</p>
+          <div class="inline-actions">
+            <a class="btn btn--secondary btn--small" href="automation-scripts/invoke-gpo-baseline-report.ps1" download>Rapport GPO</a>
+            <a class="btn btn--secondary btn--small" href="automation-scripts/invoke-dhcp-dns-health-report.ps1" download>Rapport DHCP/DNS</a>
+          </div>
+        </article>
+        <article class="card">
+          <h3>Supervision visible</h3>
+          <p>Une stack observabilite ou monitoring donne une demonstration tres forte a l'oral si tu relies ensuite les captures, verifications et limites de la solution.</p>
+          <div class="inline-actions">
+            <a class="btn btn--secondary btn--small" href="automation-scripts/deploy-observability-platform.sh" download>Plateforme observabilite</a>
+            <a class="btn btn--secondary btn--small" href="automation-scripts/deploy-zabbix-grafana.sh" download>Zabbix + Grafana</a>
+          </div>
+        </article>
+      </div>
+    </section>
   </main>
   <div id="app-footer"></div>
   <script src="assets/js/site.js"></script>

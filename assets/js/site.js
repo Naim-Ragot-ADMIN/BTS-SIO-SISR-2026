@@ -138,16 +138,17 @@ const PORTFOLIO_DATA = {
     { title: "Plan d'upgrade d'un pare-feu sature", angle: "bts entreprise reseau securite", type: "Reseau / securite", impact: "Audit, choix materiel, budget et continuite de service.", result: "Situation E5 forte et cas realiste de prestation d'infrastructure.", level: "Fort", link: "COURS/08-E5/README.md" },
     { title: "Masterisation et normalisation du parc", angle: "bts entreprise documentation", type: "Postes / deploiement", impact: "Procedure, nomenclature, preparation et documentation.", result: "Montre une logique reproductible et un vrai sens de l'organisation.", level: "Fort", link: "README.md" },
     { title: "Scripts PowerShell de demo BTS", angle: "bts documentation", type: "Automatisation", impact: "Scripts concrets pour montrer ton raisonnement technique.", result: "Tres utile a l'oral et pour illustrer ton niveau de pratique.", level: "Fort", link: "02_SCRIPTS/powershell/demo_exam_bts.ps1" },
-    { title: "Bibliotheque scripts d'automatisation", angle: "bts entreprise reseau securite documentation", type: "Automatisation / infra", impact: "Scripts concrets pour AD, DHCP, IIS, Zabbix et Grafana inspires de documentations officielles.", result: "Tres utile comme support BTS, labo et base de production a adapter.", level: "Fort", link: "scripts.html" },
+    { title: "Bibliotheque scripts d'automatisation", angle: "bts entreprise reseau securite documentation", type: "Automatisation / infra", impact: "Bibliotheque etendue avec playbooks Microsoft, monitoring, audit, reseau et outils cross-platform capables de detecter l'OS.", result: "Tres utile comme support BTS, labo et base reusable pour gagner du temps sur des taches plus serieuses.", level: "Fort", link: "scripts.html" },
     { title: "Durcissement Windows Server", angle: "bts entreprise securite", type: "Hardening", impact: "Reduction de surface d'attaque et hygiene de configuration.", result: "Renforce ton profil systeme et securite.", level: "Moyen", link: "02_SCRIPTS/powershell/hardening_windows_server.ps1" },
     { title: "Audit securite et controles de base", angle: "bts entreprise securite documentation", type: "Audit", impact: "Analyse, controles, restitution et priorisation.", result: "Base solide pour des prestations, rapports ou situations pro.", level: "Fort", link: "02_SCRIPTS/powershell/audit_security.ps1" },
     { title: "Veille techno et cyber", angle: "bts documentation", type: "Veille", impact: "Suivi des alertes, synthese et capitalisation.", result: "Montre une progression serieuse et continue.", level: "Moyen", link: "VEILLE/2025/veille_2025-12-13.md" }
   ],
   resources: [
-    { title: "CV PDF", type: "Presentation", desc: "Version prete a transmettre a un recruteur, jury ou client.", link: "cv_naim.pdf" },
+    { title: "CV PDF", type: "Presentation", desc: "Version prete a transmettre a un recruteur ou a un jury, uniquement depuis l'espace prive.", link: "cv_naim.pdf", private: true },
     { title: "Extraction CV texte", type: "Preparation", desc: "Pratique pour alimenter des candidatures ou reformuler des blocs.", link: "cv_extract.txt", private: true },
     { title: "README portfolio", type: "Documentation", desc: "Vue d'ensemble du depot et de la logique du projet.", link: "README.md", private: true },
-    { title: "Bibliotheque scripts automation", type: "Technique", desc: "Page dediee aux scripts d'automatisation infra avec telechargement et sources officielles.", link: "scripts.html", private: true },
+    { title: "Pilotage Cloudflare", type: "Admin", desc: "Tableau de bord prive pour l'API, les demandes, le stockage et la preparation de la mise en ligne plus serieuse.", link: "pilotage.html", private: true },
+    { title: "Bibliotheque scripts automation", type: "Technique", desc: "Page dediee a une base large de scripts Windows, Linux, Docker et cross-platform avec playbooks, telechargement et sources utiles.", link: "scripts.html", private: true },
     { title: "Dossier E4", type: "BTS", desc: "Base de revision et de structuration pour l'epreuve E4.", link: "COURS/07-E4/README.md", private: true },
     { title: "Dossier E5", type: "BTS", desc: "Point d'appui pour tes situations professionnelles et l'oral.", link: "COURS/08-E5/README.md", private: true },
     { title: "Cours reseaux SISR", type: "Technique", desc: "Rappels utiles DNS, DHCP, TCP/UDP et modele OSI.", link: "COURS/06-SISR/reseaux/README.md", private: true },
@@ -270,7 +271,7 @@ const PORTFOLIO_DATA = {
   ],
   pitches: {
     jury: "Je suis Naim Ragot, etudiant en BTS SIO option SISR. Mon objectif est de presenter un profil oriente systemes, reseaux, securite et documentation a travers des situations concretes.",
-    recruiter: "Je suis Naim Ragot, technicien systemes et reseaux en BTS SIO SISR. Je recherche des contextes ou je peux etre utile rapidement sur le support, l'infrastructure, l'automatisation et l'accompagnement utilisateur.",
+    recruiter: "Je suis Naim Ragot. J'interviens sur le support, l'infrastructure, l'automatisation et l'accompagnement utilisateur avec une approche claire, technique et exploitable rapidement.",
     client: "Je suis Naim Ragot, fondateur de NJR Solutions. Je propose des services de proximite en informatique et en nettoyage avec une approche simple, serieuse et accessible."
   }
 };
@@ -301,6 +302,7 @@ const PRIVATE_PAGES = new Set([
   "preuves-e5.html",
   "projets.html",
   "scripts.html",
+  "pilotage.html",
   "outils.html",
   "atelier-devis.html",
   "njr-solutions-informatique.html",
@@ -486,7 +488,7 @@ function isPrivatePage(pageName) {
 }
 
 function canAccessPrivateContent() {
-  return !isPublicOnlyMode() && isAuthenticated();
+  return isAuthenticated();
 }
 
 function filterPrivateItems(items = []) {
@@ -558,6 +560,207 @@ function downloadTextFile(filename, content, mime = "application/json") {
   link.click();
   link.remove();
   window.setTimeout(() => URL.revokeObjectURL(url), 1200);
+}
+
+const API_RUNTIME = {
+  health: null,
+  promise: null
+};
+
+const TURNSTILE_RUNTIME = {
+  scriptPromise: null,
+  widgets: new Map()
+};
+
+async function getApiHealth(force = false) {
+  if (!force && API_RUNTIME.health) return API_RUNTIME.health;
+  if (!force && API_RUNTIME.promise) return API_RUNTIME.promise;
+
+  API_RUNTIME.promise = fetch("/api/health", {
+    headers: { accept: "application/json" },
+    cache: "no-store"
+  }).then(async (response) => {
+    const payload = await response.json().catch(() => ({}));
+    const data = {
+      ok: response.ok && payload?.ok !== false,
+      status: response.status,
+      features: payload?.features || {
+        api: false,
+        storage: false,
+        turnstile: false,
+        turnstileSiteKey: ""
+      }
+    };
+    API_RUNTIME.health = data;
+    return data;
+  }).catch(() => {
+    const fallback = {
+      ok: false,
+      status: 0,
+      features: {
+        api: false,
+        storage: false,
+        turnstile: false,
+        turnstileSiteKey: ""
+      }
+    };
+    API_RUNTIME.health = fallback;
+    return fallback;
+  }).finally(() => {
+    API_RUNTIME.promise = null;
+  });
+
+  return API_RUNTIME.promise;
+}
+
+function hasServerStorage(apiHealth) {
+  return Boolean(apiHealth?.features?.storage);
+}
+
+function updateSubmissionHint(hostId, message) {
+  const host = hostId ? $("#" + hostId) : null;
+  if (host) host.textContent = message;
+}
+
+async function loadTurnstileScript() {
+  if (window.turnstile) return window.turnstile;
+  if (TURNSTILE_RUNTIME.scriptPromise) return TURNSTILE_RUNTIME.scriptPromise;
+
+  TURNSTILE_RUNTIME.scriptPromise = new Promise((resolve, reject) => {
+    const existing = document.getElementById("cf-turnstile-script");
+    if (existing) {
+      existing.addEventListener("load", () => resolve(window.turnstile));
+      existing.addEventListener("error", reject);
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.id = "cf-turnstile-script";
+    script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+    script.async = true;
+    script.defer = true;
+    script.addEventListener("load", () => resolve(window.turnstile));
+    script.addEventListener("error", reject);
+    document.head.appendChild(script);
+  }).catch(() => null);
+
+  return TURNSTILE_RUNTIME.scriptPromise;
+}
+
+async function ensureTurnstileWidget(containerId, action = "submit") {
+  if (!containerId) return { enabled: false, token: "" };
+  const host = $("#" + containerId);
+  if (!host) return { enabled: false, token: "" };
+
+  const health = await getApiHealth();
+  const siteKey = health?.features?.turnstileSiteKey || "";
+  if (!health?.features?.turnstile || !siteKey) {
+    host.hidden = true;
+    return { enabled: false, token: "" };
+  }
+
+  host.hidden = false;
+  const turnstile = await loadTurnstileScript();
+  if (!turnstile) return { enabled: false, token: "" };
+
+  let widget = TURNSTILE_RUNTIME.widgets.get(containerId);
+  if (!widget) {
+    host.innerHTML = "";
+    const mount = document.createElement("div");
+    host.appendChild(mount);
+    const widgetId = turnstile.render(mount, {
+      sitekey: siteKey,
+      action,
+      theme: "light"
+    });
+    widget = { id: widgetId, action };
+    TURNSTILE_RUNTIME.widgets.set(containerId, widget);
+  }
+
+  const token = turnstile.getResponse(widget.id) || "";
+  return {
+    enabled: true,
+    token,
+    needsInteraction: !token
+  };
+}
+
+function resetTurnstileWidget(containerId) {
+  if (!containerId || !window.turnstile) return;
+  const widget = TURNSTILE_RUNTIME.widgets.get(containerId);
+  if (widget) {
+    window.turnstile.reset(widget.id);
+  }
+}
+
+async function postSiteJson(endpoint, payload, options = {}) {
+  const health = await getApiHealth();
+  if (!health.ok || !health.features?.api) {
+    return {
+      ok: false,
+      status: 0,
+      code: "api_unavailable",
+      message: "API indisponible",
+      apiHealth: health
+    };
+  }
+
+  let turnstileToken = "";
+  if (options.turnstileContainerId) {
+    const turnstile = await ensureTurnstileWidget(options.turnstileContainerId, options.turnstileAction || "submit");
+    if (turnstile.enabled && turnstile.needsInteraction) {
+      return {
+        ok: false,
+        status: 400,
+        code: "turnstile_required",
+        message: "Merci de valider le controle anti-spam.",
+        apiHealth: health
+      };
+    }
+    turnstileToken = turnstile.token || "";
+  }
+
+  try {
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json; charset=utf-8",
+        accept: "application/json"
+      },
+      body: JSON.stringify({
+        ...payload,
+        turnstileToken
+      })
+    });
+
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok || data?.ok === false) {
+      return {
+        ok: false,
+        status: response.status,
+        code: data?.code || "request_failed",
+        message: data?.message || "La demande n'a pas pu etre envoyee.",
+        details: data?.details || [],
+        apiHealth: health
+      };
+    }
+
+    resetTurnstileWidget(options.turnstileContainerId);
+    return {
+      ok: true,
+      status: response.status,
+      data,
+      apiHealth: health
+    };
+  } catch {
+    return {
+      ok: false,
+      status: 0,
+      code: "network_error",
+      message: "Connexion au backend impossible pour le moment.",
+      apiHealth: health
+    };
+  }
 }
 
 function bindCopyButtons(scope = document) {
@@ -747,6 +950,12 @@ function renderHeader(page) {
   ];
   const authenticated = canAccessPrivateContent();
   const publicOnly = isPublicOnlyMode();
+  const brandTitle = authenticated
+    ? `${PORTFOLIO_DATA.identity.name} · Espace prive`
+    : PORTFOLIO_DATA.company.name;
+  const brandSubtitle = authenticated
+    ? "BTS, automatisation, scripts et outils internes"
+    : "Depannage informatique, reseau, nettoyage et demandes rapides";
   const links = [
     ["index.html", "Accueil", false],
     ["bts.html", "BTS", true],
@@ -763,11 +972,11 @@ function renderHeader(page) {
       <div class="site-topbar__inner">
         <div class="brand">
           <div class="brand__mark">
-            <img src="assets/img/logo-njr.png" alt="Logo NJR Solutions" class="brand__logo" />
+            <img src="assets/img/logo-njr-site.png" alt="Logo NJR Solutions" class="brand__logo" />
           </div>
           <div class="brand__copy">
-            <strong>${PORTFOLIO_DATA.identity.name} · BTS SIO SISR</strong>
-            <span>${PORTFOLIO_DATA.identity.title} · ${PORTFOLIO_DATA.company.name}</span>
+            <strong>${brandTitle}</strong>
+            <span>${brandSubtitle}</span>
           </div>
         </div>
         <div class="topbar-actions">
@@ -775,12 +984,10 @@ function renderHeader(page) {
             Recherche rapide
             <span>Ctrl+K</span>
           </button>
-          ${publicOnly ? "" : `
-            <button class="account-chip ${authenticated ? "is-authenticated" : ""}" type="button" id="open-auth-modal">
-              ${authenticated ? "Prive" : "Connexion"}
-              <span>${authenticated ? "Actif" : "Public"}</span>
-            </button>
-          `}
+          <a class="account-chip ${authenticated ? "is-authenticated" : ""}" href="connexion.html">
+            ${authenticated ? "Espace prive" : "Acces prive"}
+            <span>${authenticated ? "Actif" : "Connexion"}</span>
+          </a>
           <nav class="nav">
             ${links.map(([href, label]) => {
               const active = page === href || (href === "devis_njr.html" && quotePages.includes(page));
@@ -797,30 +1004,28 @@ function renderFooter() {
   const shell = $("#app-footer");
   if (!shell) return;
   const authenticated = canAccessPrivateContent();
-  const publicOnly = isPublicOnlyMode();
   shell.innerHTML = `
     <footer class="footer footer--rich">
       <div class="footer-grid">
         <article class="footer-card">
-          <strong>${PORTFOLIO_DATA.identity.name}</strong>
-          <span class="notice">${PORTFOLIO_DATA.identity.title}</span>
+          <strong>${PORTFOLIO_DATA.company.name}</strong>
+          <span class="notice">Interventions locales, demandes simples et reponse plus claire des le premier contact.</span>
           <span class="notice">${PORTFOLIO_DATA.identity.location}</span>
           <span class="notice">${PORTFOLIO_DATA.identity.email}</span>
           <span class="notice">${PORTFOLIO_DATA.identity.phone}</span>
         </article>
         <article class="footer-card">
-          <strong>BTS</strong>
-          ${publicOnly ? `<span class="notice">Non publie sur la version publique</span>` : authenticated ? `<a href="bts.html">Espace BTS</a>` : `<span class="notice">Connexion requise</span>`}
-          ${publicOnly ? `<span class="notice">Contenu reserve</span>` : authenticated ? `<a href="projets.html">Projets</a>` : `<span class="notice">Projets prives</span>`}
-          ${publicOnly ? `<span class="notice">Scripts non diffuses</span>` : authenticated ? `<a href="scripts.html">Scripts</a>` : `<span class="notice">Scripts prives</span>`}
+          <strong>Activites</strong>
+          <a href="entreprise.html">Services</a>
+          <a href="devis_njr.html">Simulateur</a>
           <a href="veille.html">Veille</a>
         </article>
         <article class="footer-card">
-          <strong>NJR Solutions</strong>
-          <a href="entreprise.html">Espace entreprise</a>
-          <a href="devis_njr.html">Simulateurs</a>
-          ${publicOnly ? `<span class="notice">Outils internes hors ligne</span>` : authenticated ? `<a href="outils.html">Outils</a>` : `<span class="notice">Outils prives</span>`}
-          <a href="contact.html">Contact</a>
+          <strong>Contact</strong>
+          <a href="contact.html">Demande directe</a>
+          <a href="tel:+33782307536">Appeler</a>
+          <a href="connexion.html">Acces prive</a>
+          ${authenticated ? `<a href="bts.html">Espace BTS</a>` : `<span class="notice">Contenu BTS masque au public</span>`}
         </article>
         <article class="footer-card">
           <strong>Informations</strong>
@@ -830,7 +1035,7 @@ function renderFooter() {
           <a href="confidentialite.html">Confidentialite</a>
         </article>
       </div>
-      <div class="footer-bottom">${PORTFOLIO_DATA.identity.name} · BTS SIO SISR · ${PORTFOLIO_DATA.company.name} · ${new Date().getFullYear()}</div>
+      <div class="footer-bottom">${PORTFOLIO_DATA.company.name} · ${PORTFOLIO_DATA.identity.location} · ${new Date().getFullYear()}</div>
     </footer>
   `;
 }
@@ -841,9 +1046,11 @@ function getQuickLinks() {
     { label: "Espace BTS", href: "bts.html", type: "Page", keywords: "bts e4 e5 oral preuves", private: true },
     { label: "Preuves E5", href: "preuves-e5.html", type: "Page", keywords: "preuves e5 oral jury competences annexe", private: true },
     { label: "Projets", href: "projets.html", type: "Page", keywords: "projets situations techniques", private: true },
-    { label: "Scripts", href: "scripts.html", type: "Page", keywords: "scripts automation powershell bash ad zabbix grafana", private: true },
+    { label: "Scripts", href: "scripts.html", type: "Page", keywords: "scripts automation powershell bash python cross platform ad zabbix grafana docker", private: true },
+    { label: "Pilotage", href: "pilotage.html", type: "Page", keywords: "pilotage admin cloudflare api demandes turnstile d1 kv", private: true },
     { label: "Entreprise", href: "entreprise.html", type: "Page", keywords: "entreprise services clients brief" },
     { label: "Devis", href: "devis_njr.html", type: "Page", keywords: "devis simulateur njr" },
+    { label: "Acces prive", href: "connexion.html", type: "Page", keywords: "connexion acces prive login" },
     { label: "Outils", href: "outils.html", type: "Page", keywords: "notes suivi local leads", private: true },
     { label: "Atelier devis", href: "atelier-devis.html", type: "Page", keywords: "devis prive admin generateur", private: true },
     { label: "Veille", href: "veille.html", type: "Page", keywords: "veille rss cyber" },
@@ -851,9 +1058,26 @@ function getQuickLinks() {
     { label: "Mentions legales", href: "mentions-legales.html", type: "Page", keywords: "legal mentions hebergement editeur" },
     { label: "Conditions generales", href: "conditions-generales.html", type: "Page", keywords: "conditions devis intervention tarifs" },
     { label: "Confidentialite", href: "confidentialite.html", type: "Page", keywords: "privacy donnees personnelles localstorage" },
-    { label: "CV PDF", href: "cv_naim.pdf", type: "Fichier", keywords: "cv pdf recrutement" },
+    { label: "CV PDF", href: "cv_naim.pdf", type: "Fichier", keywords: "cv pdf recrutement", private: true },
     { label: "Script AD Forest", href: "automation-scripts/deploy-ad-forest.ps1", type: "Script", keywords: "ad active directory forest powershell", private: true },
-    { label: "Script Zabbix Grafana", href: "automation-scripts/deploy-zabbix-grafana.sh", type: "Script", keywords: "zabbix grafana docker bash monitoring", private: true }
+    { label: "Script Zabbix Grafana", href: "automation-scripts/deploy-zabbix-grafana.sh", type: "Script", keywords: "zabbix grafana docker bash monitoring", private: true },
+    { label: "Script Portainer", href: "automation-scripts/deploy-portainer.sh", type: "Script", keywords: "portainer docker bash linux", private: true },
+    { label: "Inventaire portable", href: "automation-scripts/portable-system-inventory.py", type: "Script", keywords: "cross platform python inventory audit", private: true },
+    { label: "Observabilite portable", href: "automation-scripts/portable-observability-stack.py", type: "Script", keywords: "cross platform python docker prometheus grafana", private: true },
+    { label: "Smoke test HTTP", href: "automation-scripts/portable-http-smoke.py", type: "Script", keywords: "cross platform python http web smoke test", private: true },
+    { label: "Export logs Windows", href: "automation-scripts/export-event-logs.ps1", type: "Script", keywords: "windows powershell event logs export", private: true },
+    { label: "Lab AD complet", href: "automation-scripts/deploy-ad-lab-core.ps1", type: "Script", keywords: "ad dhcp dns shares lab powershell bts", private: true },
+    { label: "Audit Windows complet", href: "automation-scripts/invoke-windows-health-audit.ps1", type: "Script", keywords: "windows audit report health powershell", private: true },
+    { label: "Bundle maintenance multi-OS", href: "automation-scripts/portable-maintenance-bundle.py", type: "Script", keywords: "cross platform maintenance audit python", private: true },
+    { label: "Plateforme observabilite", href: "automation-scripts/deploy-observability-platform.sh", type: "Script", keywords: "prometheus grafana loki docker monitoring bash", private: true },
+    { label: "Cycle de vie AD", href: "automation-scripts/invoke-ad-user-lifecycle.ps1", type: "Script", keywords: "active directory lifecycle users reset unlock powershell", private: true },
+    { label: "Diagnostic reseau portable", href: "automation-scripts/portable-network-diagnostic.py", type: "Script", keywords: "cross platform network ping dns traceroute python", private: true },
+    { label: "Reverse proxy lab", href: "automation-scripts/deploy-reverse-proxy-lab.sh", type: "Script", keywords: "nginx proxy manager docker reverse proxy bash", private: true },
+    { label: "Rapport GPO", href: "automation-scripts/invoke-gpo-baseline-report.ps1", type: "Script", keywords: "gpo baseline report active directory powershell", private: true },
+    { label: "Rapport DHCP DNS", href: "automation-scripts/invoke-dhcp-dns-health-report.ps1", type: "Script", keywords: "dhcp dns health report powershell server", private: true },
+    { label: "Audit certificats TLS", href: "automation-scripts/portable-certificate-audit.py", type: "Script", keywords: "tls certificate ssl expiry python cross platform", private: true },
+    { label: "Decouverte d hotes", href: "automation-scripts/portable-host-discovery.py", type: "Script", keywords: "host discovery ping sweep cidr python cross platform", private: true },
+    { label: "Stack GLPI", href: "automation-scripts/deploy-glpi-stack.sh", type: "Script", keywords: "glpi helpdesk docker bash support", private: true }
   ].filter((item) => canAccessPrivateContent() || !item.private);
 }
 
@@ -1066,8 +1290,10 @@ function renderPrivateGate(pageName) {
   if (!main) return;
   const labels = {
     "bts.html": "Espace BTS",
+    "preuves-e5.html": "Preuves E5",
     "projets.html": "Projets",
     "scripts.html": "Scripts",
+    "pilotage.html": "Pilotage",
     "outils.html": "Outils"
   };
   main.innerHTML = `
@@ -1077,7 +1303,7 @@ function renderPrivateGate(pageName) {
         <h1>${labels[pageName] || "Espace prive"}</h1>
         <p>Cette partie du site est reservee a l'espace prive. Les visiteurs publics gardent acces aux pages entreprise, devis, veille et contact.</p>
         <div class="actions">
-          <button class="btn btn--primary" type="button" id="open-auth-gate">Se connecter</button>
+          <a class="btn btn--primary" href="connexion.html?redirect=${encodeURIComponent(pageName)}">Se connecter</a>
           <a class="btn btn--secondary" href="entreprise.html">Espace entreprise</a>
           <a class="btn btn--secondary" href="devis_njr.html">Devis</a>
           <a class="btn btn--secondary" href="contact.html">Contact</a>
@@ -1086,9 +1312,6 @@ function renderPrivateGate(pageName) {
       </div>
     </section>
   `;
-  $("#open-auth-gate")?.addEventListener("click", () => {
-    $("#open-auth-modal")?.click();
-  });
 }
 
 function refreshSiteChrome() {
@@ -2643,8 +2866,8 @@ function buildContactDraft() {
   const subjectField = $("#contact-subject")?.value?.trim() || "";
   const email = $("#contact-email")?.value.trim() || "";
   const phone = $("#contact-phone")?.value.trim() || "";
-  const message = $("#contact-message")?.value.trim() || "Je souhaite echanger avec vous concernant votre portfolio / vos services.";
-  const subject = subjectField || (service ? `Demande ${service} / NJR Solutions` : "Contact portfolio / NJR Solutions");
+  const message = $("#contact-message")?.value.trim() || "Je souhaite echanger avec vous concernant vos services.";
+  const subject = subjectField || (service ? `Demande ${service} / NJR Solutions` : "Contact NJR Solutions");
   const body = [
     name,
     email || "Email non renseigne",

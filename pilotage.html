@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Naim Ragot · Pilotage</title>
+  <meta name="description" content="Cockpit prive pour piloter l'API Cloudflare, les demandes et la preparation du site NJR Solutions." />
+  <link rel="stylesheet" href="assets/css/site.css" />
+</head>
+<body>
+  <div id="app-header"></div>
+  <main class="site-shell page">
+    <section class="hero reveal is-visible">
+      <article class="hero-main">
+        <div class="eyebrow">Pilotage prive · Cloudflare + demandes</div>
+        <h1>Voir si le site encaisse vraiment les demandes et ce qu'il manque pour passer en mode plus pro.</h1>
+        <p>Cette page sert de cockpit prive: etat du backend, stockage, Turnstile, demandes recues, cle admin locale et prochaine etape pour un vrai verrou serveur.</p>
+        <div class="actions">
+          <button class="btn btn--primary" type="button" id="refresh-admin-dashboard">Actualiser le cockpit</button>
+          <a class="btn btn--secondary" href="outils.html">Revenir aux outils</a>
+          <a class="btn btn--secondary" href="CLOUDFLARE_SETUP.md">Ouvrir la doc Cloudflare</a>
+        </div>
+      </article>
+      <aside class="hero-side">
+        <div class="mini-panel">
+          <h3>Etat global</h3>
+          <div class="metric-list" style="margin-top:12px">
+            <div class="metric"><span>API</span><strong id="pilotage-runtime">Verification...</strong></div>
+            <div class="metric"><span>Stockage</span><strong id="pilotage-storage">Verification...</strong></div>
+            <div class="metric"><span>Protection</span><strong id="pilotage-turnstile">Verification...</strong></div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
+          <h2>KPIs backend</h2>
+          <p>Le but est de voir en un coup d'oeil si le site peut recevoir de vraies demandes et ce qui reste a brancher.</p>
+        </div>
+      </div>
+      <div class="admin-kpi-grid" id="admin-kpis"></div>
+    </section>
+
+    <section class="section reveal">
+      <div class="admin-grid">
+        <article class="tool">
+          <h2>Acces admin API</h2>
+          <p>La cle admin reste stockee localement sur cet appareil pour interroger les demandes via l'API privee.</p>
+          <div class="field-inline" style="margin-top:14px">
+            <label>Cle admin API
+              <input id="admin-api-key" class="field mono" type="password" placeholder="ADMIN_API_KEY" />
+            </label>
+            <label>Type de demande
+              <select id="admin-filter-type" class="select">
+                <option value="">Toutes</option>
+                <option value="contact">Contacts</option>
+                <option value="quote">Demandes / devis</option>
+              </select>
+            </label>
+            <label>Volume
+              <select id="admin-filter-limit" class="select">
+                <option value="10">10 derniers</option>
+                <option value="25" selected>25 derniers</option>
+                <option value="50">50 derniers</option>
+              </select>
+            </label>
+          </div>
+          <div class="actions">
+            <button class="btn btn--primary" type="button" id="save-admin-key">Enregistrer la cle locale</button>
+            <button class="btn btn--secondary" type="button" id="load-submissions">Charger les demandes</button>
+            <button class="btn btn--secondary" type="button" id="clear-admin-key">Effacer la cle</button>
+          </div>
+          <p class="notice" id="admin-key-status">La cle n'est pas envoyee au site tant qu'un chargement n'est pas demande.</p>
+        </article>
+        <article class="tool">
+          <h2>Etat de la pile</h2>
+          <div class="config-list" id="capability-list"></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal">
+      <div class="section__head">
+        <div>
+          <h2>Demandes recues</h2>
+          <p>Tu peux verifier si le site commence a recevoir des contacts et des demandes de devis sans passer par la messagerie.</p>
+        </div>
+      </div>
+      <article class="tool">
+        <div class="submission-list" id="submission-list">
+          <div class="admin-empty">Aucune demande chargee pour le moment.</div>
+        </div>
+      </article>
+    </section>
+
+    <section class="section reveal">
+      <div class="tools-grid">
+        <article class="tool">
+          <h2>Ce qu'on peut brancher ensuite</h2>
+          <div class="config-list">
+            <div class="config-item">
+              <span class="label">Vrai verrou prive</span>
+              <strong>Cloudflare Access</strong>
+              <p>Ideal pour proteger BTS, scripts, outils et cockpit admin avec email ou fournisseur d'identite, sans exposer les pages privees au public.</p>
+            </div>
+            <div class="config-item">
+              <span class="label">Stockage propre</span>
+              <strong>D1 + R2</strong>
+              <p>D1 pour les demandes et clients, R2 pour les pieces jointes, rapports ou preuves BTS lourdes a partager proprement.</p>
+            </div>
+            <div class="config-item">
+              <span class="label">Automatisation</span>
+              <strong>Webhook n8n / Discord / email</strong>
+              <p>Des qu'une demande part, tu peux recevoir une notif, creer une tache, ou preparer une reponse automatique.</p>
+            </div>
+          </div>
+        </article>
+        <article class="tool">
+          <h2>Checklist production</h2>
+          <div class="config-list" id="production-checklist"></div>
+        </article>
+      </div>
+    </section>
+  </main>
+  <div id="app-footer"></div>
+  <script src="assets/js/site.js"></script>
+  <script>
+    const state = initSite("pilotage.html");
+
+    if (state.allowPage) {
+      const ADMIN_KEY_STORAGE = "njr_admin_api_key_v1";
+      const kpiHost = document.getElementById("admin-kpis");
+      const capabilityHost = document.getElementById("capability-list");
+      const submissionHost = document.getElementById("submission-list");
+      const checklistHost = document.getElementById("production-checklist");
+      const adminKeyField = document.getElementById("admin-api-key");
+      const adminKeyStatus = document.getElementById("admin-key-status");
+      const typeFilterField = document.getElementById("admin-filter-type");
+      const limitFilterField = document.getElementById("admin-filter-limit");
+      const runtimeField = document.getElementById("pilotage-runtime");
+      const storageField = document.getElementById("pilotage-storage");
+      const turnstileField = document.getElementById("pilotage-turnstile");
+
+      const capabilityLabels = {
+        api: "API Pages Functions",
+        storage: "Stockage demandes",
+        d1: "Base D1",
+        kv: "Fallback KV",
+        turnstile: "Protection Turnstile",
+        contactWebhook: "Webhook contact",
+        quoteWebhook: "Webhook devis",
+        adminApi: "Cle admin API"
+      };
+
+      function loadAdminKey() {
+        adminKeyField.value = localStorage.getItem(ADMIN_KEY_STORAGE) || "";
+      }
+
+      function saveAdminKey() {
+        const key = adminKeyField.value.trim();
+        if (!key) {
+          adminKeyStatus.textContent = "Renseigne une cle avant de l'enregistrer localement.";
+          showToast("Cle admin vide.", "warning");
+          return;
+        }
+        localStorage.setItem(ADMIN_KEY_STORAGE, key);
+        adminKeyStatus.textContent = "Cle admin stockee localement sur cet appareil.";
+        showToast("Cle admin enregistree.", "success");
+      }
+
+      function clearAdminKey() {
+        localStorage.removeItem(ADMIN_KEY_STORAGE);
+        adminKeyField.value = "";
+        adminKeyStatus.textContent = "Cle admin locale effacee sur cet appareil.";
+        showToast("Cle admin effacee.", "success");
+      }
+
+      function statusPill(ok, good = "Actif", bad = "A configurer") {
+        const tone = ok ? "is-ok" : "is-warning";
+        return `<span class="status-pill ${tone}">${ok ? good : bad}</span>`;
+      }
+
+      function formatDate(value) {
+        if (!value) return "Date inconnue";
+        try {
+          return new Date(value).toLocaleString("fr-FR", {
+            dateStyle: "medium",
+            timeStyle: "short"
+          });
+        } catch {
+          return value;
+        }
+      }
+
+      async function renderCapabilities() {
+        const health = await getApiHealth(true);
+        const features = health?.features || {};
+        runtimeField.textContent = health?.runtime || "Indisponible";
+        storageField.textContent = features.storage ? (features.d1 ? "D1 active" : features.kv ? "KV active" : "Actif") : "A configurer";
+        turnstileField.textContent = features.turnstile ? "Actif" : "Non branche";
+
+        const cards = [
+          {
+            label: "Fonctions API",
+            value: features.api ? "En ligne" : "A verifier",
+            note: features.api ? "Le site peut repondre via /api/*" : "Le runtime n'a pas encore repondu."
+          },
+          {
+            label: "Demandes stockables",
+            value: features.storage ? "Oui" : "Non",
+            note: features.storage ? "Les formulaires peuvent garder une trace serveur." : "Configurer D1 ou KV pour memoriser les demandes."
+          },
+          {
+            label: "Anti-spam",
+            value: features.turnstile ? "Pret" : "Manquant",
+            note: features.turnstile ? "Les formulaires peuvent afficher Turnstile." : "Ajouter TURNSTILE_SECRET_KEY et TURNSTILE_SITE_KEY."
+          },
+          {
+            label: "Webhooks",
+            value: (features.contactWebhook || features.quoteWebhook) ? "Branches" : "Optionnels",
+            note: (features.contactWebhook || features.quoteWebhook) ? "Les demandes peuvent declencher une notification." : "Brancher Discord, n8n ou mail si besoin."
+          }
+        ];
+
+        kpiHost.innerHTML = cards.map((item) => `
+          <article class="admin-kpi">
+            <span class="label">${item.label}</span>
+            <div class="kpi">${item.value}</div>
+            <div class="notice">${item.note}</div>
+          </article>
+        `).join("");
+
+        capabilityHost.innerHTML = Object.entries(capabilityLabels).map(([key, label]) => `
+          <div class="config-item">
+            <span class="label">${label}</span>
+            <strong>${features[key] ? "Actif" : "A configurer"}</strong>
+            ${statusPill(Boolean(features[key]))}
+          </div>
+        `).join("");
+
+        const checklist = [
+          {
+            title: "Demandes publiques",
+            text: "Contact et devis passent par le backend si le stockage existe, sinon basculent sur Gmail/Mail.",
+            ok: Boolean(features.api)
+          },
+          {
+            title: "Stockage serveur",
+            text: "Configurer D1 de preference, ou KV en fallback, pour garder une vraie trace des demandes.",
+            ok: Boolean(features.storage)
+          },
+          {
+            title: "Protection formulaire",
+            text: "Turnstile protege le site du spam des que les secrets sont poses dans Cloudflare.",
+            ok: Boolean(features.turnstile)
+          },
+          {
+            title: "Zone privee serieuse",
+            text: "Pour BTS, scripts et outils, la prochaine vraie etape est Cloudflare Access ou une auth serveur.",
+            ok: false
+          }
+        ];
+
+        checklistHost.innerHTML = checklist.map((item) => `
+          <div class="config-item">
+            <span class="label">${item.title}</span>
+            <strong>${item.text}</strong>
+            ${statusPill(item.ok, "Pret", "A faire")}
+          </div>
+        `).join("");
+      }
+
+      async function loadSubmissions() {
+        const adminKey = adminKeyField.value.trim() || localStorage.getItem(ADMIN_KEY_STORAGE) || "";
+        if (!adminKey) {
+          adminKeyStatus.textContent = "La cle admin est necessaire pour lire les demandes cote prive.";
+          showToast("Ajoute d'abord la cle admin.", "warning");
+          return;
+        }
+
+        adminKeyStatus.textContent = "Chargement des demandes...";
+        submissionHost.innerHTML = '<div class="admin-empty">Chargement des demandes...</div>';
+
+        const params = new URLSearchParams();
+        const type = typeFilterField.value.trim();
+        const limit = limitFilterField.value.trim() || "25";
+        if (type) params.set("type", type);
+        params.set("limit", limit);
+
+        try {
+          const response = await fetch(`/api/admin/submissions?${params.toString()}`, {
+            headers: {
+              "x-admin-key": adminKey
+            }
+          });
+          const data = await response.json().catch(() => null);
+          if (!response.ok || !data?.ok) {
+            const message = data?.message || "Impossible de lire les demandes pour le moment.";
+            adminKeyStatus.textContent = message;
+            submissionHost.innerHTML = `<div class="admin-empty">${message}</div>`;
+            showToast(message, "warning");
+            return;
+          }
+
+          localStorage.setItem(ADMIN_KEY_STORAGE, adminKey);
+          adminKeyStatus.textContent = `${data.count} demande(s) chargee(s) depuis ${data.storage || "le stockage configure"}.`;
+
+          if (!data.items.length) {
+            submissionHost.innerHTML = '<div class="admin-empty">Aucune demande enregistree pour le moment.</div>';
+            showToast("Aucune demande pour l'instant.", "success");
+            return;
+          }
+
+          submissionHost.innerHTML = data.items.map((item) => {
+            const email = item.email ? `<span class="status-pill">${item.email}</span>` : "";
+            const phone = item.phone ? `<span class="status-pill">${item.phone}</span>` : "";
+            const city = item.city ? `<span class="status-pill">${item.city}</span>` : "";
+            const subject = item.subject ? escapeHtml(item.subject) : "Sujet non precise";
+            const summary = [
+              item.service ? `Service: ${item.service}` : "",
+              item.source_page ? `Page: ${item.source_page}` : "",
+              item.status ? `Statut: ${item.status}` : ""
+            ].filter(Boolean).join(" · ");
+
+            return `
+              <article class="submission-card">
+                <span class="label">${item.submission_type === "quote" ? "Demande / devis" : "Contact"} · ${formatDate(item.created_at)}</span>
+                <h3>${escapeHtml(item.name || "Demande sans nom")}</h3>
+                <div class="submission-card__meta">
+                  ${email}
+                  ${phone}
+                  ${city}
+                  <span class="status-pill ${item.submission_type === "quote" ? "is-ok" : ""}">${item.id}</span>
+                </div>
+                <div class="submission-card__summary">${escapeHtml(subject)}${summary ? `\n${escapeHtml(summary)}` : ""}</div>
+                <div class="submission-card__actions">
+                  <button class="btn btn--secondary btn--small" type="button" data-copy-submission="${escapeHtml([
+                    `Reference: ${item.id}`,
+                    `Type: ${item.submission_type}`,
+                    `Nom: ${item.name || ""}`,
+                    `Email: ${item.email || ""}`,
+                    `Telephone: ${item.phone || ""}`,
+                    `Ville: ${item.city || ""}`,
+                    `Sujet: ${item.subject || ""}`,
+                    `Page: ${item.source_page || ""}`,
+                    `Statut: ${item.status || ""}`,
+                    `Date: ${item.created_at || ""}`
+                  ].join("\n"))}">Copier</button>
+                </div>
+              </article>
+            `;
+          }).join("");
+
+          showToast("Demandes chargees.", "success");
+        } catch (error) {
+          const message = error?.message || "Erreur reseau.";
+          adminKeyStatus.textContent = `Lecture impossible: ${message}`;
+          submissionHost.innerHTML = `<div class="admin-empty">Lecture impossible: ${message}</div>`;
+          showToast("Lecture admin impossible.", "warning");
+        }
+      }
+
+      document.getElementById("save-admin-key").addEventListener("click", saveAdminKey);
+      document.getElementById("clear-admin-key").addEventListener("click", clearAdminKey);
+      document.getElementById("load-submissions").addEventListener("click", loadSubmissions);
+      document.getElementById("refresh-admin-dashboard").addEventListener("click", async () => {
+        await renderCapabilities();
+        showToast("Cockpit actualise.", "success");
+      });
+
+      submissionHost.addEventListener("click", async (event) => {
+        const button = event.target.closest("[data-copy-submission]");
+        if (!button) return;
+        const text = button.getAttribute("data-copy-submission") || "";
+        await copyText(text, "Demande copiee.");
+      });
+
+      loadAdminKey();
+      renderCapabilities();
+    }
+  </script>
+</body>
+</html>

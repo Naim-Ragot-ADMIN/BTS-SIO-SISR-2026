@@ -264,14 +264,17 @@
         <label style="margin-top:14px">Explique simplement le besoin
           <textarea id="client-context" class="field-area" rows="5" placeholder="Exemple: PC lent, Wi-Fi instable, imprimante qui ne repond plus, sauvegarde a faire..."></textarea>
         </label>
+        <div id="request-turnstile" class="turnstile-slot" hidden></div>
         <div class="actions">
-          <button class="btn btn--accent" type="button" id="send-request">Envoyer via Gmail</button>
+          <button class="btn btn--accent" type="button" id="send-request">Envoyer la demande</button>
+          <button class="btn btn--secondary" type="button" id="send-request-gmail">Ouvrir Gmail</button>
           <button class="btn btn--secondary" type="button" id="open-mail-app">Ouvrir dans Mail</button>
           <button class="btn btn--secondary" type="button" id="download-request">Telecharger le recap</button>
           <button class="btn btn--secondary" type="button" id="copy-request">Copier le message</button>
           <button class="btn btn--secondary" type="button" id="reset-request">Reinitialiser</button>
         </div>
         <p class="notice" id="request-status">Nom + email ou telephone + au moins une prestation suffisent pour preparer le message.</p>
+        <p class="notice" id="request-delivery-note">Le site peut envoyer la demande au backend Cloudflare ou basculer sur Gmail/Mail si l'environnement serveur n'est pas encore configure.</p>
         <p class="notice">En preparant une demande, vous acceptez le cadre public du site et les informations presentes dans les <a href="conditions-generales.html">conditions generales</a> et la page <a href="confidentialite.html">confidentialite</a>.</p>
         <div class="quality-card">
           <div class="quality-card__head">
@@ -574,6 +577,67 @@
       showToast("Bascule vers l'app Mail.", "warning");
     }
 
+    async function updateDeliveryState() {
+      const health = await getApiHealth();
+      const note = document.getElementById("request-delivery-note");
+      if (!note) return;
+
+      if (hasServerStorage(health)) {
+        note.textContent = "Envoi serveur actif: la demande peut etre recue en ligne avec reference de suivi. Gmail et Mail restent disponibles en secours.";
+      } else {
+        note.textContent = "Le backend Cloudflare n'est pas encore completement configure. Gmail et Mail restent les modes d'envoi de secours.";
+      }
+
+      if (health?.features?.turnstile) {
+        ensureTurnstileWidget("request-turnstile", "quote-info");
+      }
+    }
+
+    async function sendRequestToApi() {
+      const missing = validateRequest();
+      if (missing.length) {
+        status.textContent = `Merci de completer: ${missing.join(" · ")}.`;
+        showToast("Demande incomplete.", "warning");
+        return;
+      }
+
+      document.getElementById("send-request").disabled = true;
+      const result = await postSiteJson("/api/quote", {
+        quoteType: "informatique",
+        sourcePage: "demande-informatique.html",
+        name: clientNameField.value.trim(),
+        city: clientCityField.value.trim(),
+        email: clientEmailField.value.trim(),
+        phone: clientPhoneField.value.trim(),
+        serviceMode: interventionModeField.value,
+        urgency: requestUrgencyField.value,
+        subject: buildSubject(),
+        message: clientContextField.value.trim(),
+        summary: buildSummary(),
+        selections: selectedItems().map((item) => `${item.title} (${euro(item.price)})`),
+        totalEstimate: selectedItems().reduce((sum, item) => sum + item.price, 0)
+      }, {
+        turnstileContainerId: "request-turnstile",
+        turnstileAction: "quote-info"
+      });
+      document.getElementById("send-request").disabled = false;
+
+      if (result.ok) {
+        downloadSummaryFile();
+        status.textContent = `Demande envoyee. Reference ${result.data.reference}. Le recapitulatif a aussi ete telecharge.`;
+        showToast("Demande envoyee au backend.", "success");
+        return;
+      }
+
+      if (result.code === "api_unavailable" || result.code === "storage_not_configured") {
+        launchRequest("gmail");
+        return;
+      }
+
+      status.textContent = result.message || "La demande n'a pas pu etre envoyee.";
+      showToast(result.message || "Envoi impossible pour le moment.", "warning");
+    }
+
     function validateRequest() {
       const name = clientNameField.value.trim();
       const email = clientEmailField.value.trim();
@@ -597,7 +661,9 @@
       updateRequestQuality();
     });
 
-    document.getElementById("send-request").addEventListener("click", () => {
+    document.getElementById("send-request").addEventListener("click", sendRequestToApi);
+
+    document.getElementById("send-request-gmail").addEventListener("click", () => {
       launchRequest("gmail");
     });
 
@@ -656,6 +722,7 @@
     if (restored) {
       status.textContent = "Brouillon local restaure sur cet appareil.";
     }
+    updateDeliveryState();
   </script>
 </body>
 </html>
